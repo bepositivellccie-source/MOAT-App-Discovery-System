@@ -354,7 +354,7 @@
 
     <!-- Comparison view -->
     <div class="comparison-section" id="comparisonSection">
-      <div class="section-title">Comparaison Top 3 -- Build Sheets</div>
+      <div class="section-title">Podium -- Top 3 (donnees live Airtable)</div>
       <div class="compare-grid" id="compareGrid"></div>
     </div>
 
@@ -1054,43 +1054,45 @@ function renderTable() {
 
 /* ==================== COMPARISON VIEW ==================== */
 function renderComparison() {
-  const compareData = [
-    {
-      name: 'NeuroCalm', score: 80, weeks: 8, hours: 48,
-      tam: '~500M EUR', som: '50K/mois', difficulty: 'Moyenne',
-      risk: 'Positionnement bien-etre/medical', goNoGo: '5/5',
-      color: 'var(--accent-green)', difficultyPct: 45, riskPct: 30,
-    },
-    {
-      name: 'SleepCoach FR', score: 90, weeks: 12, hours: 65,
-      tam: '1.2B EUR', som: '300K/mois', difficulty: 'Moyenne',
-      risk: 'Partenaire specialiste', goNoGo: '5/5',
-      color: 'var(--accent-blue)', difficultyPct: 55, riskPct: 40,
-    },
-    {
-      name: 'DoctAfter', score: 88, weeks: 8, hours: 50,
-      tam: '1.4B EUR', som: '360K/mois', difficulty: 'Moyenne-haute',
-      risk: 'RGPD donnees sante', goNoGo: '4/5',
-      color: 'var(--accent-amber)', difficultyPct: 60, riskPct: 55,
-    },
-  ];
+  /* Dynamic podium — top 3 from Airtable data, live */
+  var top3 = records.filter(function(r) { return !r.decision.includes('Kill'); }).slice(0, 3);
+  var podiumColors = ['var(--accent-green)', 'var(--accent-blue)', 'var(--accent-amber)'];
+  var medals = ['1er', '2e', '3e'];
 
   let html = '';
-  compareData.forEach(d => {
+  top3.forEach(function(r, i) {
+    var bs = getBuildSheet(r.idea);
+    var weeks = bs ? bs.mvp.weeks : '?';
+    var hours = bs ? bs.mvp.totalHours : '?';
+    var tam = bs ? (bs.market.tam || '--') : '--';
+    var som = bs ? (bs.market.som || '--') : '--';
+    var monetization = bs ? bs.monetization : (r.revenue || '--');
+    var risk = bs ? bs.risk : '--';
+    var goNoGo = bs ? (bs.goNoGo.met + '/' + bs.goNoGo.total) : '--';
+    var forecast = bs && bs.forecast ? bs.forecast.scenarios : null;
+    var mrrM12 = forecast ? forecast[1].mrr : null;
+
     html += '<div class="compare-col">' +
       '<div class="compare-col-header">' +
-        '<div class="compare-col-name">' + d.name + '</div>' +
-        '<div class="compare-col-score" style="color:' + d.color + '">' + d.score + '</div>' +
+        '<div style="display:flex;align-items:center;gap:6px">' +
+          '<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:' + podiumColors[i] + ';background:' + podiumColors[i].replace(')', ',0.12)').replace('var(', 'rgba(').replace('--accent-green', '52,211,153').replace('--accent-blue', '91,138,255').replace('--accent-amber', '245,166,35') + ';padding:2px 8px;border-radius:4px">' + medals[i] + '</span>' +
+          '<div class="compare-col-name">' + r.idea + '</div>' +
+        '</div>' +
+        '<div class="compare-col-score" style="color:' + podiumColors[i] + '">' + r.score + '</div>' +
       '</div>' +
-      '<div class="compare-row"><div class="compare-row-label">Duree MVP</div><div class="compare-row-val">' + d.weeks + ' semaines</div></div>' +
-      '<div class="compare-row"><div class="compare-row-label">Effort total</div><div class="compare-row-val">' + d.hours + 'h</div></div>' +
-      '<div class="compare-row"><div class="compare-row-label">TAM</div><div class="compare-row-val">' + d.tam + '</div></div>' +
-      '<div class="compare-row"><div class="compare-row-label">SOM potentiel</div><div class="compare-row-val">' + d.som + '</div></div>' +
-      '<div class="compare-row"><div class="compare-row-label">Difficulte</div><div class="compare-row-val">' + d.difficulty + '</div></div>' +
-      '<div class="compare-bar-wrap"><div class="compare-bar-fill" style="width:' + d.difficultyPct + '%;background:' + d.color + '"></div></div>' +
-      '<div class="compare-row"><div class="compare-row-label">Risque</div><div class="compare-row-val">' + d.risk + '</div></div>' +
-      '<div class="compare-bar-wrap"><div class="compare-bar-fill" style="width:' + d.riskPct + '%;background:var(--accent-red)"></div></div>' +
-      '<div class="compare-row"><div class="compare-row-label">Go/No-Go</div><div class="compare-row-val">' + d.goNoGo + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">ID</div><div class="compare-row-val">#' + (r.moatId || '?') + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Segment</div><div class="compare-row-val" style="font-size:11px">' + (r.segment || '--').substring(0, 35) + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Duree MVP</div><div class="compare-row-val">' + weeks + ' semaines</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Effort total</div><div class="compare-row-val">' + hours + 'h</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">TAM</div><div class="compare-row-val">' + tam + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">SOM potentiel</div><div class="compare-row-val">' + som + '</div></div>';
+    if (mrrM12) {
+      html += '<div class="compare-row"><div class="compare-row-label">MRR a M12</div><div class="compare-row-val" style="font-weight:700;color:' + podiumColors[i] + '">' + mrrM12.toLocaleString('fr-FR') + ' EUR</div></div>';
+    }
+    html += '<div class="compare-row"><div class="compare-row-label">Monetisation</div><div class="compare-row-val" style="font-size:11px">' + (monetization || '--').substring(0, 30) + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Risque</div><div class="compare-row-val" style="font-size:11px">' + (risk || '--').substring(0, 35) + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Go/No-Go</div><div class="compare-row-val">' + goNoGo + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Engine</div><div class="compare-row-val">' + verifiedTag(r.engineVerified) + '</div></div>' +
     '</div>';
   });
   document.getElementById('compareGrid').innerHTML = html;
