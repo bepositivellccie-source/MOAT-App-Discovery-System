@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SleepCoach - La premiere app de therapie cognitive et comportementale de l'insomnie (TCC-I) en francais. Programme personnalise de 6-8 semaines. Retrouvez le sommeil sans medicaments.">
+    <meta name="theme-color" content="#0f1729">
+    <title>SleepCoach - Retrouvez le sommeil naturellement | TCC-I en fran&ccedil;ais</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg-deep: #0a0f1e;
+            --color-bg-primary: #0f1729;
+            --color-bg-card: #151d35;
+            --color-bg-card-hover: #1a2440;
+            --color-bg-elevated: #1e2a4a;
+            --color-surface: #243052;
+            --color-border: rgba(99, 130, 202, 0.12);
+            --color-border-hover: rgba(99, 130, 202, 0.24);
+            --color-text-primary: #e8ecf4;
+            --color-text-secondary: #94a3c4;
+            --color-text-muted: #6b7fa3;
+            --color-accent: #7c8cf8;
+            --color-accent-hover: #6a7af0;
+            --color-accent-glow: rgba(124, 140, 248, 0.25);
+            --color-accent-subtle: rgba(124, 140, 248, 0.08);
+            --color-warm: #c8a86e;
+            --color-warm-glow: rgba(200, 168, 110, 0.2);
+            --color-success: #5ec9a0;
+            --color-success-bg: rgba(94, 201, 160, 0.1);
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.1);
+            --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.15);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-bg-deep);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 96px 0;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: var(--color-text-primary);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+            max-width: 600px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 100ms; }
+        .reveal-delay-2 { transition-delay: 200ms; }
+        .reveal-delay-3 { transition-delay: 300ms; }
+        .reveal-delay-4 { transition-delay: 400ms; }
+
+        /* ===== NAV ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 0;
+            background: rgba(10, 15, 30, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-border);
+            transition: var(--transition-base);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--color-text-primary);
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--color-accent), #5a6ae0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-logo-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            background: var(--color-accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .nav-cta:hover {
+            background: var(--color-accent-hover);
+            box-shadow: 0 0 24px var(--color-accent-glow);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            padding: 160px 0 120px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-accent);
+            background: var(--color-accent-subtle);
+            border: 1px solid rgba(124, 140, 248, 0.15);
+            border-radius: 100px;
+            margin-bottom: 32px;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero-title {
+            font-size: clamp(36px, 7vw, 64px);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            color: var(--color-text-primary);
+            margin-bottom: 24px;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--color-accent), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--color-text-secondary);
+            margin-bottom: 40px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 32px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background: var(--color-accent);
+            border: none;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 16px var(--color-accent-glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent-hover);
+            box-shadow: 0 8px 32px var(--color-accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .hero-trust {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        .hero-trust strong {
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+
+        /* ===== PROBLEM SECTION ===== */
+        .problem {
+            background: var(--color-bg-primary);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .stat-card {
+            padding: 32px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-base);
+        }
+
+        .stat-card:hover {
+            background: var(--color-bg-card-hover);
+            border-color: var(--color-border-hover);
+            box-shadow: var(--shadow-card);
+        }
+
+        .stat-number {
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--color-warm), #e0c080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== SOLUTION SECTION ===== */
+        .solution-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            margin-top: 48px;
+        }
+
+        .solution-visual {
+            position: relative;
+            padding: 40px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .solution-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent), #a78bfa, var(--color-warm));
+        }
+
+        .solution-visual-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 24px;
+        }
+
+        .solution-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+        }
+
+        .comparison-row.negative {
+            background: rgba(248, 113, 113, 0.06);
+            border: 1px solid rgba(248, 113, 113, 0.1);
+        }
+
+        .comparison-row.positive {
+            background: var(--color-success-bg);
+            border: 1px solid rgba(94, 201, 160, 0.15);
+        }
+
+        .comparison-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .comparison-row.negative .comparison-icon {
+            background: rgba(248, 113, 113, 0.15);
+            color: #f87171;
+        }
+
+        .comparison-row.positive .comparison-icon {
+            background: rgba(94, 201, 160, 0.15);
+            color: var(--color-success);
+        }
+
+        .comparison-text {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .solution-points {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .solution-point {
+            display: flex;
+            gap: 16px;
+        }
+
+        .solution-point-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--color-accent-subtle);
+            border: 1px solid rgba(124, 140, 248, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .solution-point-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-accent);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .solution-point-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .solution-point-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            background: var(--color-bg-primary);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 56px;
+        }
+
+        .step-card {
+            position: relative;
+            padding: 40px 32px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-base);
+        }
+
+        .step-card:hover {
+            border-color: var(--color-border-hover);
+            box-shadow: var(--shadow-card);
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--color-accent), #5a6ae0);
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--color-text-primary);
+            margin-bottom: 12px;
+        }
+
+        .step-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+        }
+
+        .step-duration {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-warm);
+            background: var(--color-warm-glow);
+            border-radius: 100px;
+        }
+
+        /* ===== RESULTS ===== */
+        .results-banner {
+            margin-top: 56px;
+            padding: 40px 48px;
+            background: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-bg-elevated) 100%);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 32px;
+        }
+
+        .result-item {
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: clamp(32px, 4vw, 44px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            color: var(--color-success);
+            margin-bottom: 8px;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            max-width: 160px;
+        }
+
+        .results-divider {
+            width: 1px;
+            height: 56px;
+            background: var(--color-border);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            background: var(--color-bg-primary);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .testimonial-card {
+            padding: 32px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition-base);
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--color-border-hover);
+            box-shadow: var(--shadow-card);
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-stars svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--color-warm);
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .testimonial-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .testimonial-meta {
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== PRICING ===== */
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-card {
+            position: relative;
+            padding: 40px;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            transition: var(--transition-base);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 48px var(--color-accent-glow);
+        }
+
+        .pricing-card.featured::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent), #a78bfa);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            right: 24px;
+            padding: 4px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: white;
+            background: var(--color-accent);
+            border-radius: 100px;
+        }
+
+        .pricing-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .pricing-amount {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--color-text-primary);
+        }
+
+        .pricing-period {
+            font-size: 15px;
+            color: var(--color-text-muted);
+        }
+
+        .pricing-desc {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .pricing-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .pricing-features li svg {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            margin-top: 1px;
+            stroke: var(--color-success);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 24px;
+            font-family: var(--font-family);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-border-hover);
+            background: var(--color-bg-card-hover);
+        }
+
+        .btn-primary-full {
+            width: 100%;
+        }
+
+        /* ===== CTA / EMAIL CAPTURE ===== */
+        .cta-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card {
+            position: relative;
+            padding: 64px 48px;
+            background: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-bg-elevated) 100%);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(ellipse, var(--color-accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .cta-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .cta-subtitle {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+            max-width: 480px;
+            margin: 0 auto 40px;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 12px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .email-input {
+            flex: 1;
+            padding: 14px 20px;
+            font-family: var(--font-family);
+            font-size: 15px;
+            color: var(--color-text-primary);
+            background: var(--color-bg-deep);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: var(--transition-fast);
+        }
+
+        .email-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .email-input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px var(--color-accent-glow);
+        }
+
+        .email-submit {
+            flex-shrink: 0;
+        }
+
+        .form-note {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 48px 0;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-copy {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-text-secondary);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .section {
+                padding: 72px 0;
+            }
+
+            .hero {
+                padding: 128px 0 80px;
+            }
+
+            .problem-grid,
+            .steps-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .solution-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .solution-visual {
+                order: -1;
+            }
+
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .results-banner {
+                flex-direction: column;
+                padding: 32px 24px;
+                gap: 24px;
+            }
+
+            .results-divider {
+                width: 64px;
+                height: 1px;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+
+            .cta-card {
+                padding: 48px 24px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .nav-cta-text {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .problem-grid,
+            .steps-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .testimonials-grid .testimonial-card:last-child {
+                grid-column: 1 / -1;
+                max-width: 50%;
+                margin: 0 auto;
+            }
+        }
+
+        /* ===== FOCUS STYLES (Accessibility) ===== */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* ===== SELECTION ===== */
+        ::selection {
+            background: rgba(124, 140, 248, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAV -->
+    <nav class="nav" role="navigation" aria-label="Navigation principale">
+        <div class="container nav-inner">
+            <a href="#" class="nav-logo" aria-label="SleepCoach - Accueil">
+                <span class="nav-logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </span>
+                <span class="nav-logo-text">SleepCoach</span>
+            </a>
+            <a href="#inscription" class="nav-cta">
+                <span class="nav-cta-text">Je veux mieux dormir</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <span class="hero-badge-dot"></span>
+                    Premiere app TCC-I en francais
+                </div>
+                <h1 class="hero-title reveal reveal-delay-1">
+                    Retrouvez un sommeil <span class="highlight">profond et durable</span>
+                </h1>
+                <p class="hero-description reveal reveal-delay-2">
+                    SleepCoach utilise la TCC-I, le traitement de reference recommande par la Haute Autorite de Sante, pour vous aider a vaincre l'insomnie. Sans medicaments. Avec des resultats prouves.
+                </p>
+                <div class="hero-cta-group reveal reveal-delay-3">
+                    <a href="#inscription" class="btn-primary">
+                        Je veux mieux dormir
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                    <p class="hero-trust">
+                        <strong>Gratuit pendant 7 jours</strong> - Aucune carte bancaire requise
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="section problem" id="probleme">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-label reveal">Le probleme</span>
+                <h2 class="section-title reveal reveal-delay-1">L'insomnie touche des millions de Francais</h2>
+                <p class="section-subtitle mx-auto reveal reveal-delay-2">
+                    Et les solutions existantes ne font qu'aggraver le probleme.
+                </p>
+            </div>
+            <div class="problem-grid">
+                <div class="stat-card reveal reveal-delay-1">
+                    <div class="stat-number">1 sur 3</div>
+                    <div class="stat-label">Francais souffre d'insomnie</div>
+                    <div class="stat-desc">Soit plus de 20 millions de personnes qui luttent chaque nuit pour trouver le sommeil.</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-2">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">App TCC-I en francais</div>
+                    <div class="stat-desc">Aucune application ne propose de vraie therapie comportementale de l'insomnie en francais. Jusqu'a maintenant.</div>
+                </div>
+                <div class="stat-card reveal reveal-delay-3">
+                    <div class="stat-number">30%</div>
+                    <div class="stat-label">Prennent des somniferes</div>
+                    <div class="stat-desc">La France est le premier consommateur europeen de somniferes. Avec les risques de dependance que cela implique.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTION -->
+    <section class="section" id="solution">
+        <div class="container">
+            <span class="section-label reveal">La solution</span>
+            <h2 class="section-title reveal reveal-delay-1">La TCC-I : la therapie que votre medecin recommanderait</h2>
+            <p class="section-subtitle reveal reveal-delay-2">
+                La Therapie Cognitive et Comportementale de l'Insomnie est le traitement de premiere intention recommande par la HAS. SleepCoach la rend accessible a tous.
+            </p>
+            <div class="solution-layout">
+                <div class="solution-visual reveal reveal-delay-2">
+                    <div class="solution-visual-label">Ce qui ne marche pas vs. ce qui marche</div>
+                    <div class="solution-comparison">
+                        <div class="comparison-row negative">
+                            <div class="comparison-icon">X</div>
+                            <span class="comparison-text">Somniferes et anxiolytiques (dependance, effets secondaires)</span>
+                        </div>
+                        <div class="comparison-row negative">
+                            <div class="comparison-icon">X</div>
+                            <span class="comparison-text">Applications de tracking (mesurer ne guerit pas)</span>
+                        </div>
+                        <div class="comparison-row negative">
+                            <div class="comparison-icon">X</div>
+                            <span class="comparison-text">Sons relaxants et ASMR (effet placebo temporaire)</span>
+                        </div>
+                        <div class="comparison-row positive">
+                            <div class="comparison-icon">O</div>
+                            <span class="comparison-text"><strong>TCC-I</strong> : Techniques validees scientifiquement, resultats durables</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-points">
+                    <div class="solution-point reveal reveal-delay-1">
+                        <div class="solution-point-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        </div>
+                        <div>
+                            <div class="solution-point-title">Recommandee par la HAS</div>
+                            <div class="solution-point-desc">La Haute Autorite de Sante recommande la TCC-I comme traitement de premiere intention, avant tout medicament.</div>
+                        </div>
+                    </div>
+                    <div class="solution-point reveal reveal-delay-2">
+                        <div class="solution-point-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+                        </div>
+                        <div>
+                            <div class="solution-point-title">Programme de 6 a 8 semaines</div>
+                            <div class="solution-point-desc">Un accompagnement structure et personnalise qui s'adapte a votre rythme et vos habitudes de sommeil.</div>
+                        </div>
+                    </div>
+                    <div class="solution-point reveal reveal-delay-3">
+                        <div class="solution-point-icon">
+                            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div>
+                            <div class="solution-point-title">75-80% de taux de reussite</div>
+                            <div class="solution-point-desc">Les etudes cliniques montrent que 3 patients sur 4 voient une amelioration significative de leur sommeil.</div>
+                        </div>
+                    </div>
+                    <div class="solution-point reveal reveal-delay-4">
+                        <div class="solution-point-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div>
+                            <div class="solution-point-title">Zero medicament</div>
+                            <div class="solution-point-desc">De vraies techniques cognitives et comportementales. Pas de pilule, pas de dependance, pas d'effet secondaire.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section how-it-works" id="comment">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-label reveal">Comment ca marche</span>
+                <h2 class="section-title reveal reveal-delay-1">Trois etapes vers un meilleur sommeil</h2>
+                <p class="section-subtitle mx-auto reveal reveal-delay-2">
+                    SleepCoach vous guide pas a pas, comme le ferait un therapeute specialise.
+                </p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card reveal reveal-delay-1">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Evaluation personnalisee</h3>
+                    <p class="step-desc">
+                        Repondez a quelques questions sur vos habitudes de sommeil. L'app analyse votre profil et cree un programme adapte a votre situation.
+                    </p>
+                    <span class="step-duration">5 minutes</span>
+                </div>
+                <div class="step-card reveal reveal-delay-2">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Techniques quotidiennes</h3>
+                    <p class="step-desc">
+                        Chaque jour, decouvrez et appliquez des exercices de restructuration cognitive, de controle du stimulus et de restriction de sommeil.
+                    </p>
+                    <span class="step-duration">10-15 min/jour</span>
+                </div>
+                <div class="step-card reveal reveal-delay-3">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Resultats durables</h3>
+                    <p class="step-desc">
+                        Suivez vos progres semaine apres semaine. En 6 a 8 semaines, retrouvez un sommeil naturel et reparateur, sans bequille.
+                    </p>
+                    <span class="step-duration">6-8 semaines</span>
+                </div>
+            </div>
+
+            <!-- Results banner -->
+            <div class="results-banner reveal">
+                <div class="result-item">
+                    <div class="result-value">75-80%</div>
+                    <div class="result-label">des patients ameliorent significativement leur sommeil</div>
+                </div>
+                <div class="results-divider"></div>
+                <div class="result-item">
+                    <div class="result-value">-50%</div>
+                    <div class="result-label">de reduction du temps d'endormissement en moyenne</div>
+                </div>
+                <div class="results-divider"></div>
+                <div class="result-item">
+                    <div class="result-value">+1h30</div>
+                    <div class="result-label">de sommeil supplementaire par nuit en moyenne</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section testimonials" id="temoignages">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-label reveal">Temoignages</span>
+                <h2 class="section-title reveal reveal-delay-1">Ils ont retrouve le sommeil</h2>
+                <p class="section-subtitle mx-auto reveal reveal-delay-2">
+                    Des milliers de personnes ont deja ameliore leur sommeil grace a la TCC-I.
+                </p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card reveal reveal-delay-1">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">
+                        "Apres 3 ans d'insomnie et deux tentatives de somniferes, j'ai enfin trouve quelque chose qui marche vraiment. En 5 semaines, je m'endors en moins de 20 minutes."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">S</div>
+                        <div>
+                            <div class="testimonial-name">Sophie M.</div>
+                            <div class="testimonial-meta">Lyon, 34 ans</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal reveal-delay-2">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">
+                        "Je suis medecin et j'ai ete bluffee par la qualite du contenu. C'est exactement ce que je recommande a mes patients, mais sous forme d'app accessible a tous."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">C</div>
+                        <div>
+                            <div class="testimonial-name">Dr. Caroline B.</div>
+                            <div class="testimonial-meta">Paris, medecin generaliste</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal reveal-delay-3">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">
+                        "Le cadre de travail me faisait tourner en boucle la nuit. SleepCoach m'a appris a gerer mes pensees au coucher. Aujourd'hui, mes nuits sont redevenues normales."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">T</div>
+                        <div>
+                            <div class="testimonial-name">Thomas R.</div>
+                            <div class="testimonial-meta">Bordeaux, 42 ans</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section" id="tarifs">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-label reveal">Tarifs</span>
+                <h2 class="section-title reveal reveal-delay-1">Investissez dans votre sommeil</h2>
+                <p class="section-subtitle mx-auto reveal reveal-delay-2">
+                    Moins cher qu'une seule seance chez un therapeute specialise.
+                </p>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card reveal reveal-delay-1">
+                    <div class="pricing-name">Mensuel</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">9,99</span>
+                        <span class="pricing-period">/ mois</span>
+                    </div>
+                    <div class="pricing-desc">Ideal pour commencer et tester le programme.</div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Programme TCC-I complet
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Exercices quotidiens personnalises
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Journal de sommeil interactif
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            7 jours d'essai gratuit
+                        </li>
+                    </ul>
+                    <a href="#inscription" class="btn-secondary">Commencer l'essai gratuit</a>
+                </div>
+                <div class="pricing-card featured reveal reveal-delay-2">
+                    <span class="pricing-badge">Recommande</span>
+                    <div class="pricing-name">Programme complet</div>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">49,99</span>
+                        <span class="pricing-period">/ une fois</span>
+                    </div>
+                    <div class="pricing-desc">Acces a vie au programme de 8 semaines. Le meilleur rapport qualite-prix.</div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Tout le plan Mensuel
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Acces a vie, sans abonnement
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Modules avances de relaxation
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Suivi de progres detaille
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                            Mises a jour futures incluses
+                        </li>
+                    </ul>
+                    <a href="#inscription" class="btn-primary btn-primary-full">
+                        Je veux mieux dormir
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / EMAIL CAPTURE -->
+    <section class="section cta-section" id="inscription">
+        <div class="container">
+            <div class="cta-card reveal">
+                <span class="section-label">Pret a mieux dormir ?</span>
+                <h2 class="cta-title">Inscrivez-vous pour etre informe du lancement</h2>
+                <p class="cta-subtitle">
+                    Rejoignez la liste d'attente et beneficiez d'un acces anticipe avec une offre speciale reservee aux premiers inscrits.
+                </p>
+                <form class="email-form" action="#" method="POST" aria-label="Formulaire d'inscription">
+                    <label for="email-input" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Adresse e-mail</label>
+                    <input
+                        type="email"
+                        id="email-input"
+                        name="email"
+                        class="email-input"
+                        placeholder="votre@email.com"
+                        required
+                        autocomplete="email"
+                        aria-label="Votre adresse e-mail"
+                    >
+                    <button type="submit" class="btn-primary email-submit">
+                        Je veux mieux dormir
+                    </button>
+                </form>
+                <p class="form-note">Pas de spam. Desinscription en un clic.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+        <div class="container footer-inner">
+            <p class="footer-copy">SleepCoach 2026. Tous droits reserves.</p>
+            <nav class="footer-links" aria-label="Liens du pied de page">
+                <a href="#">Mentions legales</a>
+                <a href="#">Confidentialite</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- SCROLL REVEAL SCRIPT -->
+    <script>
+        (function () {
+            'use strict';
+
+            var reveals = document.querySelectorAll('.reveal');
+
+            function onScroll() {
+                var windowHeight = window.innerHeight;
+                var triggerOffset = windowHeight * 0.88;
+
+                for (var i = 0; i < reveals.length; i++) {
+                    var el = reveals[i];
+                    var rect = el.getBoundingClientRect();
+
+                    if (rect.top < triggerOffset) {
+                        el.classList.add('visible');
+                    }
+                }
+            }
+
+            // Use passive scroll listener for performance
+            window.addEventListener('scroll', onScroll, { passive: true });
+            // Initial check
+            onScroll();
+        })();
+    </script>
+</body>
+</html>
