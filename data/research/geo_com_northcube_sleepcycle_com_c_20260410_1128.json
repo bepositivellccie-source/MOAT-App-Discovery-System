@@ -1,0 +1,559 @@
+{
+  "date": "2026-04-10T11:28:26.680414",
+  "app_ids": [
+    "com.northcube.sleepcycle",
+    "com.calm.android"
+  ],
+  "markets_scanned": [
+    "fr",
+    "es",
+    "it",
+    "de",
+    "us"
+  ],
+  "ranking": [
+    [
+      "it",
+      {
+        "name": "Italie",
+        "opportunity_score": 88,
+        "avg_negative_ratio": 57.5,
+        "total_frustrations": 54,
+        "total_installs": 87939186,
+        "apps_analyzed": 2,
+        "growth": "+143%",
+        "population": 59000000,
+        "results": [
+          {
+            "market": "it",
+            "market_name": "Italie",
+            "app_id": "com.northcube.sleepcycle",
+            "title": "Sleep Cycle: Analisi del sonno",
+            "score": 4.4069147,
+            "ratings": 215621,
+            "installs": 18733404,
+            "free": true,
+            "iap": "0,89 € - 64,99 € se la fatturazione avviene tramite Play",
+            "reviews_fetched": 80,
+            "negative_count": 44,
+            "negative_ratio": 55.0,
+            "top_frustrations": [
+              [
+                "pagamento",
+                5
+              ],
+              [
+                "premium",
+                4
+              ],
+              [
+                "non funziona",
+                4
+              ],
+              [
+                "inutile",
+                3
+              ],
+              [
+                "abbonamento",
+                2
+              ],
+              [
+                "gratis",
+                1
+              ],
+              [
+                "truffa",
+                1
+              ],
+              [
+                "bug",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 21
+          },
+          {
+            "market": "it",
+            "market_name": "Italie",
+            "app_id": "com.calm.android",
+            "title": "Calm: dormi, medita, rilassati",
+            "score": 4.040678,
+            "ratings": 610049,
+            "installs": 69205782,
+            "free": true,
+            "iap": "0,77 € - 349,99 € se la fatturazione avviene tramite Play",
+            "reviews_fetched": 80,
+            "negative_count": 48,
+            "negative_ratio": 60.0,
+            "top_frustrations": [
+              [
+                "pagamento",
+                14
+              ],
+              [
+                "abbonamento",
+                6
+              ],
+              [
+                "premium",
+                4
+              ],
+              [
+                "manca",
+                4
+              ],
+              [
+                "gratis",
+                3
+              ],
+              [
+                "truffa",
+                1
+              ],
+              [
+                "inutile",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 33
+          }
+        ]
+      }
+    ],
+    [
+      "fr",
+      {
+        "name": "France",
+        "opportunity_score": 78,
+        "avg_negative_ratio": 56.2,
+        "total_frustrations": 82,
+        "total_installs": 87939186,
+        "apps_analyzed": 2,
+        "growth": "+52%",
+        "population": 68000000,
+        "results": [
+          {
+            "market": "fr",
+            "market_name": "France",
+            "app_id": "com.northcube.sleepcycle",
+            "title": "Sleep Cycle : Suivi du sommeil",
+            "score": 4.404027,
+            "ratings": 215621,
+            "installs": 18733404,
+            "free": true,
+            "iap": "0,89 € - 63,99 € si facturé via Play",
+            "reviews_fetched": 80,
+            "negative_count": 42,
+            "negative_ratio": 52.5,
+            "top_frustrations": [
+              [
+                "payant",
+                10
+              ],
+              [
+                "abonnement",
+                6
+              ],
+              [
+                "gratuit",
+                4
+              ],
+              [
+                "inutile",
+                3
+              ],
+              [
+                "bug",
+                3
+              ],
+              [
+                "arnaque",
+                2
+              ],
+              [
+                "cher",
+                2
+              ],
+              [
+                "fonctionne pas",
+                2
+              ],
+              [
+                "premium",
+                2
+              ],
+              [
+                "manque",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 36
+          },
+          {
+            "market": "fr",
+            "market_name": "France",
+            "app_id": "com.calm.android",
+            "title": "Calm: Méditer, dormir, apaiser",
+            "score": 4.165663,
+            "ratings": 610049,
+            "installs": 69205782,
+            "free": true,
+            "iap": "0,77 € - 349,99 € si facturé via Play",
+            "reviews_fetched": 80,
+            "negative_count": 48,
+            "negative_ratio": 60.0,
+            "top_frustrations": [
+              [
+                "gratuit",
+                13
+              ],
+              [
+                "abonnement",
+                10
+              ],
+              [
+                "payant",
+                7
+              ],
+              [
+                "cher",
+                5
+              ],
+              [
+                "arnaque",
+                3
+              ],
+              [
+                "inutile",
+                3
+              ],
+              [
+                "manque",
+                2
+              ],
+              [
+                "premium",
+                1
+              ],
+              [
+                "lent",
+                1
+              ],
+              [
+                "bug",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 46
+          }
+        ]
+      }
+    ],
+    [
+      "es",
+      {
+        "name": "Espagne",
+        "opportunity_score": 76,
+        "avg_negative_ratio": 39.4,
+        "total_frustrations": 34,
+        "total_installs": 87939186,
+        "apps_analyzed": 2,
+        "growth": "+157%",
+        "population": 47000000,
+        "results": [
+          {
+            "market": "es",
+            "market_name": "Espagne",
+            "app_id": "com.northcube.sleepcycle",
+            "title": "Sleep Cycle: Análisis de sueño",
+            "score": 4.4983497,
+            "ratings": 215621,
+            "installs": 18733404,
+            "free": true,
+            "iap": "0,89 € - 64,99 € si se factura a través de Google Play",
+            "reviews_fetched": 80,
+            "negative_count": 27,
+            "negative_ratio": 33.8,
+            "top_frustrations": [
+              [
+                "premium",
+                5
+              ],
+              [
+                "gratis",
+                5
+              ],
+              [
+                "pago",
+                4
+              ],
+              [
+                "no funciona",
+                2
+              ],
+              [
+                "suscripcion",
+                1
+              ],
+              [
+                "publicidad",
+                1
+              ],
+              [
+                "falta",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 19
+          },
+          {
+            "market": "es",
+            "market_name": "Espagne",
+            "app_id": "com.calm.android",
+            "title": "Calm: Meditación y Sueño",
+            "score": 4.224163,
+            "ratings": 610049,
+            "installs": 69205782,
+            "free": true,
+            "iap": "0,77 € - 349,99 € si se factura a través de Google Play",
+            "reviews_fetched": 80,
+            "negative_count": 36,
+            "negative_ratio": 45.0,
+            "top_frustrations": [
+              [
+                "premium",
+                5
+              ],
+              [
+                "pago",
+                3
+              ],
+              [
+                "gratis",
+                3
+              ],
+              [
+                "caro",
+                2
+              ],
+              [
+                "estafa",
+                1
+              ],
+              [
+                "complicado",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 15
+          }
+        ]
+      }
+    ],
+    [
+      "de",
+      {
+        "name": "Allemagne",
+        "opportunity_score": 76,
+        "avg_negative_ratio": 68.1,
+        "total_frustrations": 77,
+        "total_installs": 87939186,
+        "apps_analyzed": 2,
+        "growth": "+43%",
+        "population": 84000000,
+        "results": [
+          {
+            "market": "de",
+            "market_name": "Allemagne",
+            "app_id": "com.northcube.sleepcycle",
+            "title": "Sleep Cycle: Sleep Tracker",
+            "score": 4.201807,
+            "ratings": 215621,
+            "installs": 18733404,
+            "free": true,
+            "iap": "0,79 €–64,99 € bei Abrechnung über Google Play",
+            "reviews_fetched": 80,
+            "negative_count": 53,
+            "negative_ratio": 66.2,
+            "top_frustrations": [
+              [
+                "abo",
+                13
+              ],
+              [
+                "premium",
+                8
+              ],
+              [
+                "kostenlos",
+                7
+              ],
+              [
+                "teuer",
+                4
+              ],
+              [
+                "nutzlos",
+                1
+              ],
+              [
+                "bug",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 34
+          },
+          {
+            "market": "de",
+            "market_name": "Allemagne",
+            "app_id": "com.calm.android",
+            "title": "Calm: Meditation und Schlaf",
+            "score": 4.0637393,
+            "ratings": 610053,
+            "installs": 69205782,
+            "free": true,
+            "iap": "0,77 €–349,99 € bei Abrechnung über Google Play",
+            "reviews_fetched": 80,
+            "negative_count": 56,
+            "negative_ratio": 70.0,
+            "top_frustrations": [
+              [
+                "abo",
+                23
+              ],
+              [
+                "kostenlos",
+                7
+              ],
+              [
+                "premium",
+                5
+              ],
+              [
+                "teuer",
+                3
+              ],
+              [
+                "werbung",
+                3
+              ],
+              [
+                "langsam",
+                1
+              ],
+              [
+                "funktioniert nicht",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 43
+          }
+        ]
+      }
+    ],
+    [
+      "us",
+      {
+        "name": "Etats-Unis",
+        "opportunity_score": 74,
+        "avg_negative_ratio": 60.6,
+        "total_frustrations": 55,
+        "total_installs": 87939186,
+        "apps_analyzed": 2,
+        "growth": "+15%",
+        "population": 335000000,
+        "results": [
+          {
+            "market": "us",
+            "market_name": "Etats-Unis",
+            "app_id": "com.northcube.sleepcycle",
+            "title": "Sleep Cycle: Sleep Tracker",
+            "score": 4.3361945,
+            "ratings": 215621,
+            "installs": 18733404,
+            "free": true,
+            "iap": "$0.99 - $59.99 per item",
+            "reviews_fetched": 80,
+            "negative_count": 55,
+            "negative_ratio": 68.8,
+            "top_frustrations": [
+              [
+                "premium",
+                12
+              ],
+              [
+                "subscription",
+                10
+              ],
+              [
+                "free",
+                9
+              ],
+              [
+                "bug",
+                2
+              ],
+              [
+                "ads",
+                1
+              ],
+              [
+                "slow",
+                1
+              ],
+              [
+                "doesnt work",
+                1
+              ]
+            ],
+            "total_frustration_mentions": 36
+          },
+          {
+            "market": "us",
+            "market_name": "Etats-Unis",
+            "app_id": "com.calm.android",
+            "title": "Calm - Sleep, Meditate, Relax",
+            "score": 4.463797,
+            "ratings": 610053,
+            "installs": 69205782,
+            "free": true,
+            "iap": "$0.99 - $399.99 per item",
+            "reviews_fetched": 80,
+            "negative_count": 42,
+            "negative_ratio": 52.5,
+            "top_frustrations": [
+              [
+                "free",
+                7
+              ],
+              [
+                "subscription",
+                5
+              ],
+              [
+                "useless",
+                3
+              ],
+              [
+                "premium",
+                2
+              ],
+              [
+                "scam",
+                2
+              ]
+            ],
+            "total_frustration_mentions": 19
+          }
+        ]
+      }
+    ]
+  ],
+  "best_market": "it",
+  "strategy": {
+    "primary": "Italie",
+    "secondary": "France",
+    "tertiary": "Espagne"
+  }
+}
