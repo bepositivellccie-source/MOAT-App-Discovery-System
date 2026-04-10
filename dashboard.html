@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOAT App Discovery System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Fonts loaded via link tag in head */
+
+  :root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: #16161f;
+    --bg-card-hover: #1c1c28;
+    --bg-elevated: #1e1e2a;
+    --border: #2a2a3a;
+    --border-subtle: #1e1e2e;
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888a0;
+    --text-muted: #555570;
+    --accent-blue: #4d7cff;
+    --accent-blue-dim: rgba(77,124,255,0.12);
+    --accent-green: #34d399;
+    --accent-green-dim: rgba(52,211,153,0.12);
+    --accent-amber: #f59e0b;
+    --accent-amber-dim: rgba(245,158,11,0.12);
+    --accent-red: #ef4444;
+    --accent-red-dim: rgba(239,68,68,0.12);
+    --accent-purple: #a78bfa;
+    --accent-purple-dim: rgba(167,139,250,0.12);
+    --accent-cyan: #22d3ee;
+    --accent-cyan-dim: rgba(34,211,238,0.12);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px var(--border-subtle);
+    --shadow-elevated: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(77,124,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px 60px;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .header-left { display: flex; align-items: center; gap: 16px; }
+
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 18px;
+    color: #fff;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .header-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-green);
+    background: var(--accent-green-dim);
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── KPI Row ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 20px 22px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .kpi-card:hover { border-color: var(--border); transform: translateY(-1px); }
+  .kpi-card:hover::before { opacity: 1; }
+
+  .kpi-card[data-accent="blue"]::before { background: var(--accent-blue); }
+  .kpi-card[data-accent="green"]::before { background: var(--accent-green); }
+  .kpi-card[data-accent="amber"]::before { background: var(--accent-amber); }
+  .kpi-card[data-accent="red"]::before { background: var(--accent-red); }
+  .kpi-card[data-accent="purple"]::before { background: var(--accent-purple); }
+
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .kpi-value[data-accent="blue"] { color: var(--accent-blue); }
+  .kpi-value[data-accent="green"] { color: var(--accent-green); }
+  .kpi-value[data-accent="amber"] { color: var(--accent-amber); }
+  .kpi-value[data-accent="red"] { color: var(--accent-red); }
+  .kpi-value[data-accent="purple"] { color: var(--accent-purple); }
+
+  .kpi-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* ── Section ── */
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+  }
+
+  /* ── Main Grid ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  /* ── Pipeline ── */
+  .pipeline-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .pipeline-stages {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stage {
+    text-align: center;
+    padding: 16px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.2s ease;
+    cursor: default;
+  }
+
+  .stage:hover { border-color: var(--border); }
+
+  .stage-count {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+
+  .stage-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+  }
+
+  .stage-bar {
+    height: 3px;
+    border-radius: 2px;
+    margin-top: 10px;
+  }
+
+  .pipeline-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .flow-arrow { color: var(--accent-blue); font-size: 14px; }
+
+  /* ── Scoring Matrix ── */
+  .scoring-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .scoring-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .scoring-row:last-child { border-bottom: none; }
+
+  .scoring-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+
+  .scoring-weight {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 12px;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .scoring-bar-container {
+    width: 100px;
+    height: 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    margin-left: 16px;
+    overflow: hidden;
+  }
+
+  .scoring-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  /* ── Opportunity Table ── */
+  .table-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+
+  .table-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .table-header-bar h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .table-filter {
+    display: flex;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-btn:hover { border-color: var(--border); color: var(--text-secondary); }
+  .filter-btn.active { background: var(--accent-blue-dim); border-color: var(--accent-blue); color: var(--accent-blue); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: left;
+    padding: 12px 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  td {
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg-card-hover); }
+
+  .idea-name {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 5px;
+  }
+
+  .tag-a { color: var(--accent-green); background: var(--accent-green-dim); }
+  .tag-b { color: var(--accent-blue); background: var(--accent-blue-dim); }
+  .tag-c { color: var(--accent-amber); background: var(--accent-amber-dim); }
+  .tag-d { color: var(--accent-red); background: var(--accent-red-dim); }
+
+  .tag-backlog { color: var(--text-muted); background: var(--bg-secondary); }
+  .tag-scoring { color: var(--accent-purple); background: var(--accent-purple-dim); }
+  .tag-validation { color: var(--accent-cyan); background: var(--accent-cyan-dim); }
+  .tag-ready { color: var(--accent-green); background: var(--accent-green-dim); }
+  .tag-killed { color: var(--accent-red); background: var(--accent-red-dim); }
+
+  .score-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .score-high { color: var(--accent-green); }
+  .score-mid { color: var(--accent-blue); }
+  .score-low { color: var(--accent-amber); }
+  .score-dead { color: var(--accent-red); }
+
+  /* ── Bottom Grid ── */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  /* ── Weekly Progress ── */
+  .weekly-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .week-day {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .week-day:last-child { border-bottom: none; }
+
+  .day-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    width: 36px;
+    flex-shrink: 0;
+  }
+
+  .day-label.today { color: var(--accent-blue); }
+
+  .day-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+
+  .day-tasks {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .day-progress {
+    width: 80px;
+    height: 4px;
+    background: var(--bg-secondary);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .day-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── Go/No-Go ── */
+  .gonogo-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .condition-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .condition-row:last-child { border-bottom: none; }
+
+  .condition-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .condition-check.checked {
+    background: var(--accent-green-dim);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+  }
+
+  .condition-check.unchecked {
+    background: transparent;
+    border-color: var(--border);
+    color: transparent;
+  }
+
+  .condition-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .condition-text.checked { color: var(--text-primary); }
+
+  .gonogo-verdict {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .verdict-go { background: var(--accent-green-dim); color: var(--accent-green); border: 1px solid rgba(52,211,153,0.2); }
+  .verdict-validate { background: var(--accent-blue-dim); color: var(--accent-blue); border: 1px solid rgba(77,124,255,0.2); }
+  .verdict-kill { background: var(--accent-red-dim); color: var(--accent-red); border: 1px solid rgba(239,68,68,0.2); }
+
+  /* ── Quick Actions ── */
+  .actions-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+
+  .action-btn:hover {
+    border-color: var(--border);
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+  }
+
+  .action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .action-icon.blue { background: var(--accent-blue-dim); color: var(--accent-blue); }
+  .action-icon.green { background: var(--accent-green-dim); color: var(--accent-green); }
+  .action-icon.amber { background: var(--accent-amber-dim); color: var(--accent-amber); }
+  .action-icon.purple { background: var(--accent-purple-dim); color: var(--accent-purple); }
+
+  /* ── Decision Thresholds ── */
+  .thresholds-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .threshold-card {
+    padding: 18px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    text-align: center;
+    transition: transform 0.15s ease;
+  }
+
+  .threshold-card:hover { transform: translateY(-1px); }
+
+  .threshold-range {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .threshold-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .threshold-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .t-a { background: var(--accent-green-dim); border-color: rgba(52,211,153,0.15); }
+  .t-a .threshold-range, .t-a .threshold-label { color: var(--accent-green); }
+  .t-b { background: var(--accent-blue-dim); border-color: rgba(77,124,255,0.15); }
+  .t-b .threshold-range, .t-b .threshold-label { color: var(--accent-blue); }
+  .t-c { background: var(--accent-amber-dim); border-color: rgba(245,158,11,0.15); }
+  .t-c .threshold-range, .t-c .threshold-label { color: var(--accent-amber); }
+  .t-d { background: var(--accent-red-dim); border-color: rgba(239,68,68,0.15); }
+  .t-d .threshold-range, .t-d .threshold-label { color: var(--accent-red); }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 24px 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .footer span { color: var(--accent-blue); font-weight: 600; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(3, 1fr); }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .actions-bar { grid-template-columns: repeat(2, 1fr); }
+    .thresholds-row { grid-template-columns: repeat(2, 1fr); }
+    .pipeline-stages { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .app { padding: 20px 16px; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .actions-bar { grid-template-columns: 1fr; }
+    .thresholds-row { grid-template-columns: 1fr 1fr; }
+    .pipeline-stages { grid-template-columns: repeat(2, 1fr); }
+    .header { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark">M</div>
+      <div>
+        <div class="header-title">MOAT App Discovery System</div>
+        <div class="header-sub">Pipeline de selection d'opportunites Flutter</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-badge">Semaine 15</div>
+      <div class="header-date">2026-04-10</div>
+    </div>
+  </header>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    <div class="kpi-card" data-accent="blue">
+      <div class="kpi-label">Backlog</div>
+      <div class="kpi-value" data-accent="blue">3</div>
+      <div class="kpi-detail">Sub Tracker, Habit Tracker, Meal Planner</div>
+    </div>
+    <div class="kpi-card" data-accent="purple">
+      <div class="kpi-label">En scoring</div>
+      <div class="kpi-value" data-accent="purple">6</div>
+      <div class="kpi-detail">Score moyen : 68/100</div>
+    </div>
+    <div class="kpi-card" data-accent="amber">
+      <div class="kpi-label">En validation</div>
+      <div class="kpi-value" data-accent="amber">1</div>
+      <div class="kpi-detail">Exercice Builder (81pts)</div>
+    </div>
+    <div class="kpi-card" data-accent="green">
+      <div class="kpi-label">Zone A — Build</div>
+      <div class="kpi-value" data-accent="green">3</div>
+      <div class="kpi-detail">Exercice Builder, PatientFlow, Devis Express</div>
+    </div>
+    <div class="kpi-card" data-accent="red">
+      <div class="kpi-label">Tuees</div>
+      <div class="kpi-value" data-accent="red">1</div>
+      <div class="kpi-detail">Social Planner (41pts)</div>
+    </div>
+  </div>
+
+  <!-- Pipeline + Scoring -->
+  <div class="main-grid">
+
+    <!-- Pipeline -->
+    <div class="pipeline-card">
+      <div class="section-title">Pipeline</div>
+
+      <div class="pipeline-stages">
+        <div class="stage">
+          <div class="stage-count" style="color:var(--accent-blue)">3</div>
+          <div class="stage-label">Backlog</div>
+          <div class="stage-bar" style="background: var(--accent-blue)"></div>
+        </div>
+        <div class="stage">
+          <div class="stage-count" style="color:var(--accent-purple)">6</div>
+          <div class="stage-label">Scoring</div>
+          <div class="stage-bar" style="background: var(--accent-purple)"></div>
+        </div>
+        <div class="stage">
+          <div class="stage-count" style="color:var(--accent-amber)">1</div>
+          <div class="stage-label">Validation</div>
+          <div class="stage-bar" style="background: var(--accent-amber)"></div>
+        </div>
+        <div class="stage">
+          <div class="stage-count" style="color:var(--accent-green)">0</div>
+          <div class="stage-label">Build</div>
+          <div class="stage-bar" style="background: var(--accent-green)"></div>
+        </div>
+        <div class="stage">
+          <div class="stage-count" style="color:var(--accent-red)">1</div>
+          <div class="stage-label">Kill</div>
+          <div class="stage-bar" style="background: var(--accent-red)"></div>
+        </div>
+      </div>
+
+      <div class="pipeline-flow">
+        SOURCING <span class="flow-arrow">&rarr;</span>
+        QUALIFICATION <span class="flow-arrow">&rarr;</span>
+        SCORING <span class="flow-arrow">&rarr;</span>
+        VALIDATION <span class="flow-arrow">&rarr;</span>
+        DECISION
+      </div>
+    </div>
+
+    <!-- Scoring Matrix -->
+    <div class="scoring-card">
+      <div class="section-title">Matrice de scoring</div>
+
+      <div class="scoring-row">
+        <span class="scoring-name">Intensite probleme</span>
+        <span class="scoring-weight">x4</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:100%;background:var(--accent-red)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Frequence d'usage</span>
+        <span class="scoring-weight">x3</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:75%;background:var(--accent-amber)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Volonte de payer</span>
+        <span class="scoring-weight">x3</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:75%;background:var(--accent-amber)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Segment accessible</span>
+        <span class="scoring-weight">x2</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:50%;background:var(--accent-blue)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Faiblesse concurrence</span>
+        <span class="scoring-weight">x2</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:50%;background:var(--accent-blue)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Differenciation</span>
+        <span class="scoring-weight">x2</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:50%;background:var(--accent-blue)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Fit personnel</span>
+        <span class="scoring-weight">x2</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:50%;background:var(--accent-blue)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Vitesse MVP</span>
+        <span class="scoring-weight">x1</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:25%;background:var(--accent-purple)"></div>
+        </div>
+      </div>
+      <div class="scoring-row">
+        <span class="scoring-name">Retention potentielle</span>
+        <span class="scoring-weight">x1</span>
+        <div class="scoring-bar-container">
+          <div class="scoring-bar-fill" style="width:25%;background:var(--accent-purple)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decision Thresholds -->
+  <div class="section-title">Seuils de decision</div>
+  <div class="thresholds-row">
+    <div class="threshold-card t-a">
+      <div class="threshold-range">75 - 100</div>
+      <div class="threshold-label">A &mdash; Build Now</div>
+      <div class="threshold-desc">Lancer la validation terrain</div>
+    </div>
+    <div class="threshold-card t-b">
+      <div class="threshold-range">60 - 74</div>
+      <div class="threshold-label">B &mdash; Validate</div>
+      <div class="threshold-desc">Creuser les hypotheses</div>
+    </div>
+    <div class="threshold-card t-c">
+      <div class="threshold-range">45 - 59</div>
+      <div class="threshold-label">C &mdash; Watchlist</div>
+      <div class="threshold-desc">Surveiller, pas d'action</div>
+    </div>
+    <div class="threshold-card t-d">
+      <div class="threshold-range">0 - 44</div>
+      <div class="threshold-label">D &mdash; Kill</div>
+      <div class="threshold-desc">Archiver et oublier</div>
+    </div>
+  </div>
+
+  <!-- Opportunity Table -->
+  <div class="table-card">
+    <div class="table-header-bar">
+      <h3>Opportunites actives</h3>
+      <div class="table-filter">
+        <button class="filter-btn active" onclick="filterTable('all')">Toutes</button>
+        <button class="filter-btn" onclick="filterTable('A')">A</button>
+        <button class="filter-btn" onclick="filterTable('B')">B</button>
+        <button class="filter-btn" onclick="filterTable('C')">C</button>
+        <button class="filter-btn" onclick="filterTable('D')">D</button>
+      </div>
+    </div>
+    <table id="opTable">
+      <thead>
+        <tr>
+          <th>Idee</th>
+          <th>Categorie</th>
+          <th>Segment</th>
+          <th>Score</th>
+          <th>Decision</th>
+          <th>Statut</th>
+          <th>Prochaine action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-decision="A">
+          <td class="idea-name">Exercice Builder</td>
+          <td>Sante</td>
+          <td>Kines / Coachs sportifs</td>
+          <td><span class="score-pill score-high">81</span></td>
+          <td><span class="tag tag-a">A &mdash; Build</span></td>
+          <td><span class="tag tag-validation">Validation</span></td>
+          <td>Interviews segment (5 kines)</td>
+        </tr>
+        <tr data-decision="A">
+          <td class="idea-name">PatientFlow</td>
+          <td>Sante</td>
+          <td>Praticiens paramedicaux (osteos, naturo, sophro)</td>
+          <td><span class="score-pill score-high">77</span></td>
+          <td><span class="tag tag-a">A &mdash; Build</span></td>
+          <td><span class="tag tag-scoring">Scoring</span></td>
+          <td>Interviews 5 praticiens</td>
+        </tr>
+        <tr data-decision="A">
+          <td class="idea-name">Devis Express</td>
+          <td>Metier</td>
+          <td>Artisans independants FR</td>
+          <td><span class="score-pill score-high">75</span></td>
+          <td><span class="tag tag-a">A &mdash; Build</span></td>
+          <td><span class="tag tag-scoring">Scoring</span></td>
+          <td>Analyser avis concurrents + landing page</td>
+        </tr>
+        <tr data-decision="B">
+          <td class="idea-name">Agenda Kine</td>
+          <td>Sante</td>
+          <td>Kines independants FR</td>
+          <td><span class="score-pill score-mid">72</span></td>
+          <td><span class="tag tag-b">B &mdash; Validate</span></td>
+          <td><span class="tag tag-scoring">Scoring</span></td>
+          <td>Recherche concurrentielle</td>
+        </tr>
+        <tr data-decision="B">
+          <td class="idea-name">Invoice AI</td>
+          <td>Finance</td>
+          <td>Freelances EU</td>
+          <td><span class="score-pill score-mid">66</span></td>
+          <td><span class="tag tag-b">B &mdash; Validate</span></td>
+          <td><span class="tag tag-scoring">Scoring</span></td>
+          <td>Landing page test</td>
+        </tr>
+        <tr data-decision="B">
+          <td class="idea-name">FormAI</td>
+          <td>Finance</td>
+          <td>Auto-entrepreneurs FR</td>
+          <td><span class="score-pill score-mid">66</span></td>
+          <td><span class="tag tag-b">B &mdash; Validate</span></td>
+          <td><span class="tag tag-scoring">Scoring</span></td>
+          <td>Landing page + test promesse</td>
+        </tr>
+        <tr data-decision="B">
+          <td class="idea-name">Studio Booking</td>
+          <td>Metier</td>
+          <td>Studios photo independants</td>
+          <td><span class="score-pill score-mid">64</span></td>
+          <td><span class="tag tag-b">B &mdash; Validate</span></td>
+          <td><span class="tag tag-scoring">Scoring</span></td>
+          <td>Analyse avis concurrents</td>
+        </tr>
+        <tr data-decision="C">
+          <td class="idea-name">Meal Planner Pro</td>
+          <td>Sante</td>
+          <td>Familles FR</td>
+          <td><span class="score-pill score-low">59</span></td>
+          <td><span class="tag tag-c">C &mdash; Watch</span></td>
+          <td><span class="tag tag-backlog">Backlog</span></td>
+          <td>Surveiller tendances</td>
+        </tr>
+        <tr data-decision="C">
+          <td class="idea-name">Sub Tracker</td>
+          <td>Finance</td>
+          <td>Particuliers / Freelances / Familles</td>
+          <td><span class="score-pill score-low">57</span></td>
+          <td><span class="tag tag-c">C &mdash; Watch</span></td>
+          <td><span class="tag tag-backlog">Backlog</span></td>
+          <td>Chercher un sous-segment</td>
+        </tr>
+        <tr data-decision="C">
+          <td class="idea-name">Habit Tracker IA</td>
+          <td>Productivite</td>
+          <td>Early adopters tech</td>
+          <td><span class="score-pill score-low">57</span></td>
+          <td><span class="tag tag-c">C &mdash; Watch</span></td>
+          <td><span class="tag tag-backlog">Backlog</span></td>
+          <td>Surveiller</td>
+        </tr>
+        <tr data-decision="D">
+          <td class="idea-name">Social Planner</td>
+          <td>Marketing</td>
+          <td>Micro-influenceurs FR</td>
+          <td><span class="score-pill score-dead">41</span></td>
+          <td><span class="tag tag-d">D &mdash; Kill</span></td>
+          <td><span class="tag tag-killed">Killed</span></td>
+          <td>Archive - marche sature</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bottom Grid -->
+  <div class="bottom-grid">
+
+    <!-- Weekly Progress -->
+    <div class="weekly-card">
+      <div class="section-title">Workflow hebdomadaire</div>
+
+      <div class="week-day">
+        <div class="day-label">LUN</div>
+        <div class="day-name">Collecte</div>
+        <div class="day-tasks">6/6 taches</div>
+        <div class="day-progress">
+          <div class="day-progress-fill" style="width:100%;background:var(--accent-green)"></div>
+        </div>
+      </div>
+      <div class="week-day">
+        <div class="day-label">MAR</div>
+        <div class="day-name">Formulation</div>
+        <div class="day-tasks">4/5 taches</div>
+        <div class="day-progress">
+          <div class="day-progress-fill" style="width:80%;background:var(--accent-green)"></div>
+        </div>
+      </div>
+      <div class="week-day">
+        <div class="day-label">MER</div>
+        <div class="day-name">Scoring</div>
+        <div class="day-tasks">2/4 taches</div>
+        <div class="day-progress">
+          <div class="day-progress-fill" style="width:50%;background:var(--accent-amber)"></div>
+        </div>
+      </div>
+      <div class="week-day">
+        <div class="day-label today">JEU</div>
+        <div class="day-name">Validation</div>
+        <div class="day-tasks">0/4 taches</div>
+        <div class="day-progress">
+          <div class="day-progress-fill" style="width:0%;background:var(--accent-blue)"></div>
+        </div>
+      </div>
+      <div class="week-day">
+        <div class="day-label">VEN</div>
+        <div class="day-name">Decision</div>
+        <div class="day-tasks">0/3 taches</div>
+        <div class="day-progress">
+          <div class="day-progress-fill" style="width:0%;background:var(--accent-blue)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Go / No-Go Checklist -->
+    <div class="gonogo-card">
+      <div class="section-title">Checklist Go / No-Go</div>
+      <div class="section-title" style="font-size:12px;letter-spacing:0;text-transform:none;color:var(--text-secondary);margin-bottom:16px">
+        Idee en cours : <strong style="color:var(--accent-cyan)">Exercice Builder</strong>
+      </div>
+
+      <div class="condition-row" onclick="toggleCheck(this)">
+        <div class="condition-check checked">&#10003;</div>
+        <div class="condition-text checked">Probleme douloureux</div>
+      </div>
+      <div class="condition-row" onclick="toggleCheck(this)">
+        <div class="condition-check checked">&#10003;</div>
+        <div class="condition-text checked">Segment precis</div>
+      </div>
+      <div class="condition-row" onclick="toggleCheck(this)">
+        <div class="condition-check checked">&#10003;</div>
+        <div class="condition-text checked">Paiement plausible</div>
+      </div>
+      <div class="condition-row" onclick="toggleCheck(this)">
+        <div class="condition-check checked">&#10003;</div>
+        <div class="condition-text checked">MVP faisable en &lt;6 semaines</div>
+      </div>
+      <div class="condition-row" onclick="toggleCheck(this)">
+        <div class="condition-check unchecked">&#10003;</div>
+        <div class="condition-text">Canal d'acces realiste</div>
+      </div>
+
+      <div class="gonogo-verdict verdict-go">4/5 &mdash; GO : cette idee merite un MVP</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section-title">Actions rapides</div>
+  <div class="actions-bar">
+    <div class="action-btn">
+      <div class="action-icon blue">+</div>
+      Nouvelle idee
+    </div>
+    <div class="action-btn">
+      <div class="action-icon green">S</div>
+      Scorer une idee
+    </div>
+    <div class="action-btn">
+      <div class="action-icon amber">W</div>
+      Checklist semaine
+    </div>
+    <div class="action-btn">
+      <div class="action-icon purple">A</div>
+      Analyser des avis
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>MOAT</span> App Discovery System &mdash; Flutter App Selection Pipeline &mdash; v1.0
+  </div>
+</div>
+
+<script>
+  function filterTable(decision) {
+    const rows = document.querySelectorAll('#opTable tbody tr');
+    const btns = document.querySelectorAll('.filter-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    rows.forEach(row => {
+      if (decision === 'all' || row.dataset.decision === decision) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  function toggleCheck(row) {
+    const check = row.querySelector('.condition-check');
+    const text = row.querySelector('.condition-text');
+    if (check.classList.contains('checked')) {
+      check.classList.remove('checked');
+      check.classList.add('unchecked');
+      text.classList.remove('checked');
+    } else {
+      check.classList.remove('unchecked');
+      check.classList.add('checked');
+      text.classList.add('checked');
+    }
+    updateVerdict();
+  }
+
+  function updateVerdict() {
+    const checks = document.querySelectorAll('.condition-check.checked').length;
+    const verdict = document.querySelector('.gonogo-verdict');
+    verdict.className = 'gonogo-verdict';
+    if (checks >= 4) {
+      verdict.textContent = checks + '/5 — GO : cette idee merite un MVP';
+      verdict.classList.add('verdict-go');
+    } else if (checks >= 3) {
+      verdict.textContent = checks + '/5 — VALIDER : creuser avant de builder';
+      verdict.classList.add('verdict-validate');
+    } else {
+      verdict.textContent = checks + '/5 — KILL / WATCHLIST : pas assez de signal';
+      verdict.classList.add('verdict-kill');
+    }
+  }
+</script>
+
+</body>
+</html>
