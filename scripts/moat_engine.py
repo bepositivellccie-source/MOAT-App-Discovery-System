@@ -153,6 +153,16 @@ STRUCTURAL_DRIVER_BONUS = 8  # +8 points if there's a legal/regulatory driver
 # The theoretical SOM is multiplied by this factor
 SOLO_DEV_SOM_FACTOR = 0.07  # 7% of theoretical SOM = realistic solo dev Y1 (Sonnet recommande 5-10%, on prend le milieu)
 
+# Conditional Score — when a score depends on an external condition
+# If condition is not met, the score falls to the penalty value
+# Example: TOCLibre = 80 with psy partner, 60 without
+CONDITIONAL_PENALTIES = {
+    'partner_medical': -15,     # Needs medical/psy partner validation
+    'partner_content': -10,     # Needs content expert (not medical)
+    'regulatory_risk': -12,     # RGPD, medical device, legal risk
+    'market_education': -10,    # Behavior doesn't exist yet, needs education
+}
+
 
 def data_backed_score(market_data, review_data, tam_data, angle_strength=3,
                       trend_direction='STABLE', structural_driver=False):
@@ -319,6 +329,7 @@ def data_backed_score(market_data, review_data, tam_data, angle_strength=3,
 def run_engine(idea_name, query=None, competitors=None, segment_size=None,
                arpu=None, angle=None, angle_strength=3,
                trend_direction='STABLE', structural_driver=False,
+               condition=None, condition_met=False,
                lang='fr', country='fr'):
     """Run the full MOAT engine pipeline."""
 
@@ -600,8 +611,48 @@ def run_engine(idea_name, query=None, competitors=None, segment_size=None,
     # V3 data
     v3 = scoring.get('raw_scores', {}).get('_v3', {})
 
+    # V3: Conditional score
+    score_with_condition = scoring['total']
+    score_without_condition = scoring['total']
+    condition_label = ''
+
+    if condition and condition in CONDITIONAL_PENALTIES:
+        penalty = CONDITIONAL_PENALTIES[condition]
+        condition_labels = {
+            'partner_medical': 'Partenaire medical/psy requis',
+            'partner_content': 'Expert contenu requis',
+            'regulatory_risk': 'Risque reglementaire a evaluer',
+            'market_education': 'Education marche necessaire',
+        }
+        condition_label = condition_labels.get(condition, condition)
+
+        if condition_met:
+            score_with_condition = scoring['total']  # Score maintenu
+            score_without_condition = max(scoring['total'] + penalty, 0)
+        else:
+            score_without_condition = max(scoring['total'] + penalty, 0)
+            score_with_condition = scoring['total']  # Score potentiel si condition remplie
+
     print(f"\n  {'*'*50}")
-    print(f"  SCORE MOAT     : {scoring['total']}/100 — {scoring['decision']}")
+    if condition and not condition_met:
+        print(f"  SCORE MOAT     : {score_without_condition}/100 (CONDITIONNEL)")
+        print(f"  SCORE SI OK    : {score_with_condition}/100 — si {condition_label}")
+        # Recalculate decision based on conditional score
+        if score_without_condition >= 75:
+            cond_decision = "A -- Build now (conditionnel)"
+        elif score_without_condition >= 60:
+            cond_decision = "B -- Validate (conditionnel)"
+        else:
+            cond_decision = "C -- Watchlist (bloque par condition)"
+        print(f"  DECISION       : {cond_decision}")
+        print(f"  CONDITION      : {condition_label}")
+        print(f"  PENALITE       : {CONDITIONAL_PENALTIES[condition]} pts si non remplie")
+    elif condition and condition_met:
+        print(f"  SCORE MOAT     : {scoring['total']}/100 — {scoring['decision']}")
+        print(f"  CONDITION      : {condition_label} -- REMPLIE")
+    else:
+        print(f"  SCORE MOAT     : {scoring['total']}/100 — {scoring['decision']}")
+
     if v3.get('total_before_adjustments') and v3['total_before_adjustments'] != scoring['total']:
         print(f"  SCORE BASE     : {v3['total_before_adjustments']}/100 (avant ajustements V3)")
     if v3.get('trend_direction') and v3['trend_direction'] != 'STABLE':
@@ -660,6 +711,9 @@ def main():
                        help="Direction Google Trends (EXPLOSIVE/UP/STABLE/DOWN)")
     parser.add_argument("--structural-driver", action="store_true",
                        help="Flag si une loi/regulation cree la demande")
+    parser.add_argument("--condition", help="Condition bloquante (partner_medical, partner_content, regulatory_risk, market_education)")
+    parser.add_argument("--condition-met", action="store_true",
+                       help="La condition est remplie (partenaire trouve, etc.)")
     parser.add_argument("--lang", default="fr", help="Langue (default: fr)")
     parser.add_argument("--country", default="fr", help="Pays (default: fr)")
     args = parser.parse_args()
@@ -674,6 +728,8 @@ def main():
         angle_strength=args.angle_strength,
         trend_direction=args.trend,
         structural_driver=args.structural_driver,
+        condition=args.condition,
+        condition_met=args.condition_met,
         lang=args.lang,
         country=args.country,
     )
