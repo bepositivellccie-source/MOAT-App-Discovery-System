@@ -134,10 +134,31 @@ SCORING_WEIGHTS = {
     'retention':         1,  # x1 = max 5
 }
 
+# ── V3 UPGRADES ──
 
-def data_backed_score(market_data, review_data, tam_data, angle_strength=3):
+# Trend Multiplier — adjusts final score based on Google Trends direction
+# Applied AFTER base scoring, as a multiplier on the total
+TREND_MULTIPLIERS = {
+    'EXPLOSIVE': 1.15,   # Trend en explosion (ex: time tracking freelance +570%)
+    'UP': 1.08,          # Tendance montante (ex: anger management +22%)
+    'STABLE': 1.00,      # Plateau (ex: highly sensitive person)
+    'DOWN': 0.90,        # En decline (ex: hypersensible -33%)
+}
+
+# Structural Driver Bonus — when demand is created by law/regulation
+# Added as flat bonus points to the final score
+STRUCTURAL_DRIVER_BONUS = 8  # +8 points if there's a legal/regulatory driver
+
+# Solo Dev Reality Factor — adjusts SOM to realistic Y1 for a solo developer
+# The theoretical SOM is multiplied by this factor
+SOLO_DEV_SOM_FACTOR = 0.07  # 7% of theoretical SOM = realistic solo dev Y1 (Sonnet recommande 5-10%, on prend le milieu)
+
+
+def data_backed_score(market_data, review_data, tam_data, angle_strength=3,
+                      trend_direction='STABLE', structural_driver=False):
     """
     Generate a MOAT score backed by real data instead of gut feeling.
+    V3: includes trend multiplier + structural driver bonus.
 
     Returns scores 1-5 for each criterion based on data signals.
     """
@@ -250,6 +271,32 @@ def data_backed_score(market_data, review_data, tam_data, angle_strength=3):
             'max': weight * 5,
         })
 
+    # V3: Apply trend multiplier
+    trend_mult = TREND_MULTIPLIERS.get(trend_direction, 1.0)
+    total_before_trend = total
+    total = round(total * trend_mult)
+
+    # V3: Apply structural driver bonus
+    structural_bonus = 0
+    if structural_driver:
+        structural_bonus = STRUCTURAL_DRIVER_BONUS
+        total = min(total + structural_bonus, 100)
+
+    # V3: Calculate Solo Dev SOM
+    som_theoretical = tam_data.get('som', 0)
+    som_solo_dev = round(som_theoretical * SOLO_DEV_SOM_FACTOR)
+
+    # Store V3 data
+    scores['_v3'] = {
+        'trend_direction': trend_direction,
+        'trend_multiplier': trend_mult,
+        'structural_driver': structural_driver,
+        'structural_bonus': structural_bonus,
+        'total_before_adjustments': total_before_trend,
+        'som_theoretical': som_theoretical,
+        'som_solo_dev_y1': som_solo_dev,
+    }
+
     # Decision
     if total >= 75:
         decision = "A -- Build now"
@@ -270,7 +317,9 @@ def data_backed_score(market_data, review_data, tam_data, angle_strength=3):
 
 
 def run_engine(idea_name, query=None, competitors=None, segment_size=None,
-               arpu=None, angle=None, angle_strength=3, lang='fr', country='fr'):
+               arpu=None, angle=None, angle_strength=3,
+               trend_direction='STABLE', structural_driver=False,
+               lang='fr', country='fr'):
     """Run the full MOAT engine pipeline."""
 
     report = {
@@ -448,7 +497,9 @@ def run_engine(idea_name, query=None, competitors=None, segment_size=None,
     print(f"  PHASE 4: MOAT Scoring (Data-Backed)")
     print(f"{'='*60}")
 
-    scoring = data_backed_score(market_data, review_data, tam_data, angle_strength)
+    scoring = data_backed_score(market_data, review_data, tam_data, angle_strength,
+                                trend_direction=trend_direction,
+                                structural_driver=structural_driver)
 
     print(f"\n  SCORING DETAILS:")
     for d in scoring['details']:
@@ -546,11 +597,22 @@ def run_engine(idea_name, query=None, competitors=None, segment_size=None,
     confidence = len(signals) * 20
     confidence = min(confidence, 100)
 
+    # V3 data
+    v3 = scoring.get('raw_scores', {}).get('_v3', {})
+
     print(f"\n  {'*'*50}")
     print(f"  SCORE MOAT     : {scoring['total']}/100 — {scoring['decision']}")
+    if v3.get('total_before_adjustments') and v3['total_before_adjustments'] != scoring['total']:
+        print(f"  SCORE BASE     : {v3['total_before_adjustments']}/100 (avant ajustements V3)")
+    if v3.get('trend_direction') and v3['trend_direction'] != 'STABLE':
+        print(f"  TREND          : {v3['trend_direction']} (x{v3['trend_multiplier']})")
+    if v3.get('structural_driver'):
+        print(f"  DRIVER         : LOI/REGULATION (+{v3['structural_bonus']} pts)")
     print(f"  CONFIDENCE     : {confidence}% (base sur {len(signals)} signaux)")
     if tam_data.get('som'):
-        print(f"  REVENUE EST    : {tam_data['som']/12:,.0f} EUR/mois")
+        print(f"  SOM THEORIQUE  : {tam_data['som']/12:,.0f} EUR/mois")
+        if v3.get('som_solo_dev_y1'):
+            print(f"  SOM SOLO DEV Y1: {v3['som_solo_dev_y1']/12:,.0f} EUR/mois (realiste)")
     print(f"  {'*'*50}")
 
     report['verdict'] = {
@@ -594,6 +656,10 @@ def main():
     parser.add_argument("--arpu", "-a", type=float, help="Revenue moyen par user/an (EUR)")
     parser.add_argument("--angle", help="Description de la differenciation")
     parser.add_argument("--angle-strength", type=int, default=3, help="Force de la differenciation (1-5)")
+    parser.add_argument("--trend", choices=['EXPLOSIVE', 'UP', 'STABLE', 'DOWN'], default='STABLE',
+                       help="Direction Google Trends (EXPLOSIVE/UP/STABLE/DOWN)")
+    parser.add_argument("--structural-driver", action="store_true",
+                       help="Flag si une loi/regulation cree la demande")
     parser.add_argument("--lang", default="fr", help="Langue (default: fr)")
     parser.add_argument("--country", default="fr", help="Pays (default: fr)")
     args = parser.parse_args()
@@ -606,6 +672,8 @@ def main():
         arpu=args.arpu,
         angle=args.angle,
         angle_strength=args.angle_strength,
+        trend_direction=args.trend,
+        structural_driver=args.structural_driver,
         lang=args.lang,
         country=args.country,
     )
