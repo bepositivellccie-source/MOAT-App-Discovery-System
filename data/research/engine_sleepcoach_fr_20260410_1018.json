@@ -1,0 +1,191 @@
+{
+  "idea": "SleepCoach FR",
+  "date": "2026-04-10T10:18:39.986117",
+  "modules_available": {
+    "niche_hunter": false,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 0,
+      "avg_score": 0,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "UNKNOWN"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 42.7,
+      "pricing_complaint_ratio": 60.3,
+      "total_reviews_analyzed": 450,
+      "top_frustrations": [
+        [
+          "gratuit",
+          35
+        ],
+        [
+          "payant",
+          31
+        ],
+        [
+          "abonnement",
+          25
+        ],
+        [
+          "cher",
+          15
+        ],
+        [
+          "payante",
+          14
+        ],
+        [
+          "premium",
+          14
+        ],
+        [
+          "impossible",
+          12
+        ],
+        [
+          "ne fonctionne",
+          10
+        ],
+        [
+          "fonctionne pas",
+          8
+        ],
+        [
+          "bug",
+          7
+        ],
+        [
+          "inutile",
+          6
+        ],
+        [
+          "nul",
+          6
+        ],
+        [
+          "arnaque",
+          6
+        ],
+        [
+          "trop cher",
+          4
+        ],
+        [
+          "lent",
+          3
+        ]
+      ]
+    },
+    "market_sizing": {
+      "segment_size": 20000000,
+      "arpu": 60.0,
+      "tam": 1200000000.0,
+      "sam": 180000000.0,
+      "som": 3600000.0,
+      "monthly_revenue_est": 300000,
+      "capture_rate": 0.02,
+      "verdict": "EXCELLENT — potentiel 10K+ MRR"
+    },
+    "scoring": {
+      "total": 82,
+      "max": 100,
+      "decision": "A -- Build now",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 4,
+          "weight": 4,
+          "weighted": 16,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 5,
+          "weight": 1,
+          "weighted": 5,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 4,
+        "usage_frequency": 4,
+        "willingness_to_pay": 4,
+        "market_access": 5,
+        "competition_gap": 4,
+        "differentiation": 5,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 5
+      }
+    }
+  },
+  "verdict": {
+    "score": 82,
+    "decision": "A -- Build now",
+    "confidence": 80,
+    "signals": [
+      "[+] 42.7% avis negatifs = frustration massive",
+      "[+] 60.3% plaintes pricing = volonte de payer",
+      "[+] SOM = 300,000 EUR/mois potentiel",
+      "[+] Score MOAT 82/100 = Zone A"
+    ],
+    "risks": [
+      "[-] Marche petit ou naissant (peu d'installs)"
+    ]
+  }
+}
