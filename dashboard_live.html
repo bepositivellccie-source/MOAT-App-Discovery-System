@@ -879,6 +879,31 @@ function openPanel(ideaName) {
   var bs = getBuildSheet(rec.idea);
   var html = '';
 
+  /* --- BODYGUARD CHECK --- */
+  var bodyguardKills = [];
+  if (rec.pain && rec.pain < 3) bodyguardKills.push('Pas de douleur reelle — le probleme est un desir, pas une souffrance');
+  if (rec.frequency && rec.frequency < 2) bodyguardKills.push('Usage trop rare — pas de recurrence = pas de retention');
+  if (rec.willPay && rec.willPay < 2) bodyguardKills.push('Aucun signal de paiement — segment habitue au gratuit');
+  if (rec.score && rec.score < 45) bodyguardKills.push('Score MOAT insuffisant — trop de faiblesses cumulees');
+
+  if (bodyguardKills.length > 0) {
+    html += '<div style="padding:16px;background:var(--accent-red-dim);border:1px solid rgba(239,68,68,0.3);border-radius:10px;margin-bottom:16px">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
+        '<div style="font-size:16px">X</div>' +
+        '<div style="font-size:13px;font-weight:700;color:var(--accent-red);text-transform:uppercase;letter-spacing:1px">Bodyguard — Idee eliminee</div>' +
+      '</div>';
+    bodyguardKills.forEach(function(k) {
+      html += '<div style="font-size:12px;color:var(--accent-red);padding:4px 0;border-top:1px solid rgba(239,68,68,0.15)">KILL : ' + k + '</div>';
+    });
+    html += '<div style="font-size:11px;color:var(--text-muted);margin-top:8px;font-style:italic">Ne pas investir de temps supplementaire sur cette idee.</div>';
+    html += '</div>';
+  } else if (rec.score >= 45 && rec.pain >= 3) {
+    html += '<div style="padding:10px 14px;background:var(--accent-green-dim);border:1px solid rgba(52,211,153,0.2);border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px">' +
+      '<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-green)"></div>' +
+      '<span style="font-size:11px;font-weight:600;color:var(--accent-green);text-transform:uppercase;letter-spacing:0.8px">Bodyguard OK — Filtres eliminatoires passes</span>' +
+    '</div>';
+  }
+
   /* --- Score section --- */
   html += '<div class="panel-section">' +
     '<div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:16px">' +

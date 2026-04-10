@@ -61,6 +61,67 @@ except ImportError:
     modules['playstore'] = False
 
 
+# ── BODYGUARD — Kill criteria (abort immediately) ──
+# If ANY of these triggers, the idea is dead. No further analysis.
+BODYGUARD_RULES = [
+    {
+        'id': 'NO_PAIN',
+        'label': 'Pas de douleur reelle',
+        'description': 'Le probleme est un desir ou un confort, pas une souffrance. Les gens ne cherchent pas activement une solution.',
+        'check': lambda scores: scores.get('pain_intensity', 0) < 3,
+    },
+    {
+        'id': 'NO_FREQUENCY',
+        'label': 'Usage trop rare',
+        'description': 'Le besoin revient moins d\'une fois par mois. Pas de recurrence = pas de retention = pas d\'abonnement.',
+        'check': lambda scores: scores.get('usage_frequency', 0) < 2,
+    },
+    {
+        'id': 'NO_MONEY',
+        'label': 'Aucun signal de paiement',
+        'description': 'Le segment est habitue au gratuit, aucun concurrent ne monetise, personne ne paie pour ce type de solution.',
+        'check': lambda scores: scores.get('willingness_to_pay', 0) < 2,
+    },
+    {
+        'id': 'MARKET_DOMINATED',
+        'label': 'Marche domine et satisfait',
+        'description': 'Les concurrents ont >4.5/5 de score et <15% d\'avis negatifs. Les gens sont contents. Pas de gap.',
+        'check': lambda market: market.get('avg_score', 0) >= 4.5 and market.get('pct_below_4', 100) < 10,
+    },
+    {
+        'id': 'SCORE_TOO_LOW',
+        'label': 'Score MOAT insuffisant',
+        'description': 'Score total sous 45/100. Trop de faiblesses cumulees, pas viable.',
+        'check': lambda scores: scores.get('total', 100) < 45,
+    },
+]
+
+
+def bodyguard_check(scores, market_data=None):
+    """
+    Run bodyguard kill checks. Returns (passed, kills).
+    If kills is not empty, the idea should be aborted.
+    """
+    kills = []
+
+    for rule in BODYGUARD_RULES:
+        try:
+            # Some rules check scores, some check market data
+            if rule['id'] == 'MARKET_DOMINATED':
+                if market_data and rule['check'](market_data):
+                    kills.append(rule)
+            elif rule['id'] == 'SCORE_TOO_LOW':
+                if rule['check'](scores):
+                    kills.append(rule)
+            else:
+                if rule['check'](scores):
+                    kills.append(rule)
+        except:
+            pass
+
+    return len(kills) == 0, kills
+
+
 SCORING_WEIGHTS = {
     'pain_intensity':    4,  # x4 = max 20
     'usage_frequency':   3,  # x3 = max 15
@@ -399,6 +460,50 @@ def run_engine(idea_name, query=None, competitors=None, segment_size=None,
     print(f"  {'DECISION':25s}       {scoring['decision']}")
 
     report['phases']['scoring'] = scoring
+
+    # ── PHASE 4b: BODYGUARD CHECK ──
+    print(f"\n{'='*60}")
+    print(f"  BODYGUARD — Filtres eliminatoires")
+    print(f"{'='*60}")
+
+    bg_passed, bg_kills = bodyguard_check(scoring.get('raw_scores', {}), market_data)
+
+    if bg_kills:
+        print(f"\n  !! IDEE ELIMINEE — {len(bg_kills)} critere(s) eliminatoire(s) !!")
+        for kill in bg_kills:
+            print(f"  [KILL] {kill['label']}")
+            print(f"         {kill['description']}")
+
+        print(f"\n  {'X'*50}")
+        print(f"  VERDICT: ABORT — Cette idee ne passe pas le bodyguard.")
+        print(f"  Ne pas investir de temps supplementaire.")
+        print(f"  {'X'*50}")
+
+        report['verdict'] = {
+            'score': scoring['total'],
+            'decision': 'ABORT',
+            'bodyguard_killed': True,
+            'kill_reasons': [k['label'] for k in bg_kills],
+        }
+
+        # Save report even if killed
+        output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'research')
+        os.makedirs(output_dir, exist_ok=True)
+        slug = re.sub(r'[^\w]', '_', idea_name.lower())
+        filepath = os.path.join(output_dir, f"engine_{slug}_{datetime.now():%Y%m%d_%H%M}.json")
+        def clean(obj):
+            try:
+                json.dumps(obj)
+                return obj
+            except (TypeError, ValueError):
+                return str(obj)
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=2, default=clean)
+        print(f"\n  Rapport: {filepath}")
+        print(f"{'#'*70}")
+        return report
+    else:
+        print(f"\n  [OK] Tous les filtres passes. Idee viable.")
 
     # ── PHASE 5: Final Verdict ──
     print(f"\n{'#'*70}")
