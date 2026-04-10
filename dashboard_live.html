@@ -408,7 +408,7 @@ let refreshInterval;
 /* ==================== BUILD SHEETS DATA ==================== */
 const BUILD_SHEETS = {
   'SleepCoach FR': {
-    score: 90,
+    score: 90, verified: true, engineScore: 82,
     pitch: [
       'Un Francais sur trois dort mal. C\'est 20 millions de personnes qui cherchent une solution, souvent la nuit, souvent en urgence. La plupart finissent sur des apps qui mesurent le probleme sans le resoudre.',
       'Le traitement de reference contre l\'insomnie, c\'est la CBT-I, la therapie cognitive et comportementale. C\'est recommande par la Haute Autorite de Sante, prouve sur 75 a 80% des patients. Et pourtant, aucune app ne le propose en francais. Pas une seule.',
@@ -471,7 +471,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 5, total: 5 },
   },
   'CoachCRM': {
-    score: 79,
+    score: 79, verified: true, engineScore: 70,
     pitch: [
       'En France, 50 000 coachs sportifs et praticiens bien-etre gerent leur activite sur WhatsApp, Google Sheets et des bouts de Notion. Ils envoient des programmes par photo, suivent les paiements dans un tableur, et perdent des clients faute de relance.',
       'On a regarde ce qui existe. Strong, Fitbod, Hevy. 52% d\'avis negatifs sur Fitbod. Mais surtout, ces apps sont des trackers d\'exercices. Elles aident le sportif a compter ses repetitions. Aucune n\'aide le coach a gerer son business.',
@@ -522,7 +522,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 4, total: 5 },
   },
   'Exercice Builder': {
-    score: 81,
+    score: 81, verified: false, engineScore: null,
     pitch: [
       'Chaque semaine, des milliers de kines et de coachs sportifs passent 2 heures a creer des programmes d\'exercices pour leurs patients. Le process : prendre des photos, les coller dans un Word ou un PDF, envoyer par WhatsApp, et prier pour que le patient retrouve le bon fichier.',
       'Le probleme n\'est pas le manque de competences du praticien. C\'est l\'absence totale d\'outil adapte. Il n\'existe aucune app mobile francophone qui permette de construire un programme d\'exercices, de l\'envoyer au patient, et de suivre s\'il a ete fait.',
@@ -568,7 +568,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 4, total: 5 },
   },
   'NeuroCalm': {
-    score: 94,
+    score: 80, verified: true, engineScore: 76,
     bri: 87.5,
     pitch: [
       'Le stress chronique touche 1 adulte sur 4 en France. Les gens ne cherchent plus juste a mediter — ils veulent comprendre pourquoi leur corps reste bloque en mode alerte et comment en sortir. La theorie polyvagale de Stephen Porges donne un cadre scientifique a ca.',
@@ -624,7 +624,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 5, total: 5 },
   },
   'Apaise': {
-    score: 78,
+    score: 78, verified: false, engineScore: null,
     bri: 75.5,
     pitch: [
       'En France, 600 000 personnes meurent chaque annee. Derriere chaque deces, une famille entiere est touchee. Le deuil est un processus long, douloureux, et la plupart des gens le traversent seuls.',
@@ -673,7 +673,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 4, total: 5 },
   },
   'RituelZen': {
-    score: 70,
+    score: 70, verified: false, engineScore: null,
     bri: 76.5,
     pitch: [
       'Fabulous a 27 millions d\'installs et 35% d\'avis negatifs. La frustration numero un : l\'abonnement agressif. Dix mentions. Puis "cher" (5x), "arnaque" (4x). Les gens veulent des routines bien-etre mais refusent de se faire plumer.',
@@ -721,7 +721,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 4, total: 5 },
   },
   'DoctAfter': {
-    score: 88,
+    score: 88, verified: true, engineScore: 88,
     bri: 71.0,
     pitch: [
       'Doctolib a 40 millions d\'utilisateurs. Ils prennent rendez-vous. Puis rien. Entre deux consultations, le patient est seul : pas de rappel de traitement, pas de suivi de symptomes, pas d\'historique accessible. Le medecin revoit le patient 3 mois plus tard et repart de zero.',
@@ -1031,7 +1031,7 @@ function renderTable() {
 function renderComparison() {
   const compareData = [
     {
-      name: 'NeuroCalm', score: 94, weeks: 8, hours: 48,
+      name: 'NeuroCalm', score: 80, weeks: 8, hours: 48,
       tam: '~500M EUR', som: '50K/mois', difficulty: 'Moyenne',
       risk: 'Positionnement bien-etre/medical', goNoGo: '5/5',
       color: 'var(--accent-green)', difficultyPct: 45, riskPct: 30,
@@ -1085,6 +1085,23 @@ function openPanel(ideaName) {
 
   var bs = getBuildSheet(rec.idea);
   var html = '';
+
+  /* --- VERIFICATION STATUS --- */
+  if (bs) {
+    if (bs.verified && bs.engineScore) {
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--accent-green-dim);border:1px solid rgba(52,211,153,0.2);border-radius:8px;margin-bottom:12px">' +
+        '<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-green)"></div>' +
+        '<span style="font-size:11px;font-weight:600;color:var(--accent-green);text-transform:uppercase;letter-spacing:0.8px">Score verifie par MOAT Engine</span>' +
+        '<span style="font-family:JetBrains Mono;font-size:11px;color:var(--text-muted);margin-left:auto">Engine: ' + bs.engineScore + '/100</span>' +
+      '</div>';
+    } else {
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--accent-amber-dim);border:1px solid rgba(245,166,35,0.2);border-radius:8px;margin-bottom:12px">' +
+        '<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-amber)"></div>' +
+        '<span style="font-size:11px;font-weight:600;color:var(--accent-amber);text-transform:uppercase;letter-spacing:0.8px">Score estime — non verifie par les donnees</span>' +
+        '<span style="font-family:JetBrains Mono;font-size:10px;color:var(--text-muted);margin-left:auto">Lancer MOAT Engine pour confirmer</span>' +
+      '</div>';
+    }
+  }
 
   /* --- BODYGUARD CHECK --- */
   var bodyguardKills = [];
