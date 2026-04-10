@@ -375,6 +375,7 @@
             <th>Decision</th>
             <th>Statut</th>
             <th>Engine</th>
+            <th>Rang</th>
             <th>Prochaine action</th>
           </tr>
         </thead>
@@ -1076,6 +1077,7 @@ async function fetchRecords() {
     retention: r.fields['Retention'] || 0,
     engineVerified: r.fields['Engine Verified']?.name || r.fields['Engine Verified'] || '',
     moatId: r.fields['ID'] || '',
+    rang: r.fields['Rang']?.name || r.fields['Rang'] || '',
   }));
 }
 
@@ -1147,6 +1149,14 @@ function statusTag(s) {
     'Killed':'Eliminee par le bodyguard ou par decision. Ne pas investir de temps.',
   }[s] || '';
   return '<span class="tag ' + cls + '" title="' + tips + '" style="cursor:help">' + s + '</span>';
+}
+
+function rangTag(rang) {
+  if (rang === 'PEPITE') return '<span class="tag" style="color:#f5a623;background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);font-weight:700;cursor:help" title="Engine 80+ verifie + territoire vierge FR. Meilleure opportunite du pipeline.">PEPITE</span>';
+  if (rang === 'Prometteuse') return '<span class="tag" style="color:var(--accent-green);background:var(--accent-green-dim);cursor:help" title="Engine 75-79. Signal fort mais a confirmer.">Prometteuse</span>';
+  if (rang === 'A explorer') return '<span class="tag" style="color:var(--accent-blue);background:var(--accent-blue-dim);cursor:help" title="Engine 60-74. Besoin de plus de validation.">A explorer</span>';
+  if (rang === 'Faible') return '<span class="tag tag-backlog" title="Engine <60. Pas prioritaire." style="cursor:help">Faible</span>';
+  return '<span class="tag tag-backlog">--</span>';
 }
 
 function verifiedTag(v) {
@@ -1301,6 +1311,7 @@ function renderTable() {
       '<td>' + decisionTag(r.decision) + '</td>' +
       '<td>' + statusTag(r.status) + '</td>' +
       '<td>' + verifiedTag(r.engineVerified) + '</td>' +
+      '<td>' + rangTag(r.rang) + '</td>' +
       '<td>' + r.nextAction + '</td>' +
     '</tr>';
   });
