@@ -1,0 +1,190 @@
+{
+  "idea": "ZenColere",
+  "date": "2026-04-10T15:20:05.148595",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 0,
+      "avg_score": 0,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "UNKNOWN"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 27.3,
+      "pricing_complaint_ratio": 60.7,
+      "total_reviews_analyzed": 187,
+      "top_frustrations": [
+        [
+          "gratuit",
+          13
+        ],
+        [
+          "payant",
+          12
+        ],
+        [
+          "payante",
+          8
+        ],
+        [
+          "abonnement",
+          8
+        ],
+        [
+          "nul",
+          6
+        ],
+        [
+          "cher",
+          3
+        ],
+        [
+          "ne fonctionne",
+          2
+        ],
+        [
+          "bloque",
+          2
+        ],
+        [
+          "fonctionne pas",
+          1
+        ],
+        [
+          "inutile",
+          1
+        ],
+        [
+          "arnaque",
+          1
+        ],
+        [
+          "desinstalle",
+          1
+        ],
+        [
+          "impossible",
+          1
+        ],
+        [
+          "lent",
+          1
+        ],
+        [
+          "trop cher",
+          1
+        ]
+      ]
+    },
+    "market_sizing": {
+      "segment_size": 5000000,
+      "arpu": 48.0,
+      "tam": 240000000.0,
+      "sam": 36000000.0,
+      "som": 720000.0,
+      "monthly_revenue_est": 60000,
+      "capture_rate": 0.02,
+      "verdict": "EXCELLENT — potentiel 10K+ MRR"
+    },
+    "scoring": {
+      "total": 76,
+      "max": 100,
+      "decision": "A -- Build now",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 3,
+          "weight": 4,
+          "weighted": 12,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 5,
+          "weight": 1,
+          "weighted": 5,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 3,
+        "usage_frequency": 4,
+        "willingness_to_pay": 4,
+        "market_access": 5,
+        "competition_gap": 3,
+        "differentiation": 5,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 5
+      }
+    }
+  },
+  "verdict": {
+    "score": 76,
+    "decision": "A -- Build now",
+    "confidence": 60,
+    "signals": [
+      "[+] 60.7% plaintes pricing = volonte de payer",
+      "[+] SOM = 60,000 EUR/mois potentiel",
+      "[+] Score MOAT 76/100 = Zone A"
+    ],
+    "risks": [
+      "[-] Marche petit ou naissant (peu d'installs)"
+    ]
+  }
+}
