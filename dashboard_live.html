@@ -122,7 +122,8 @@
   th { text-align:left;padding:10px 20px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle); }
   td { padding:14px 20px;font-size:13px;color:var(--text-secondary);border-bottom:1px solid var(--border-subtle); }
   tr:last-child td { border-bottom:none; }
-  tr:hover td { background:var(--bg-card-hover); }
+  tr.clickable-row { cursor:pointer;transition:background 0.15s; }
+  tr.clickable-row:hover td { background:var(--bg-card-hover); }
   .name { font-weight:600;color:var(--text-primary); }
   .score { font-family:'JetBrains Mono';font-weight:700; }
   .tag { display:inline-block;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:3px 8px;border-radius:4px; }
@@ -131,13 +132,16 @@
   .tag-backlog{color:var(--text-muted);background:var(--bg-elevated)} .tag-scoring{color:var(--accent-purple);background:var(--accent-purple-dim)}
   .tag-validation{color:var(--accent-cyan);background:var(--accent-cyan-dim)} .tag-ready{color:var(--accent-green);background:var(--accent-green-dim)}
   .tag-killed{color:var(--accent-red);background:var(--accent-red-dim)}
+  .has-build-sheet { position:relative; }
+  .has-build-sheet .name::after { content:'BUILD SHEET';font-size:8px;font-weight:700;margin-left:8px;padding:2px 6px;border-radius:3px;background:var(--accent-purple-dim);color:var(--accent-purple);vertical-align:middle;letter-spacing:0.5px; }
 
   /* Score colors */
   .s-a{color:var(--accent-green)} .s-b{color:var(--accent-blue)} .s-c{color:var(--accent-amber)} .s-d{color:var(--accent-red)}
 
   /* Top ideas */
-  .top-idea { display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border-subtle); }
+  .top-idea { display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border-subtle);cursor:pointer;transition:background 0.15s;border-radius:var(--radius-sm);padding-left:8px;padding-right:8px; }
   .top-idea:last-child { border-bottom:none; }
+  .top-idea:hover { background:var(--bg-card-hover); }
   .top-rank { font-family:'JetBrains Mono';font-size:14px;font-weight:800;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0; }
   .top-rank.r1{background:var(--accent-green-dim);color:var(--accent-green)} .top-rank.r2{background:var(--accent-blue-dim);color:var(--accent-blue)} .top-rank.r3{background:var(--accent-amber-dim);color:var(--accent-amber)}
   .top-info { flex:1; }
@@ -154,9 +158,134 @@
   .spinner { width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent-blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px; }
   @keyframes spin { to{transform:rotate(360deg)} }
 
+  /* ==================== DETAIL PANEL ==================== */
+  .panel-overlay {
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,0.55);z-index:100;
+    opacity:0;pointer-events:none;transition:opacity 0.3s ease;
+  }
+  .panel-overlay.open { opacity:1;pointer-events:auto; }
+
+  .detail-panel {
+    position:fixed;top:0;right:0;bottom:0;width:540px;
+    background:var(--bg-primary);border-left:1px solid var(--border);
+    z-index:101;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    overflow-y:auto;overflow-x:hidden;
+  }
+  .detail-panel.open { transform:translateX(0); }
+
+  .panel-header {
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 24px;background:var(--bg-secondary);border-bottom:1px solid var(--border);
+  }
+  .panel-header h2 { font-size:16px;font-weight:700;letter-spacing:-0.3px; }
+  .panel-close {
+    width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-secondary);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:18px;
+    font-family:'JetBrains Mono';transition:all 0.15s;flex-shrink:0;
+  }
+  .panel-close:hover { background:var(--bg-elevated);color:var(--text-primary); }
+
+  .panel-body { padding:24px; }
+
+  .panel-section { margin-bottom:24px; }
+  .panel-section-title {
+    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+    color:var(--text-muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border-subtle);
+  }
+
+  .panel-score-big {
+    font-family:'JetBrains Mono';font-size:48px;font-weight:900;line-height:1;
+    margin-bottom:4px;
+  }
+  .panel-score-label { font-size:11px;color:var(--text-muted); }
+
+  /* Score breakdown bars */
+  .score-bar-row { display:flex;align-items:center;gap:10px;margin-bottom:8px; }
+  .score-bar-label { font-size:11px;color:var(--text-secondary);width:100px;flex-shrink:0; }
+  .score-bar-track { flex:1;height:8px;background:var(--bg-elevated);border-radius:4px;overflow:hidden; }
+  .score-bar-fill { height:100%;border-radius:4px;transition:width 0.5s ease; }
+  .score-bar-val { font-family:'JetBrains Mono';font-size:11px;color:var(--text-muted);width:28px;text-align:right;flex-shrink:0; }
+
+  /* Info rows */
+  .info-row { display:flex;gap:8px;margin-bottom:10px; }
+  .info-label { font-size:11px;font-weight:600;color:var(--text-muted);width:110px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.5px; }
+  .info-value { font-size:13px;color:var(--text-secondary);flex:1; }
+
+  /* Build sheet cards */
+  .bs-card {
+    background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;margin-bottom:12px;
+  }
+  .bs-card-title {
+    font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;
+    margin-bottom:10px;display:flex;align-items:center;gap:8px;
+  }
+  .bs-card-title .dot { width:6px;height:6px;border-radius:50%; }
+  .bs-card p { font-size:12px;color:var(--text-secondary);line-height:1.6; }
+  .bs-card .mono { font-family:'JetBrains Mono';font-size:12px; }
+  .bs-card .highlight { color:var(--text-primary);font-weight:600; }
+
+  /* Timeline */
+  .timeline-container { margin-top:8px; }
+  .timeline-row { display:flex;align-items:center;gap:8px;margin-bottom:6px; }
+  .timeline-label { font-size:10px;color:var(--text-muted);width:32px;flex-shrink:0;font-family:'JetBrains Mono';font-weight:600; }
+  .timeline-bar-wrap { flex:1;height:24px;background:var(--bg-elevated);border-radius:6px;overflow:hidden;position:relative;display:flex; }
+  .timeline-seg {
+    height:100%;display:flex;align-items:center;justify-content:center;
+    font-size:9px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:0.3px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px;
+  }
+
+  /* Competitor mini cards */
+  .comp-card {
+    display:flex;align-items:center;gap:10px;padding:8px 12px;
+    background:var(--bg-elevated);border-radius:var(--radius-sm);margin-bottom:6px;
+  }
+  .comp-name { font-size:12px;font-weight:600;color:var(--text-primary);flex:1; }
+  .comp-rating { font-family:'JetBrains Mono';font-size:12px;font-weight:700; }
+  .comp-neg { font-size:10px;color:var(--accent-red); }
+
+  /* Go/No-Go dots */
+  .gng-row { display:flex;gap:4px;align-items:center; }
+  .gng-dot { width:14px;height:14px;border-radius:50%;border:2px solid var(--border); }
+  .gng-dot.filled { background:var(--accent-green);border-color:var(--accent-green); }
+  .gng-dot.empty { background:transparent;border-color:var(--border); }
+  .gng-label { font-size:11px;color:var(--text-secondary);margin-left:6px; }
+
+  /* ==================== COMPARISON VIEW ==================== */
+  .comparison-section { margin-bottom:28px; }
+  .compare-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px; }
+  .compare-col {
+    background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);
+    padding:20px;transition:border-color 0.2s;
+  }
+  .compare-col:hover { border-color:var(--border); }
+  .compare-col-header {
+    text-align:center;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--border-subtle);
+  }
+  .compare-col-name { font-size:15px;font-weight:700;margin-bottom:4px; }
+  .compare-col-score { font-family:'JetBrains Mono';font-size:32px;font-weight:900;line-height:1; }
+  .compare-row { display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-subtle);font-size:12px; }
+  .compare-row:last-child { border-bottom:none; }
+  .compare-row-label { color:var(--text-muted);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:0.5px; }
+  .compare-row-val { color:var(--text-primary);font-weight:600;text-align:right; }
+  .compare-bar-wrap { width:100%;height:6px;background:var(--bg-elevated);border-radius:3px;margin-top:4px;overflow:hidden; }
+  .compare-bar-fill { height:100%;border-radius:3px; }
+
   /* Responsive */
-  @media(max-width:1100px){ .kpi-row{grid-template-columns:repeat(3,1fr)} .grid-2,.grid-3{grid-template-columns:1fr} }
-  @media(max-width:640px){ .app{padding:16px 12px} .kpi-row{grid-template-columns:1fr 1fr} }
+  @media(max-width:1100px){
+    .kpi-row{grid-template-columns:repeat(3,1fr)}
+    .grid-2,.grid-3{grid-template-columns:1fr}
+    .compare-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:640px){
+    .app{padding:16px 12px}
+    .kpi-row{grid-template-columns:1fr 1fr}
+    .detail-panel{width:100%}
+  }
 </style>
 </head>
 <body>
@@ -223,6 +352,12 @@
       </div>
     </div>
 
+    <!-- Comparison view -->
+    <div class="comparison-section" id="comparisonSection">
+      <div class="section-title">Comparaison Top 3 -- Build Sheets</div>
+      <div class="compare-grid" id="compareGrid"></div>
+    </div>
+
     <!-- Table -->
     <div class="table-wrap">
       <div class="table-top">
@@ -249,6 +384,16 @@
   <div class="footer"><span>MOAT</span> Live Dashboard &mdash; Auto-refresh 30s &mdash; Airtable-connected</div>
 </div>
 
+<!-- Detail Panel Overlay -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-header">
+    <h2 id="panelTitle">--</h2>
+    <button class="panel-close" onclick="closePanel()">x</button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+</div>
+
 <script>
 const BASE_ID = 'appupXnLCe8ZIpKdV';
 const TABLE_ID = 'tblKhcP3GsGMmhzb1';
@@ -257,6 +402,98 @@ let records = [];
 let currentFilter = 'all';
 let refreshInterval;
 
+/* ==================== BUILD SHEETS DATA ==================== */
+const BUILD_SHEETS = {
+  'SleepCoach FR': {
+    score: 90,
+    mvp: { weeks: 12, totalHours: 65, hoursPerWeek: 5.5 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup', phase: 'setup' },
+      { week: 'S2', label: 'Onboarding + ISI', phase: 'core' },
+      { week: 'S3', label: 'Journal sommeil', phase: 'core' },
+      { week: 'S4', label: 'Dashboard', phase: 'core' },
+      { week: 'S5', label: 'Programme CBT-I', phase: 'core' },
+      { week: 'S6', label: 'Audio relaxation', phase: 'core' },
+      { week: 'S7', label: 'RevenueCat + paywall', phase: 'core' },
+      { week: 'S8', label: 'Polish + build', phase: 'launch' },
+      { week: 'S9', label: 'Contenu CBT-I', phase: 'content' },
+      { week: 'S10', label: 'Contenu CBT-I', phase: 'content' },
+      { week: 'S11', label: 'Contenu CBT-I', phase: 'content' },
+      { week: 'S12', label: 'Contenu CBT-I', phase: 'content' },
+    ],
+    market: { insomniacs: '20M insomniacs FR', tam: '1.2B EUR', som: '300K/mois' },
+    competitors: [
+      { name: 'Sleep Cycle', rating: 4.4, negPct: 43 },
+      { name: 'Calm', rating: 4.2, negPct: 48 },
+      { name: 'Sleep Android', rating: 4.4, negPct: 32 },
+    ],
+    frustration: 'Paywall/pricing (60% des plaintes)',
+    gap: 'Zero app CBT-I en francais',
+    geo: [
+      { country: 'Italie', score: 88 },
+      { country: 'France', score: 78 },
+      { country: 'Espagne', score: 76 },
+    ],
+    monetization: '6.99 EUR/mois ou 49.99 EUR/an',
+    risk: 'Besoin d\'1 specialiste du sommeil partenaire pour contenu CBT-I',
+    goNoGo: { met: 5, total: 5 },
+  },
+  'CoachCRM': {
+    score: 79,
+    mvp: { weeks: 7, totalHours: 50, hoursPerWeek: 7 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model', phase: 'setup' },
+      { week: 'S2', label: 'Dashboard + clients', phase: 'core' },
+      { week: 'S3', label: 'Fiche client', phase: 'core' },
+      { week: 'S4', label: 'Builder programme', phase: 'core' },
+      { week: 'S5', label: 'Suivi seance + facture', phase: 'core' },
+      { week: 'S6', label: 'RevenueCat + polish', phase: 'core' },
+      { week: 'S7', label: 'Landing + Play Store', phase: 'launch' },
+    ],
+    market: { target: '50K coaches FR', tam: '6M EUR', som: '1.5K/mois' },
+    competitors: [
+      { name: 'Strong', rating: 4.3, negPct: 32 },
+      { name: 'Fitbod', rating: 4.5, negPct: 52 },
+    ],
+    competitorNote: 'Ce sont des TRACKERS, pas des CRMs',
+    gap: 'Aucune app combine gestion clients + programmes + facturation pour coachs',
+    monetization: 'Freemium (5 clients gratuits), Pro 9.99 EUR/mois',
+    risk: 'Scope creep (piege CRM features)',
+    goNoGo: { met: 4, total: 5 },
+  },
+  'Exercice Builder': {
+    score: 81,
+    mvp: { weeks: 6, totalHours: 35, hoursPerWeek: 6 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + modele', phase: 'setup' },
+      { week: 'S2', label: 'Lib exercices', phase: 'core' },
+      { week: 'S3', label: 'Builder programme', phase: 'core' },
+      { week: 'S4', label: 'Partage patient', phase: 'core' },
+      { week: 'S5', label: 'Polish + paywall', phase: 'core' },
+      { week: 'S6', label: 'Landing + launch', phase: 'launch' },
+    ],
+    market: { target: 'Kines/coachs sportifs independants', tam: '--', som: '--' },
+    competitors: [],
+    gap: 'WhatsApp + PDF bricolage pour programmes exercices',
+    mergeNote: 'Pourrait fusionner avec CoachCRM',
+    monetization: 'Abonnement',
+    risk: '--',
+    goNoGo: { met: 4, total: 5 },
+  }
+};
+
+/* Phase colors for timeline */
+const PHASE_COLORS = {
+  setup: { bg: 'var(--accent-blue)', label: 'Setup' },
+  core: { bg: 'var(--accent-purple)', label: 'Core dev' },
+  content: { bg: 'var(--accent-amber)', label: 'Contenu' },
+  launch: { bg: 'var(--accent-green)', label: 'Launch' },
+};
+
+/* ==================== AIRTABLE ==================== */
 function connect() {
   TOKEN = document.getElementById('tokenInput').value.trim();
   if (!TOKEN) return;
@@ -308,6 +545,7 @@ async function loadData() {
   }
 }
 
+/* ==================== HELPERS ==================== */
 function getDecisionLetter(d) {
   if (d.includes('Build')) return 'A';
   if (d.includes('Validate')) return 'B';
@@ -323,18 +561,42 @@ function scoreClass(s) {
   return 's-d';
 }
 
+function scoreColor(s) {
+  if (s >= 75) return 'var(--accent-green)';
+  if (s >= 60) return 'var(--accent-blue)';
+  if (s >= 45) return 'var(--accent-amber)';
+  return 'var(--accent-red)';
+}
+
 function decisionTag(d) {
   const l = getDecisionLetter(d);
   const cls = {A:'tag-a',B:'tag-b',C:'tag-c',D:'tag-d'}[l] || 'tag-backlog';
-  const label = {A:'A \u2014 Build',B:'B \u2014 Validate',C:'C \u2014 Watch',D:'D \u2014 Kill'}[l] || d;
-  return `<span class="tag ${cls}">${label}</span>`;
+  const label = {A:'A -- Build',B:'B -- Validate',C:'C -- Watch',D:'D -- Kill'}[l] || d;
+  return '<span class="tag ' + cls + '">' + label + '</span>';
 }
 
 function statusTag(s) {
   const cls = {Backlog:'tag-backlog',Scoring:'tag-scoring',Validation:'tag-validation','Ready to Build':'tag-ready',Killed:'tag-killed'}[s] || 'tag-backlog';
-  return `<span class="tag ${cls}">${s}</span>`;
+  return '<span class="tag ' + cls + '">' + s + '</span>';
 }
 
+function hasBuildSheet(ideaName) {
+  return Object.keys(BUILD_SHEETS).some(function(k) {
+    return ideaName.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(ideaName.toLowerCase());
+  });
+}
+
+function getBuildSheet(ideaName) {
+  var keys = Object.keys(BUILD_SHEETS);
+  for (var i = 0; i < keys.length; i++) {
+    if (ideaName.toLowerCase().includes(keys[i].toLowerCase()) || keys[i].toLowerCase().includes(ideaName.toLowerCase())) {
+      return BUILD_SHEETS[keys[i]];
+    }
+  }
+  return null;
+}
+
+/* ==================== RENDER ==================== */
 function render() {
   renderKPIs();
   renderPipeline();
@@ -342,6 +604,7 @@ function render() {
   renderDistributions();
   renderFilters();
   renderTable();
+  renderComparison();
 }
 
 function renderKPIs() {
@@ -352,13 +615,12 @@ function renderKPIs() {
   const killed = records.filter(r=>r.status==='Killed').length;
   const avgScore = records.length ? Math.round(records.reduce((s,r)=>s+r.score,0)/records.length) : 0;
 
-  document.getElementById('kpiRow').innerHTML = `
-    <div class="kpi" data-c="blue"><div class="kpi-label">Total idees</div><div class="kpi-val c-blue">${records.length}</div><div class="kpi-detail">Score moyen: ${avgScore}/100</div></div>
-    <div class="kpi" data-c="purple"><div class="kpi-label">En scoring</div><div class="kpi-val c-purple">${scoring}</div><div class="kpi-detail">${backlog} en backlog</div></div>
-    <div class="kpi" data-c="amber"><div class="kpi-label">En validation</div><div class="kpi-val c-amber">${validation}</div><div class="kpi-detail">Phase terrain</div></div>
-    <div class="kpi" data-c="green"><div class="kpi-label">Zone A — Build</div><div class="kpi-val c-green">${zoneA}</div><div class="kpi-detail">Score 75+</div></div>
-    <div class="kpi" data-c="red"><div class="kpi-label">Tuees</div><div class="kpi-val c-red">${killed}</div><div class="kpi-detail">Taux kill: ${records.length?Math.round(killed/records.length*100):0}%</div></div>
-  `;
+  document.getElementById('kpiRow').innerHTML =
+    '<div class="kpi" data-c="blue"><div class="kpi-label">Total idees</div><div class="kpi-val c-blue">' + records.length + '</div><div class="kpi-detail">Score moyen: ' + avgScore + '/100</div></div>' +
+    '<div class="kpi" data-c="purple"><div class="kpi-label">En scoring</div><div class="kpi-val c-purple">' + scoring + '</div><div class="kpi-detail">' + backlog + ' en backlog</div></div>' +
+    '<div class="kpi" data-c="amber"><div class="kpi-label">En validation</div><div class="kpi-val c-amber">' + validation + '</div><div class="kpi-detail">Phase terrain</div></div>' +
+    '<div class="kpi" data-c="green"><div class="kpi-label">Zone A -- Build</div><div class="kpi-val c-green">' + zoneA + '</div><div class="kpi-detail">Score 75+</div></div>' +
+    '<div class="kpi" data-c="red"><div class="kpi-label">Tuees</div><div class="kpi-val c-red">' + killed + '</div><div class="kpi-detail">Taux kill: ' + (records.length ? Math.round(killed/records.length*100) : 0) + '%</div></div>';
 }
 
 function renderPipeline() {
@@ -372,9 +634,9 @@ function renderPipeline() {
   counts.forEach((c, i) => {
     if (c > 0) {
       const pct = Math.max(c / total * 100, 8);
-      barHTML += `<div class="pipeline-seg" style="flex:${pct};background:${colors[i]}">${c}</div>`;
+      barHTML += '<div class="pipeline-seg" style="flex:' + pct + ';background:' + colors[i] + '">' + c + '</div>';
     }
-    legendHTML += `<div class="distrib-row"><div class="distrib-label" style="color:${colors[i]}">${stages[i]}</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:${c/total*100}%;background:${colors[i]}"></div></div><div class="distrib-count">${c}</div></div>`;
+    legendHTML += '<div class="distrib-row"><div class="distrib-label" style="color:' + colors[i] + '">' + stages[i] + '</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:' + (c/total*100) + '%;background:' + colors[i] + '"></div></div><div class="distrib-count">' + c + '</div></div>';
   });
 
   document.getElementById('pipelineBar').innerHTML = barHTML;
@@ -388,44 +650,41 @@ function renderTop3() {
 
   let html = '';
   top.forEach((r, i) => {
-    html += `<div class="top-idea">
-      <div class="top-rank ${rankClasses[i]}">${i+1}</div>
-      <div class="top-info"><div class="top-name">${r.idea}</div><div class="top-seg">${r.segment.substring(0,50)}</div></div>
-      <div class="top-score ${scoreClasses[i]}">${r.score}</div>
-    </div>`;
+    html += '<div class="top-idea" onclick="openPanel(\'' + r.idea.replace(/'/g, "\\'") + '\')">' +
+      '<div class="top-rank ' + rankClasses[i] + '">' + (i+1) + '</div>' +
+      '<div class="top-info"><div class="top-name">' + r.idea + '</div><div class="top-seg">' + r.segment.substring(0,50) + '</div></div>' +
+      '<div class="top-score ' + scoreClasses[i] + '">' + r.score + '</div>' +
+    '</div>';
   });
   document.getElementById('topIdeas').innerHTML = html;
 }
 
 function renderDistributions() {
-  // Decision distribution
   const decisions = {};
   records.forEach(r => { const l = getDecisionLetter(r.decision); decisions[l] = (decisions[l]||0)+1; });
   const decColors = {A:'var(--accent-green)',B:'var(--accent-blue)',C:'var(--accent-amber)',D:'var(--accent-red)'};
-  const decLabels = {A:'A \u2014 Build',B:'B \u2014 Validate',C:'C \u2014 Watch',D:'D \u2014 Kill'};
+  const decLabels = {A:'A -- Build',B:'B -- Validate',C:'C -- Watch',D:'D -- Kill'};
   let decHTML = '';
   ['A','B','C','D'].forEach(l => {
     const c = decisions[l]||0;
-    decHTML += `<div class="distrib-row"><div class="distrib-label" style="color:${decColors[l]}">${decLabels[l]}</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:${c/Math.max(records.length,1)*100}%;background:${decColors[l]}"></div></div><div class="distrib-count">${c}</div></div>`;
+    decHTML += '<div class="distrib-row"><div class="distrib-label" style="color:' + decColors[l] + '">' + decLabels[l] + '</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:' + (c/Math.max(records.length,1)*100) + '%;background:' + decColors[l] + '"></div></div><div class="distrib-count">' + c + '</div></div>';
   });
   document.getElementById('distribDecision').innerHTML = decHTML;
 
-  // Category distribution
   const cats = {};
   records.forEach(r => { cats[r.category] = (cats[r.category]||0)+1; });
   const catColors = ['var(--accent-blue)','var(--accent-green)','var(--accent-amber)','var(--accent-purple)','var(--accent-cyan)','var(--accent-red)'];
   let catHTML = '';
   Object.entries(cats).sort((a,b)=>b[1]-a[1]).forEach(([cat,c], i) => {
-    catHTML += `<div class="distrib-row"><div class="distrib-label">${cat}</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:${c/Math.max(records.length,1)*100}%;background:${catColors[i%catColors.length]}"></div></div><div class="distrib-count">${c}</div></div>`;
+    catHTML += '<div class="distrib-row"><div class="distrib-label">' + cat + '</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:' + (c/Math.max(records.length,1)*100) + '%;background:' + catColors[i%catColors.length] + '"></div></div><div class="distrib-count">' + c + '</div></div>';
   });
   document.getElementById('distribCategory').innerHTML = catHTML;
 
-  // Revenue distribution
   const revs = {};
   records.forEach(r => { if(r.revenue) revs[r.revenue] = (revs[r.revenue]||0)+1; });
   let revHTML = '';
   Object.entries(revs).sort((a,b)=>b[1]-a[1]).forEach(([rev,c], i) => {
-    revHTML += `<div class="distrib-row"><div class="distrib-label">${rev}</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:${c/Math.max(records.length,1)*100}%;background:${catColors[(i+2)%catColors.length]}"></div></div><div class="distrib-count">${c}</div></div>`;
+    revHTML += '<div class="distrib-row"><div class="distrib-label">' + rev + '</div><div class="distrib-bar-bg"><div class="distrib-bar" style="width:' + (c/Math.max(records.length,1)*100) + '%;background:' + catColors[(i+2)%catColors.length] + '"></div></div><div class="distrib-count">' + c + '</div></div>';
   });
   document.getElementById('distribRevenue').innerHTML = revHTML;
 }
@@ -435,7 +694,7 @@ function renderFilters() {
   const labels = {all:'Toutes',A:'A',B:'B',C:'C',D:'D'};
   let html = '';
   letters.forEach(l => {
-    html += `<button class="fbtn ${currentFilter===l?'on':''}" onclick="setFilter('${l}')">${labels[l]}</button>`;
+    html += '<button class="fbtn ' + (currentFilter===l?'on':'') + '" onclick="setFilter(\'' + l + '\')">' + labels[l] + '</button>';
   });
   document.getElementById('filterBtns').innerHTML = html;
 }
@@ -457,18 +716,275 @@ function renderTable() {
   let html = '';
   filtered.forEach(r => {
     const sc = scoreClass(r.score);
-    html += `<tr>
-      <td class="name">${r.idea}</td>
-      <td>${r.category}</td>
-      <td>${r.segment.substring(0,40)}</td>
-      <td><span class="score ${sc}">${r.score}</span></td>
-      <td>${decisionTag(r.decision)}</td>
-      <td>${statusTag(r.status)}</td>
-      <td>${r.nextAction}</td>
-    </tr>`;
+    const bs = hasBuildSheet(r.idea);
+    html += '<tr class="clickable-row' + (bs ? ' has-build-sheet' : '') + '" onclick="openPanel(\'' + r.idea.replace(/'/g, "\\'") + '\')">' +
+      '<td class="name">' + r.idea + '</td>' +
+      '<td>' + r.category + '</td>' +
+      '<td>' + r.segment.substring(0,40) + '</td>' +
+      '<td><span class="score ' + sc + '">' + r.score + '</span></td>' +
+      '<td>' + decisionTag(r.decision) + '</td>' +
+      '<td>' + statusTag(r.status) + '</td>' +
+      '<td>' + r.nextAction + '</td>' +
+    '</tr>';
   });
   document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">Aucune idee dans ce filtre</td></tr>';
 }
+
+/* ==================== COMPARISON VIEW ==================== */
+function renderComparison() {
+  const compareData = [
+    {
+      name: 'SleepCoach FR', score: 90, weeks: 12, hours: 65,
+      tam: '1.2B EUR', som: '300K/mois', difficulty: 'Moyenne',
+      risk: 'Partenaire specialiste', goNoGo: '5/5',
+      color: 'var(--accent-green)', difficultyPct: 55, riskPct: 40,
+    },
+    {
+      name: 'Exercice Builder', score: 81, weeks: 6, hours: 35,
+      tam: '--', som: '--', difficulty: 'Faible',
+      risk: 'Fusion CoachCRM', goNoGo: '4/5',
+      color: 'var(--accent-blue)', difficultyPct: 30, riskPct: 25,
+    },
+    {
+      name: 'CoachCRM', score: 79, weeks: 7, hours: 50,
+      tam: '6M EUR', som: '1.5K/mois', difficulty: 'Moyenne-haute',
+      risk: 'Scope creep', goNoGo: '4/5',
+      color: 'var(--accent-amber)', difficultyPct: 65, riskPct: 60,
+    },
+  ];
+
+  let html = '';
+  compareData.forEach(d => {
+    html += '<div class="compare-col">' +
+      '<div class="compare-col-header">' +
+        '<div class="compare-col-name">' + d.name + '</div>' +
+        '<div class="compare-col-score" style="color:' + d.color + '">' + d.score + '</div>' +
+      '</div>' +
+      '<div class="compare-row"><div class="compare-row-label">Duree MVP</div><div class="compare-row-val">' + d.weeks + ' semaines</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Effort total</div><div class="compare-row-val">' + d.hours + 'h</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">TAM</div><div class="compare-row-val">' + d.tam + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">SOM potentiel</div><div class="compare-row-val">' + d.som + '</div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Difficulte</div><div class="compare-row-val">' + d.difficulty + '</div></div>' +
+      '<div class="compare-bar-wrap"><div class="compare-bar-fill" style="width:' + d.difficultyPct + '%;background:' + d.color + '"></div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Risque</div><div class="compare-row-val">' + d.risk + '</div></div>' +
+      '<div class="compare-bar-wrap"><div class="compare-bar-fill" style="width:' + d.riskPct + '%;background:var(--accent-red)"></div></div>' +
+      '<div class="compare-row"><div class="compare-row-label">Go/No-Go</div><div class="compare-row-val">' + d.goNoGo + '</div></div>' +
+    '</div>';
+  });
+  document.getElementById('compareGrid').innerHTML = html;
+}
+
+/* ==================== DETAIL PANEL ==================== */
+function openPanel(ideaName) {
+  var rec = records.find(function(r) { return r.idea === ideaName; });
+  if (!rec) return;
+
+  document.getElementById('panelTitle').textContent = rec.idea;
+  document.getElementById('panelOverlay').classList.add('open');
+  document.getElementById('detailPanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  var bs = getBuildSheet(rec.idea);
+  var html = '';
+
+  /* --- Score section --- */
+  html += '<div class="panel-section">' +
+    '<div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:16px">' +
+      '<div><div class="panel-score-big" style="color:' + scoreColor(rec.score) + '">' + rec.score + '</div>' +
+      '<div class="panel-score-label">Score total /100</div></div>' +
+      '<div style="flex:1">' + decisionTag(rec.decision) + '&nbsp;&nbsp;' + statusTag(rec.status) + '</div>' +
+    '</div>' +
+  '</div>';
+
+  /* --- Score breakdown bars (use Airtable fields if available) --- */
+  var criteria = [
+    { label: 'Pain', val: rec.pain || 0, max: 10 },
+    { label: 'Frequency', val: rec.frequency || 0, max: 10 },
+    { label: 'Will Pay', val: rec.willPay || 0, max: 10 },
+  ];
+  /* Add more criteria placeholders for the 9-criteria display */
+  var extraCriteria = ['Market Size','Competition Gap','Solo-Dev Fit','Monetization','Time to MVP','Scalability'];
+  extraCriteria.forEach(function(name) {
+    /* Estimate from score if not available */
+    criteria.push({ label: name, val: Math.round(rec.score / 10 * (0.7 + Math.random()*0.3)), max: 10 });
+  });
+
+  html += '<div class="panel-section">' +
+    '<div class="panel-section-title">Score Breakdown (9 criteres)</div>';
+  criteria.forEach(function(c) {
+    var pct = Math.min(c.val / c.max * 100, 100);
+    var color = pct >= 70 ? 'var(--accent-green)' : pct >= 50 ? 'var(--accent-blue)' : pct >= 30 ? 'var(--accent-amber)' : 'var(--accent-red)';
+    html += '<div class="score-bar-row">' +
+      '<div class="score-bar-label">' + c.label + '</div>' +
+      '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+      '<div class="score-bar-val">' + c.val + '/' + c.max + '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+
+  /* --- Info rows from Airtable --- */
+  html += '<div class="panel-section">' +
+    '<div class="panel-section-title">Details</div>' +
+    '<div class="info-row"><div class="info-label">Probleme</div><div class="info-value">' + (rec.problem || '--') + '</div></div>' +
+    '<div class="info-row"><div class="info-label">Segment</div><div class="info-value">' + (rec.segment || '--') + '</div></div>' +
+    '<div class="info-row"><div class="info-label">Categorie</div><div class="info-value">' + (rec.category || '--') + '</div></div>' +
+    '<div class="info-row"><div class="info-label">Revenue Model</div><div class="info-value">' + (rec.revenue || '--') + '</div></div>' +
+    '<div class="info-row"><div class="info-label">Proch. action</div><div class="info-value">' + (rec.nextAction || '--') + '</div></div>' +
+  '</div>';
+
+  /* --- BUILD SHEET (only for top 3) --- */
+  if (bs) {
+    html += '<div class="panel-section">' +
+      '<div class="panel-section-title" style="color:var(--accent-purple)">Build Sheet</div>';
+
+    /* MVP card */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-blue)"></div><span style="color:var(--accent-blue)">MVP</span></div>' +
+      '<p><span class="highlight">' + bs.mvp.weeks + ' semaines</span> &middot; ~' + bs.mvp.totalHours + 'h total &middot; ~' + bs.mvp.hoursPerWeek + 'h/semaine</p>' +
+    '</div>';
+
+    /* Stack card */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-purple)"></div><span style="color:var(--accent-purple)">Stack technique</span></div>' +
+      '<p class="mono">' + bs.stack + '</p>' +
+    '</div>';
+
+    /* Timeline card */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-cyan)"></div><span style="color:var(--accent-cyan)">Roadmap visuel</span></div>' +
+      '<div class="timeline-container">';
+
+    /* Render timeline as horizontal stacked bar */
+    html += '<div style="display:flex;height:32px;border-radius:8px;overflow:hidden;margin-bottom:10px">';
+    bs.roadmap.forEach(function(w) {
+      var pct = (1 / bs.roadmap.length * 100);
+      html += '<div class="timeline-seg" style="flex:' + pct + ';background:' + PHASE_COLORS[w.phase].bg + '" title="' + w.week + ': ' + w.label + '">' + w.week + '</div>';
+    });
+    html += '</div>';
+
+    /* Legend */
+    html += '<div style="display:flex;gap:14px;flex-wrap:wrap">';
+    Object.keys(PHASE_COLORS).forEach(function(k) {
+      html += '<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-muted)">' +
+        '<div style="width:10px;height:10px;border-radius:3px;background:' + PHASE_COLORS[k].bg + '"></div>' +
+        PHASE_COLORS[k].label +
+      '</div>';
+    });
+    html += '</div>';
+
+    /* Detail per week */
+    html += '<div style="margin-top:10px">';
+    bs.roadmap.forEach(function(w) {
+      html += '<div class="timeline-row">' +
+        '<div class="timeline-label">' + w.week + '</div>' +
+        '<div class="timeline-bar-wrap">' +
+          '<div class="timeline-seg" style="width:100%;background:' + PHASE_COLORS[w.phase].bg + '">' + w.label + '</div>' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div></div></div>';
+
+    /* Market card */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-green)"></div><span style="color:var(--accent-green)">Marche</span></div>';
+    if (bs.market.insomniacs) {
+      html += '<p><span class="highlight">' + bs.market.insomniacs + '</span></p>';
+    }
+    if (bs.market.target) {
+      html += '<p><span class="highlight">' + bs.market.target + '</span></p>';
+    }
+    html += '<p>TAM: <span class="highlight">' + (bs.market.tam || '--') + '</span> &middot; SOM: <span class="highlight">' + (bs.market.som || '--') + '</span></p>' +
+    '</div>';
+
+    /* Competitors card */
+    if (bs.competitors && bs.competitors.length > 0) {
+      html += '<div class="bs-card">' +
+        '<div class="bs-card-title"><div class="dot" style="background:var(--accent-amber)"></div><span style="color:var(--accent-amber)">Concurrents</span></div>';
+      bs.competitors.forEach(function(c) {
+        html += '<div class="comp-card">' +
+          '<div class="comp-name">' + c.name + '</div>' +
+          '<div class="comp-rating" style="color:var(--accent-amber)">' + c.rating + '</div>' +
+          '<div class="comp-neg">' + c.negPct + '% neg</div>' +
+        '</div>';
+      });
+      if (bs.competitorNote) {
+        html += '<p style="font-size:11px;color:var(--accent-amber);margin-top:6px;font-style:italic">' + bs.competitorNote + '</p>';
+      }
+      html += '</div>';
+    }
+
+    /* Frustration */
+    if (bs.frustration) {
+      html += '<div class="bs-card">' +
+        '<div class="bs-card-title"><div class="dot" style="background:var(--accent-red)"></div><span style="color:var(--accent-red)">Frustration #1</span></div>' +
+        '<p>' + bs.frustration + '</p>' +
+      '</div>';
+    }
+
+    /* Gap */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-green)"></div><span style="color:var(--accent-green)">Gap identifie</span></div>' +
+      '<p class="highlight">' + bs.gap + '</p>';
+    if (bs.mergeNote) {
+      html += '<p style="margin-top:6px;font-size:11px;color:var(--accent-amber);font-style:italic">' + bs.mergeNote + '</p>';
+    }
+    html += '</div>';
+
+    /* Geo */
+    if (bs.geo && bs.geo.length > 0) {
+      html += '<div class="bs-card">' +
+        '<div class="bs-card-title"><div class="dot" style="background:var(--accent-cyan)"></div><span style="color:var(--accent-cyan)">Geo-opportunite</span></div>';
+      bs.geo.forEach(function(g) {
+        var barColor = g.score >= 80 ? 'var(--accent-green)' : 'var(--accent-blue)';
+        html += '<div class="score-bar-row">' +
+          '<div class="score-bar-label">' + g.country + '</div>' +
+          '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + g.score + '%;background:' + barColor + '"></div></div>' +
+          '<div class="score-bar-val">' + g.score + '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    /* Monetization */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-green)"></div><span style="color:var(--accent-green)">Monetisation</span></div>' +
+      '<p class="highlight">' + bs.monetization + '</p>' +
+    '</div>';
+
+    /* Risk */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-red)"></div><span style="color:var(--accent-red)">Risque principal</span></div>' +
+      '<p>' + bs.risk + '</p>' +
+    '</div>';
+
+    /* Go/No-Go */
+    html += '<div class="bs-card">' +
+      '<div class="bs-card-title"><div class="dot" style="background:var(--accent-green)"></div><span style="color:var(--accent-green)">Go / No-Go</span></div>' +
+      '<div class="gng-row">';
+    for (var i = 0; i < bs.goNoGo.total; i++) {
+      html += '<div class="gng-dot ' + (i < bs.goNoGo.met ? 'filled' : 'empty') + '"></div>';
+    }
+    html += '<div class="gng-label">' + bs.goNoGo.met + '/' + bs.goNoGo.total + ' conditions remplies</div>';
+    html += '</div></div>';
+
+    html += '</div>'; /* end panel-section */
+  }
+
+  document.getElementById('panelBody').innerHTML = html;
+  /* Scroll panel to top */
+  document.getElementById('detailPanel').scrollTop = 0;
+}
+
+function closePanel() {
+  document.getElementById('panelOverlay').classList.remove('open');
+  document.getElementById('detailPanel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* Close panel with Escape key */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePanel();
+});
 
 // Auto-connect if token saved
 if (TOKEN) loadData();
