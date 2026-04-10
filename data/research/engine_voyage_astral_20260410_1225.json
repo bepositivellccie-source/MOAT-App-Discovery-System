@@ -1,0 +1,126 @@
+{
+  "idea": "Voyage Astral",
+  "date": "2026-04-10T12:25:09.126937",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 0,
+      "avg_score": 0,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "UNKNOWN"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 0.0,
+      "pricing_complaint_ratio": 0,
+      "total_reviews_analyzed": 1,
+      "top_frustrations": []
+    },
+    "market_sizing": {
+      "segment_size": 50000,
+      "arpu": 30.0,
+      "tam": 1500000.0,
+      "sam": 225000.0,
+      "som": 4500.0,
+      "monthly_revenue_est": 375,
+      "capture_rate": 0.02,
+      "verdict": "PETIT — necessite volume ou ARPU plus eleve"
+    },
+    "scoring": {
+      "total": 32,
+      "max": 100,
+      "decision": "D -- Kill",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 1,
+          "weight": 4,
+          "weighted": 4,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 1,
+          "weight": 3,
+          "weighted": 3,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 1,
+          "weight": 3,
+          "weighted": 3,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 1,
+          "weight": 1,
+          "weighted": 1,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 1,
+        "usage_frequency": 1,
+        "willingness_to_pay": 1,
+        "market_access": 1,
+        "competition_gap": 1,
+        "differentiation": 4,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 1
+      }
+    }
+  },
+  "verdict": {
+    "score": 32,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Pas de douleur reelle",
+      "Usage trop rare",
+      "Aucun signal de paiement"
+    ]
+  }
+}

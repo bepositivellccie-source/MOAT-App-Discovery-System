@@ -1,0 +1,185 @@
+{
+  "idea": "FocusFlow TDAH",
+  "date": "2026-04-10T14:58:55.100385",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 0,
+      "avg_score": 0,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "UNKNOWN"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 22.0,
+      "pricing_complaint_ratio": 35.1,
+      "total_reviews_analyzed": 300,
+      "top_frustrations": [
+        [
+          "premium",
+          6
+        ],
+        [
+          "subscription",
+          5
+        ],
+        [
+          "bad",
+          4
+        ],
+        [
+          "useless",
+          3
+        ],
+        [
+          "bug",
+          3
+        ],
+        [
+          "deleted",
+          2
+        ],
+        [
+          "complicated",
+          2
+        ],
+        [
+          "ads",
+          2
+        ],
+        [
+          "uninstall",
+          2
+        ],
+        [
+          "expensive",
+          1
+        ],
+        [
+          "forced",
+          1
+        ],
+        [
+          "horrible",
+          1
+        ],
+        [
+          "doesn't work",
+          1
+        ],
+        [
+          "broken",
+          1
+        ],
+        [
+          "confusing",
+          1
+        ]
+      ]
+    },
+    "market_sizing": {
+      "segment_size": 2000000,
+      "arpu": 72.0,
+      "tam": 144000000.0,
+      "sam": 21600000.0,
+      "som": 432000.0,
+      "monthly_revenue_est": 36000,
+      "capture_rate": 0.02,
+      "verdict": "EXCELLENT — potentiel 10K+ MRR"
+    },
+    "scoring": {
+      "total": 64,
+      "max": 100,
+      "decision": "B -- Validate",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 2,
+          "weight": 4,
+          "weighted": 8,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 3,
+          "weight": 3,
+          "weighted": 9,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 2,
+          "weight": 2,
+          "weighted": 4,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 4,
+          "weight": 1,
+          "weighted": 4,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 2,
+        "usage_frequency": 4,
+        "willingness_to_pay": 3,
+        "market_access": 4,
+        "competition_gap": 2,
+        "differentiation": 5,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 4
+      }
+    }
+  },
+  "verdict": {
+    "score": 64,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Pas de douleur reelle"
+    ]
+  }
+}
