@@ -1,0 +1,189 @@
+{
+  "idea": "RituelZen",
+  "date": "2026-04-10T15:36:20.351224",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 0,
+      "avg_score": 0,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "UNKNOWN"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 31.3,
+      "pricing_complaint_ratio": 66.7,
+      "total_reviews_analyzed": 150,
+      "top_frustrations": [
+        [
+          "abonnement",
+          12
+        ],
+        [
+          "cher",
+          7
+        ],
+        [
+          "nul",
+          4
+        ],
+        [
+          "arnaque",
+          4
+        ],
+        [
+          "gratuit",
+          3
+        ],
+        [
+          "payant",
+          3
+        ],
+        [
+          "trop cher",
+          3
+        ],
+        [
+          "force",
+          2
+        ],
+        [
+          "manque",
+          1
+        ],
+        [
+          "mauvais",
+          1
+        ],
+        [
+          "horrible",
+          1
+        ],
+        [
+          "desinstalle",
+          1
+        ],
+        [
+          "inutile",
+          1
+        ],
+        [
+          "premium",
+          1
+        ],
+        [
+          "payante",
+          1
+        ]
+      ]
+    },
+    "market_sizing": {
+      "segment_size": 5000000,
+      "arpu": 36.0,
+      "tam": 180000000.0,
+      "sam": 27000000.0,
+      "som": 540000.0,
+      "monthly_revenue_est": 45000,
+      "capture_rate": 0.02,
+      "verdict": "EXCELLENT — potentiel 10K+ MRR"
+    },
+    "scoring": {
+      "total": 72,
+      "max": 100,
+      "decision": "B -- Validate",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 3,
+          "weight": 4,
+          "weighted": 12,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 5,
+          "weight": 1,
+          "weighted": 5,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 3,
+        "usage_frequency": 4,
+        "willingness_to_pay": 4,
+        "market_access": 5,
+        "competition_gap": 3,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 5
+      }
+    }
+  },
+  "verdict": {
+    "score": 72,
+    "decision": "B -- Validate",
+    "confidence": 40,
+    "signals": [
+      "[+] 66.7% plaintes pricing = volonte de payer",
+      "[+] SOM = 45,000 EUR/mois potentiel"
+    ],
+    "risks": [
+      "[-] Marche petit ou naissant (peu d'installs)"
+    ]
+  }
+}
