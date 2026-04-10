@@ -389,7 +389,10 @@
 <div class="detail-panel" id="detailPanel">
   <div class="panel-header">
     <h2 id="panelTitle">--</h2>
-    <button class="panel-close" onclick="closePanel()">x</button>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button id="exportBtn" onclick="exportFiche()" style="display:none;font-family:Inter;font-size:11px;font-weight:600;padding:6px 14px;border-radius:6px;border:1px solid var(--accent-cyan);background:var(--accent-cyan-dim);color:var(--accent-cyan);cursor:pointer;transition:all 0.15s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Exporter fiche</button>
+      <button class="panel-close" onclick="closePanel()">x</button>
+    </div>
   </div>
   <div class="panel-body" id="panelBody"></div>
 </div>
@@ -867,6 +870,8 @@ function openPanel(ideaName) {
   if (!rec) return;
 
   document.getElementById('panelTitle').textContent = rec.idea;
+  currentPanelIdea = rec.idea;
+  document.getElementById('exportBtn').style.display = 'block';
   document.getElementById('panelOverlay').classList.add('open');
   document.getElementById('detailPanel').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1160,6 +1165,147 @@ function closePanel() {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePanel();
 });
+
+/* ==================== EXPORT FICHE ==================== */
+var currentPanelIdea = '';
+
+function exportFiche() {
+  var rec = records.find(function(r) { return r.idea === currentPanelIdea; });
+  if (!rec) return;
+  var bs = BUILD_SHEETS[rec.idea];
+
+  var md = '';
+  md += '# ' + rec.idea + '\n\n';
+  md += '## Identite\n';
+  md += '- **Score MOAT** : ' + rec.score + '/100\n';
+  md += '- **Decision** : ' + rec.decision + '\n';
+  md += '- **Statut** : ' + rec.status + '\n';
+  md += '- **Categorie** : ' + rec.category + '\n';
+  md += '- **Segment cible** : ' + rec.segment + '\n';
+  md += '- **Monetisation** : ' + rec.revenue + '\n\n';
+
+  md += '## Probleme\n';
+  md += rec.problem + '\n\n';
+
+  md += '## Scoring (9 criteres)\n';
+  md += '| Critere | Score |\n|---------|-------|\n';
+  md += '| Douleur (x4) | ' + (rec.pain || '?') + '/5 |\n';
+  md += '| Frequence (x3) | ' + (rec.frequency || '?') + '/5 |\n';
+  md += '| Volonte de payer (x3) | ' + (rec.willPay || '?') + '/5 |\n';
+  md += '| Acces marche (x2) | ' + (rec.marketAccess || '?') + '/5 |\n';
+  md += '| Faiblesse concurrence (x2) | ' + (rec.competitionGap || '?') + '/5 |\n';
+  md += '| Differenciation (x2) | ' + (rec.differentiation || '?') + '/5 |\n';
+  md += '| Fit personnel (x2) | ' + (rec.personalFit || '?') + '/5 |\n';
+  md += '| Vitesse MVP (x1) | ' + (rec.mvpSpeed || '?') + '/5 |\n';
+  md += '| Retention (x1) | ' + (rec.retention || '?') + '/5 |\n';
+  md += '| **TOTAL** | **' + rec.score + '/100** |\n\n';
+
+  if (bs) {
+    if (bs.pitch) {
+      md += '## Pourquoi cette app\n\n';
+      bs.pitch.forEach(function(p) { md += p + '\n\n'; });
+    }
+
+    md += '## Stack technique\n';
+    md += bs.stack + '\n\n';
+
+    md += '## MVP\n';
+    md += '- **Duree** : ' + bs.mvp.weeks + ' semaines\n';
+    md += '- **Effort total** : ~' + bs.mvp.totalHours + 'h\n';
+    md += '- **Effort/semaine** : ~' + bs.mvp.hoursPerWeek + 'h\n\n';
+
+    md += '## Roadmap\n';
+    md += '| Semaine | Phase | Focus |\n|---------|-------|-------|\n';
+    bs.roadmap.forEach(function(w) {
+      md += '| ' + w.week + ' | ' + w.phase + ' | ' + w.label + ' |\n';
+    });
+    md += '\n';
+
+    md += '## Marche\n';
+    if (bs.market.insomniacs) md += '- **Segment** : ' + bs.market.insomniacs + '\n';
+    if (bs.market.target) md += '- **Segment** : ' + bs.market.target + '\n';
+    md += '- **TAM** : ' + (bs.market.tam || '--') + '\n';
+    md += '- **SOM** : ' + (bs.market.som || '--') + '\n\n';
+
+    if (bs.competitors && bs.competitors.length > 0) {
+      md += '## Concurrents\n';
+      md += '| App | Score | % Negatifs |\n|-----|-------|------------|\n';
+      bs.competitors.forEach(function(c) {
+        md += '| ' + c.name + ' | ' + c.rating + '/5 | ' + c.negPct + '% |\n';
+      });
+      if (bs.competitorNote) md += '\n*' + bs.competitorNote + '*\n';
+      md += '\n';
+    }
+
+    if (bs.frustration) {
+      md += '## Frustration #1\n' + bs.frustration + '\n\n';
+    }
+
+    md += '## Gap identifie\n' + bs.gap + '\n\n';
+
+    if (bs.geo && bs.geo.length > 0) {
+      md += '## Geo-opportunite\n';
+      md += '| Pays | Score |\n|------|-------|\n';
+      bs.geo.forEach(function(g) {
+        md += '| ' + g.country + ' | ' + g.score + '/100 |\n';
+      });
+      md += '\n';
+    }
+
+    md += '## Monetisation\n' + bs.monetization + '\n\n';
+
+    if (bs.forecast) {
+      var fc = bs.forecast;
+      md += '## Previsionnel 12 mois\n';
+      md += '- **Prix** : ' + fc.price + '\n';
+      md += '- **Conversion** : ' + fc.conversion + '\n';
+      md += '- **Churn** : ' + fc.churn + '\n';
+      md += '- **Breakeven** : ' + fc.breakeven + '\n\n';
+      md += '| Mois | Abonnes | MRR | Profit cumule |\n|------|---------|-----|---------------|\n';
+      fc.months.forEach(function(row) {
+        md += '| M' + row.m + ' | ' + row.subs.toLocaleString('fr-FR') + ' | ' + row.mrr.toLocaleString('fr-FR') + ' EUR | +' + row.profit.toLocaleString('fr-FR') + ' EUR |\n';
+      });
+      md += '\n### Scenarios MRR a M12\n';
+      fc.scenarios.forEach(function(s) {
+        md += '- **' + s.label + '** : ' + s.mrr.toLocaleString('fr-FR') + ' EUR/mois = ' + s.arr.toLocaleString('fr-FR') + ' EUR/an\n';
+      });
+      md += '\n**Verdict** : ' + fc.verdict + '\n\n';
+    }
+
+    md += '## Risque principal\n' + bs.risk + '\n\n';
+
+    md += '## Go / No-Go\n';
+    md += bs.goNoGo.met + '/' + bs.goNoGo.total + ' conditions remplies\n\n';
+  }
+
+  md += '## Prochaine action\n' + (rec.nextAction || '--') + '\n';
+
+  /* Copy to clipboard + download */
+  navigator.clipboard.writeText(md).then(function() {
+    /* Also trigger download */
+    var blob = new Blob([md], { type: 'text/markdown' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = rec.idea.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_fiche.md';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    /* Visual feedback */
+    var btn = document.getElementById('exportBtn');
+    var orig = btn.textContent;
+    btn.textContent = 'Copie + telecharge !';
+    btn.style.borderColor = 'var(--accent-green)';
+    btn.style.color = 'var(--accent-green)';
+    btn.style.background = 'var(--accent-green-dim)';
+    setTimeout(function() {
+      btn.textContent = orig;
+      btn.style.borderColor = 'var(--accent-cyan)';
+      btn.style.color = 'var(--accent-cyan)';
+      btn.style.background = 'var(--accent-cyan-dim)';
+    }, 2000);
+  });
+}
 
 // Auto-connect if token saved
 if (TOKEN) loadData();
