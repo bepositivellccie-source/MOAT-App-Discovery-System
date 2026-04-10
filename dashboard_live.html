@@ -373,6 +373,7 @@
             <th>Score</th>
             <th>Decision</th>
             <th>Statut</th>
+            <th>Engine</th>
             <th>Prochaine action</th>
           </tr>
         </thead>
@@ -817,6 +818,7 @@ async function fetchRecords() {
     personalFit: r.fields['Personal Fit'] || 0,
     mvpSpeed: r.fields['MVP Speed'] || 0,
     retention: r.fields['Retention'] || 0,
+    engineVerified: r.fields['Engine Verified']?.name || r.fields['Engine Verified'] || '',
   }));
 }
 
@@ -888,6 +890,12 @@ function statusTag(s) {
     'Killed':'Eliminee par le bodyguard ou par decision. Ne pas investir de temps.',
   }[s] || '';
   return '<span class="tag ' + cls + '" title="' + tips + '" style="cursor:help">' + s + '</span>';
+}
+
+function verifiedTag(v) {
+  if (v === 'Verifie') return '<span class="tag tag-a" title="Score confirme par le MOAT Engine avec donnees reelles Google Play" style="cursor:help">Verifie</span>';
+  if (v === 'En cours') return '<span class="tag tag-scoring" title="Verification Engine en cours" style="cursor:help">En cours</span>';
+  return '<span class="tag tag-backlog" title="Score manuel uniquement, pas encore passe par le MOAT Engine" style="cursor:help">Non verifie</span>';
 }
 
 function hasBuildSheet(ideaName) {
@@ -1034,10 +1042,11 @@ function renderTable() {
       '<td><span class="score ' + sc + '">' + r.score + '</span></td>' +
       '<td>' + decisionTag(r.decision) + '</td>' +
       '<td>' + statusTag(r.status) + '</td>' +
+      '<td>' + verifiedTag(r.engineVerified) + '</td>' +
       '<td>' + r.nextAction + '</td>' +
     '</tr>';
   });
-  document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">Aucune idee dans ce filtre</td></tr>';
+  document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="8" style="text-align:center;color:var(--text-muted)">Aucune idee dans ce filtre</td></tr>';
 }
 
 /* ==================== COMPARISON VIEW ==================== */
