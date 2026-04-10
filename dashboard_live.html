@@ -869,12 +869,25 @@ function decisionTag(d) {
   const l = getDecisionLetter(d);
   const cls = {A:'tag-a',B:'tag-b',C:'tag-c',D:'tag-d'}[l] || 'tag-backlog';
   const label = {A:'A -- Build',B:'B -- Validate',C:'C -- Watch',D:'D -- Kill'}[l] || d;
-  return '<span class="tag ' + cls + '">' + label + '</span>';
+  const tips = {
+    A:'Score 75+ : Opportunite validee. Lancer la validation terrain puis le MVP.',
+    B:'Score 60-74 : Signal prometteur mais hypotheses a verifier. Creuser avant de builder.',
+    C:'Score 45-59 : Idee a surveiller. Pas assez de signal pour agir maintenant.',
+    D:'Score <45 : Idee eliminee. Trop de faiblesses, pas de marche ou pas de differenciation.',
+  }[l] || '';
+  return '<span class="tag ' + cls + '" title="' + tips + '" style="cursor:help">' + label + '</span>';
 }
 
 function statusTag(s) {
   const cls = {Backlog:'tag-backlog',Scoring:'tag-scoring',Validation:'tag-validation','Ready to Build':'tag-ready',Killed:'tag-killed'}[s] || 'tag-backlog';
-  return '<span class="tag ' + cls + '">' + s + '</span>';
+  const tips = {
+    'Backlog':'Idee brute, pas encore analysee en profondeur. En attente de scoring.',
+    'Scoring':'En cours d\'evaluation : analyse concurrentielle, scoring MOAT, verification Engine.',
+    'Validation':'Score suffisant. Phase terrain : landing page, interviews, test de demande reelle.',
+    'Ready to Build':'Validee par les donnees ET le terrain. Prete pour le Sprint 1 Flutter.',
+    'Killed':'Eliminee par le bodyguard ou par decision. Ne pas investir de temps.',
+  }[s] || '';
+  return '<span class="tag ' + cls + '" title="' + tips + '" style="cursor:help">' + s + '</span>';
 }
 
 function hasBuildSheet(ideaName) {
