@@ -1904,9 +1904,9 @@ function renderKPIs() {
   const backlog = records.filter(r=>r.status==='Backlog').length;
   const scoring = records.filter(r=>r.status==='Scoring').length;
   const validation = records.filter(r=>r.status==='Validation').length;
-  const zoneA = records.filter(r=>r.score>=75 && !r.decision.includes('Kill')).length;
+  const zoneA = records.filter(r=>(r.scoreV3||r.score)>=75 && !r.decision.includes('Kill')).length;
   const killed = records.filter(r=>r.status==='Killed').length;
-  const avgScore = records.length ? Math.round(records.reduce((s,r)=>s+r.score,0)/records.length) : 0;
+  const avgScore = records.length ? Math.round(records.reduce((s,r)=>s+(r.scoreV3||r.score),0)/records.length) : 0;
 
   document.getElementById('kpiRow').innerHTML =
     '<div class="kpi" data-c="blue"><div class="kpi-label">Total idees</div><div class="kpi-val c-blue">' + records.length + '</div><div class="kpi-detail">Score moyen: ' + avgScore + '/100</div></div>' +
@@ -1946,7 +1946,7 @@ function renderTop3() {
     html += '<div class="top-idea" onclick="openPanel(\'' + r.idea.replace(/'/g, "\\'") + '\')">' +
       '<div class="top-rank ' + rankClasses[i] + '">' + (i+1) + '</div>' +
       '<div class="top-info"><div class="top-name">' + r.idea + '</div><div class="top-seg">' + r.segment.substring(0,50) + '</div></div>' +
-      '<div class="top-score ' + scoreClasses[i] + '">' + r.score + '</div>' +
+      '<div class="top-score ' + scoreClasses[i] + '">' + (r.scoreV3 || r.score) + '</div>' +
     '</div>';
   });
   document.getElementById('topIdeas').innerHTML = html;
@@ -2052,7 +2052,7 @@ function renderComparison() {
           '<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:' + podiumColors[i] + ';background:' + podiumColors[i].replace(')', ',0.12)').replace('var(', 'rgba(').replace('--accent-green', '52,211,153').replace('--accent-blue', '91,138,255').replace('--accent-amber', '245,166,35') + ';padding:2px 8px;border-radius:4px">' + medals[i] + '</span>' +
           '<div class="compare-col-name">' + r.idea + '</div>' +
         '</div>' +
-        '<div class="compare-col-score" style="color:' + podiumColors[i] + '">' + r.score + '</div>' +
+        '<div class="compare-col-score" style="color:' + podiumColors[i] + '">' + (r.scoreV3 || r.score) + '</div>' +
       '</div>' +
       '<div class="compare-row"><div class="compare-row-label">ID</div><div class="compare-row-val">#' + (r.moatId || '?') + '</div></div>' +
       '<div class="compare-row"><div class="compare-row-label">Segment</div><div class="compare-row-val" style="font-size:11px">' + (r.segment || '--').substring(0, 35) + '</div></div>' +
@@ -2132,7 +2132,7 @@ function openPanel(ideaName) {
   /* --- Score section --- */
   html += '<div class="panel-section">' +
     '<div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:16px">' +
-      '<div><div class="panel-score-big" style="color:' + scoreColor(rec.score) + '">' + rec.score + '</div>' +
+      '<div><div class="panel-score-big" style="color:' + scoreColor(rec.scoreV3 || rec.score) + '">' + (rec.scoreV3 || rec.score) + '</div>' +
       '<div class="panel-score-label">Score total /100</div></div>' +
       '<div style="flex:1">' + decisionTag(rec.decision) + '&nbsp;&nbsp;' + statusTag(rec.status) + '</div>' +
     '</div>' +
