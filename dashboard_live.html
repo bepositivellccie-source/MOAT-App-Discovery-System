@@ -371,7 +371,7 @@
             <th>Idee</th>
             <th>Categorie</th>
             <th>Segment</th>
-            <th>Score</th>
+            <th>Score V3</th>
             <th>Decision</th>
             <th>Statut</th>
             <th>Engine</th>
@@ -1758,7 +1758,7 @@ function connect() {
 }
 
 async function fetchRecords() {
-  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?sort%5B0%5D%5Bfield%5D=Total+Score&sort%5B0%5D%5Bdirection%5D=desc`;
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?sort%5B0%5D%5Bfield%5D=Score+V3&sort%5B0%5D%5Bdirection%5D=desc`;
   const resp = await fetch(url, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
   if (!resp.ok) throw new Error(`Airtable ${resp.status}`);
   const data = await resp.json();
@@ -1785,6 +1785,7 @@ async function fetchRecords() {
     engineVerified: r.fields['Engine Verified']?.name || r.fields['Engine Verified'] || '',
     moatId: r.fields['ID'] || '',
     rang: r.fields['Rang']?.name || r.fields['Rang'] || '',
+    scoreV3: r.fields['Score V3'] || 0,
   }));
 }
 
@@ -2014,7 +2015,7 @@ function renderTable() {
       '<td class="name">' + r.idea + '</td>' +
       '<td>' + r.category + '</td>' +
       '<td>' + r.segment.substring(0,40) + '</td>' +
-      '<td><span class="score ' + sc + '">' + r.score + '</span></td>' +
+      '<td><span class="score ' + scoreClass(r.scoreV3 || r.score) + '" title="V3: ' + (r.scoreV3 || '?') + ' | Base: ' + r.score + '">' + (r.scoreV3 || r.score) + '</span></td>' +
       '<td>' + decisionTag(r.decision) + '</td>' +
       '<td>' + statusTag(r.status) + '</td>' +
       '<td>' + verifiedTag(r.engineVerified) + '</td>' +
