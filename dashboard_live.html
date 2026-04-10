@@ -133,7 +133,7 @@
   .tag-validation{color:var(--accent-cyan);background:var(--accent-cyan-dim)} .tag-ready{color:var(--accent-green);background:var(--accent-green-dim)}
   .tag-killed{color:var(--accent-red);background:var(--accent-red-dim)}
   .has-build-sheet { position:relative; }
-  .has-build-sheet .name::after { content:'BUILD SHEET';font-size:8px;font-weight:700;margin-left:8px;padding:2px 6px;border-radius:3px;background:var(--accent-purple-dim);color:var(--accent-purple);vertical-align:middle;letter-spacing:0.5px; }
+  .has-build-sheet .name::after { content:'FICHE BUILD';font-size:8px;font-weight:700;margin-left:8px;padding:2px 6px;border-radius:3px;background:var(--accent-purple-dim);color:var(--accent-purple);vertical-align:middle;letter-spacing:0.5px; }
 
   /* Score colors */
   .s-a{color:var(--accent-green)} .s-b{color:var(--accent-blue)} .s-c{color:var(--accent-amber)} .s-d{color:var(--accent-red)}
@@ -331,7 +331,7 @@
         <div id="pipelineLegend"></div>
       </div>
       <div class="card">
-        <h3>Top 3 Opportunities</h3>
+        <h3>Top 3 Opportunites</h3>
         <div id="topIdeas"></div>
       </div>
     </div>
@@ -406,6 +406,15 @@ let refreshInterval;
 const BUILD_SHEETS = {
   'SleepCoach FR': {
     score: 90,
+    pitch: [
+      'Un Francais sur trois dort mal. C\'est 20 millions de personnes qui cherchent une solution, souvent la nuit, souvent en urgence. La plupart finissent sur des apps qui mesurent le probleme sans le resoudre.',
+      'Le traitement de reference contre l\'insomnie, c\'est la CBT-I, la therapie cognitive et comportementale. C\'est recommande par la Haute Autorite de Sante, prouve sur 75 a 80% des patients. Et pourtant, aucune app ne le propose en francais. Pas une seule.',
+      'On a analyse 450 avis sur les 3 leaders du marche. 43% de negatifs sur Sleep Cycle, 48% sur Calm. La plainte numero un ? Le prix. 60% des frustrations concernent le paywall. Les gens sont prets a payer, mais ils veulent de la valeur reelle, pas du contenu verrouille.',
+      'SleepCoach ne track pas le sommeil. Il le traite. Un programme personnalise de 8 semaines, avec des techniques prouvees, un journal quotidien, et des exercices de relaxation. Pas de gadget, pas de tracking passif. De la vraie therapie, sur mobile, en francais.',
+      'Le marche est mondial. Notre geo-scanner a identifie l\'Italie comme marche #1 (score 88/100, +143% de croissance iOS), devant la France (78) et l\'Espagne (76). Zero concurrent CBT-I dans ces trois langues.',
+      'La stack est identique a Respir. Meme Flutter, meme Supabase, meme RevenueCat. Le cout de lancement est quasi nul. Le vrai investissement, c\'est 65 heures de dev sur 12 semaines et un partenariat avec un specialiste du sommeil pour valider le contenu.',
+      'A 6.99 EUR par mois, on est deux fois moins cher que Calm tout en proposant quelque chose de therapeutique. Avec 2% de capture sur le marche francophone, le SOM est a 300 000 EUR par mois. Meme a 0.1% de capture, c\'est un micro-SaaS viable.',
+    ],
     mvp: { weeks: 12, totalHours: 65, hoursPerWeek: 5.5 },
     stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
     roadmap: [
@@ -436,11 +445,38 @@ const BUILD_SHEETS = {
       { country: 'Espagne', score: 76 },
     ],
     monetization: '6.99 EUR/mois ou 49.99 EUR/an',
+    forecast: {
+      price: '6.99/mois — 49.99/an',
+      conversion: '3.0%',
+      churn: '4%/mois',
+      months: [
+        { m: 1, subs: 600, mrr: 3600, profit: 3560 },
+        { m: 3, subs: 2009, mrr: 12054, profit: 23130 },
+        { m: 6, subs: 4832, mrr: 28992, profit: 91710 },
+        { m: 9, subs: 8921, mrr: 53526, profit: 225558 },
+        { m: 12, subs: 14959, mrr: 89754, profit: 455292 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 44877, arr: 538524 },
+        { label: 'Base', mrr: 89754, arr: 1077048 },
+        { label: 'Optimiste', mrr: 179508, arr: 2154096 },
+      ],
+      verdict: 'EXCELLENT — Business auto-suffisant',
+    },
     risk: 'Besoin d\'1 specialiste du sommeil partenaire pour contenu CBT-I',
     goNoGo: { met: 5, total: 5 },
   },
   'CoachCRM': {
     score: 79,
+    pitch: [
+      'En France, 50 000 coachs sportifs et praticiens bien-etre gerent leur activite sur WhatsApp, Google Sheets et des bouts de Notion. Ils envoient des programmes par photo, suivent les paiements dans un tableur, et perdent des clients faute de relance.',
+      'On a regarde ce qui existe. Strong, Fitbod, Hevy. 52% d\'avis negatifs sur Fitbod. Mais surtout, ces apps sont des trackers d\'exercices. Elles aident le sportif a compter ses repetitions. Aucune n\'aide le coach a gerer son business.',
+      'Le gap est entre le FITNESS et le BUSINESS. Pas un seul outil mobile-first ne combine : fiche client, programme personnalise, suivi de seance, et facturation. C\'est comme si les restaurants n\'avaient que des apps de recettes mais aucun outil de caisse.',
+      'CoachCRM comble ce vide. Dashboard du coach, gestion clients, builder de programmes, suivi de seances et facturation PDF. Tout sur mobile, pense pour quelqu\'un qui est entre deux clients et qui a 30 secondes.',
+      'Le modele freemium est simple : 5 clients gratuits pour prouver la valeur, puis 9.99 EUR par mois en Pro. C\'est le prix d\'un cafe par semaine pour un outil qui fait gagner 3 heures de gestion administrative.',
+      'Le MVP est livrable en 7 semaines, 50 heures de travail. Meme stack que Respir, zero cout d\'infrastructure supplementaire. Le risque est faible, le retour potentiel est un SaaS a revenu recurrent.',
+    ],
     mvp: { weeks: 7, totalHours: 50, hoursPerWeek: 7 },
     stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
     roadmap: [
@@ -460,11 +496,37 @@ const BUILD_SHEETS = {
     competitorNote: 'Ce sont des TRACKERS, pas des CRMs',
     gap: 'Aucune app combine gestion clients + programmes + facturation pour coachs',
     monetization: 'Freemium (5 clients gratuits), Pro 9.99 EUR/mois',
+    forecast: {
+      price: '9.99/mois — 79.99/an',
+      conversion: '5.0%',
+      churn: '4%/mois',
+      months: [
+        { m: 1, subs: 50, mrr: 442, profit: 436 },
+        { m: 3, subs: 151, mrr: 1333, profit: 2640 },
+        { m: 6, subs: 307, mrr: 2711, profit: 9359 },
+        { m: 9, subs: 475, mrr: 4194, profit: 20423 },
+        { m: 12, subs: 655, mrr: 5784, profit: 36131 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 2892, arr: 34702 },
+        { label: 'Base', mrr: 5784, arr: 69404 },
+        { label: 'Optimiste', mrr: 11567, arr: 138808 },
+      ],
+      verdict: 'SOLIDE — Revenu viable solo dev',
+    },
     risk: 'Scope creep (piege CRM features)',
     goNoGo: { met: 4, total: 5 },
   },
   'Exercice Builder': {
     score: 81,
+    pitch: [
+      'Chaque semaine, des milliers de kines et de coachs sportifs passent 2 heures a creer des programmes d\'exercices pour leurs patients. Le process : prendre des photos, les coller dans un Word ou un PDF, envoyer par WhatsApp, et prier pour que le patient retrouve le bon fichier.',
+      'Le probleme n\'est pas le manque de competences du praticien. C\'est l\'absence totale d\'outil adapte. Il n\'existe aucune app mobile francophone qui permette de construire un programme d\'exercices, de l\'envoyer au patient, et de suivre s\'il a ete fait.',
+      'Exercice Builder remplace le bricolage par un flux propre : bibliotheque d\'exercices avec images, builder de programme par glisser-deposer, envoi au patient en un lien, et feedback automatique.',
+      'Le MVP est le plus rapide des trois projets : 6 semaines, 35 heures. C\'est un test a faible risque pour valider la demande avant d\'investir plus.',
+      'Note strategique : Exercice Builder est potentiellement le coeur de CoachCRM. Si la demande est confirmee, les deux projets peuvent fusionner en une seule app plus complete. C\'est un pari a double sortie : soit standalone, soit feature killer d\'un produit plus large.',
+    ],
     mvp: { weeks: 6, totalHours: 35, hoursPerWeek: 6 },
     stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
     roadmap: [
@@ -480,6 +542,25 @@ const BUILD_SHEETS = {
     gap: 'WhatsApp + PDF bricolage pour programmes exercices',
     mergeNote: 'Pourrait fusionner avec CoachCRM',
     monetization: 'Abonnement',
+    forecast: {
+      price: 'A definir (~7.99/mois)',
+      conversion: '3.5%',
+      churn: '5%/mois',
+      months: [
+        { m: 1, subs: 35, mrr: 280, profit: 274 },
+        { m: 3, subs: 95, mrr: 760, profit: 1482 },
+        { m: 6, subs: 210, mrr: 1680, profit: 5544 },
+        { m: 9, subs: 340, mrr: 2720, profit: 12132 },
+        { m: 12, subs: 480, mrr: 3840, profit: 21408 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 1920, arr: 23040 },
+        { label: 'Base', mrr: 3840, arr: 46080 },
+        { label: 'Optimiste', mrr: 7680, arr: 92160 },
+      ],
+      verdict: 'VIABLE — Micro-SaaS rentable',
+    },
     risk: '--',
     goNoGo: { met: 4, total: 5 },
   }
@@ -520,6 +601,12 @@ async function fetchRecords() {
     pain: r.fields['Pain'] || 0,
     frequency: r.fields['Frequency'] || 0,
     willPay: r.fields['Will Pay'] || 0,
+    marketAccess: r.fields['Market Access'] || 0,
+    competitionGap: r.fields['Competition Gap'] || 0,
+    differentiation: r.fields['Differentiation'] || 0,
+    personalFit: r.fields['Personal Fit'] || 0,
+    mvpSpeed: r.fields['MVP Speed'] || 0,
+    retention: r.fields['Retention'] || 0,
   }));
 }
 
@@ -798,19 +885,25 @@ function openPanel(ideaName) {
 
   /* --- Score breakdown bars (use Airtable fields if available) --- */
   var criteria = [
-    { label: 'Pain', val: rec.pain || 0, max: 10 },
-    { label: 'Frequency', val: rec.frequency || 0, max: 10 },
-    { label: 'Will Pay', val: rec.willPay || 0, max: 10 },
+    { label: 'Douleur', val: rec.pain || 0, max: 5 },
+    { label: 'Frequence', val: rec.frequency || 0, max: 5 },
+    { label: 'Volonte de payer', val: rec.willPay || 0, max: 5 },
   ];
-  /* Add more criteria placeholders for the 9-criteria display */
-  var extraCriteria = ['Market Size','Competition Gap','Solo-Dev Fit','Monetization','Time to MVP','Scalability'];
-  extraCriteria.forEach(function(name) {
-    /* Estimate from score if not available */
-    criteria.push({ label: name, val: Math.round(rec.score / 10 * (0.7 + Math.random()*0.3)), max: 10 });
+  /* Add more criteria from Airtable fields */
+  var extraFields = [
+    { label: 'Acces marche', field: 'marketAccess' },
+    { label: 'Faiblesse concurrence', field: 'competitionGap' },
+    { label: 'Differenciation', field: 'differentiation' },
+    { label: 'Fit personnel', field: 'personalFit' },
+    { label: 'Vitesse MVP', field: 'mvpSpeed' },
+    { label: 'Retention', field: 'retention' },
+  ];
+  extraFields.forEach(function(f) {
+    criteria.push({ label: f.label, val: rec[f.field] || Math.round(rec.score / 20), max: 5 });
   });
 
   html += '<div class="panel-section">' +
-    '<div class="panel-section-title">Score Breakdown (9 criteres)</div>';
+    '<div class="panel-section-title">Analyse par critere (9 axes)</div>';
   criteria.forEach(function(c) {
     var pct = Math.min(c.val / c.max * 100, 100);
     var color = pct >= 70 ? 'var(--accent-green)' : pct >= 50 ? 'var(--accent-blue)' : pct >= 30 ? 'var(--accent-amber)' : 'var(--accent-red)';
@@ -826,16 +919,29 @@ function openPanel(ideaName) {
   html += '<div class="panel-section">' +
     '<div class="panel-section-title">Details</div>' +
     '<div class="info-row"><div class="info-label">Probleme</div><div class="info-value">' + (rec.problem || '--') + '</div></div>' +
-    '<div class="info-row"><div class="info-label">Segment</div><div class="info-value">' + (rec.segment || '--') + '</div></div>' +
+    '<div class="info-row"><div class="info-label">Segment cible</div><div class="info-value">' + (rec.segment || '--') + '</div></div>' +
     '<div class="info-row"><div class="info-label">Categorie</div><div class="info-value">' + (rec.category || '--') + '</div></div>' +
-    '<div class="info-row"><div class="info-label">Revenue Model</div><div class="info-value">' + (rec.revenue || '--') + '</div></div>' +
+    '<div class="info-row"><div class="info-label">Monetisation</div><div class="info-value">' + (rec.revenue || '--') + '</div></div>' +
     '<div class="info-row"><div class="info-label">Proch. action</div><div class="info-value">' + (rec.nextAction || '--') + '</div></div>' +
   '</div>';
 
-  /* --- BUILD SHEET (only for top 3) --- */
+  /* --- PITCH (why this app) --- */
+  if (bs && bs.pitch) {
+    html += '<div class="panel-section">' +
+      '<div class="panel-section-title" style="color:var(--accent-cyan)">Pourquoi cette app</div>' +
+      '<div style="display:flex;flex-direction:column;gap:14px">';
+    bs.pitch.forEach(function(p, i) {
+      html += '<div style="font-size:13px;line-height:1.65;color:var(--text-secondary);padding:14px 16px;background:var(--bg-secondary);border-radius:8px;border-left:3px solid ' +
+        (i === 0 ? 'var(--accent-cyan)' : i === bs.pitch.length - 1 ? 'var(--accent-green)' : 'var(--border)') + '">' +
+        p + '</div>';
+    });
+    html += '</div></div>';
+  }
+
+  /* --- FICHE BUILD (only for top 3) --- */
   if (bs) {
     html += '<div class="panel-section">' +
-      '<div class="panel-section-title" style="color:var(--accent-purple)">Build Sheet</div>';
+      '<div class="panel-section-title" style="color:var(--accent-purple)">Fiche Build</div>';
 
     /* MVP card */
     html += '<div class="bs-card">' +
@@ -950,6 +1056,75 @@ function openPanel(ideaName) {
       '<div class="bs-card-title"><div class="dot" style="background:var(--accent-green)"></div><span style="color:var(--accent-green)">Monetisation</span></div>' +
       '<p class="highlight">' + bs.monetization + '</p>' +
     '</div>';
+
+    /* Revenue Forecast */
+    if (bs.forecast) {
+      var fc = bs.forecast;
+      html += '<div class="bs-card" style="border:1px solid rgba(91,138,255,0.2);background:rgba(91,138,255,0.04)">' +
+        '<div class="bs-card-title"><div class="dot" style="background:var(--accent-blue)"></div><span style="color:var(--accent-blue)">Previsionnel 12 mois</span></div>';
+
+      /* Params */
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">' +
+        '<div style="text-align:center;padding:8px;background:var(--bg-card);border-radius:6px"><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Prix</div><div style="font-size:13px;font-weight:700;color:var(--text-primary);margin-top:4px">' + fc.price + '</div></div>' +
+        '<div style="text-align:center;padding:8px;background:var(--bg-card);border-radius:6px"><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Conversion</div><div style="font-size:13px;font-weight:700;color:var(--accent-green);margin-top:4px">' + fc.conversion + '</div></div>' +
+        '<div style="text-align:center;padding:8px;background:var(--bg-card);border-radius:6px"><div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Churn</div><div style="font-size:13px;font-weight:700;color:var(--accent-amber);margin-top:4px">' + fc.churn + '</div></div>' +
+      '</div>';
+
+      /* Monthly progression table */
+      html += '<table style="width:100%;border-collapse:collapse;margin-bottom:12px">' +
+        '<tr style="border-bottom:1px solid var(--border-subtle)">' +
+          '<th style="padding:6px 8px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);text-align:left;background:none">Mois</th>' +
+          '<th style="padding:6px 8px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);text-align:right;background:none">Abonnes</th>' +
+          '<th style="padding:6px 8px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);text-align:right;background:none">MRR</th>' +
+          '<th style="padding:6px 8px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);text-align:right;background:none">Profit cumul</th>' +
+        '</tr>';
+      fc.months.forEach(function(row) {
+        var mrrColor = row.mrr >= 10000 ? 'var(--accent-green)' : row.mrr >= 1000 ? 'var(--accent-blue)' : 'var(--text-secondary)';
+        html += '<tr style="border-bottom:1px solid var(--border-subtle)">' +
+          '<td style="padding:7px 8px;font-family:JetBrains Mono;font-size:12px;color:var(--text-secondary)">M' + row.m + '</td>' +
+          '<td style="padding:7px 8px;font-family:JetBrains Mono;font-size:12px;color:var(--text-secondary);text-align:right">' + row.subs.toLocaleString('fr-FR') + '</td>' +
+          '<td style="padding:7px 8px;font-family:JetBrains Mono;font-size:12px;font-weight:700;color:' + mrrColor + ';text-align:right">' + row.mrr.toLocaleString('fr-FR') + ' E</td>' +
+          '<td style="padding:7px 8px;font-family:JetBrains Mono;font-size:12px;color:var(--accent-green);text-align:right">+' + row.profit.toLocaleString('fr-FR') + ' E</td>' +
+        '</tr>';
+      });
+      html += '</table>';
+
+      /* MRR bar visualization */
+      var maxMrr = fc.months[fc.months.length - 1].mrr;
+      html += '<div style="display:flex;gap:3px;align-items:flex-end;height:50px;margin-bottom:12px">';
+      fc.months.forEach(function(row) {
+        var pct = Math.max(row.mrr / maxMrr * 100, 4);
+        var barColor = row.mrr >= 10000 ? 'var(--accent-green)' : row.mrr >= 1000 ? 'var(--accent-blue)' : 'var(--accent-purple)';
+        html += '<div style="flex:1;background:' + barColor + ';border-radius:3px 3px 0 0;height:' + pct + '%;min-height:3px;opacity:0.7" title="M' + row.m + ': ' + row.mrr.toLocaleString('fr-FR') + ' EUR"></div>';
+      });
+      html += '</div>';
+
+      /* Breakeven */
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-green-dim);border-radius:6px;margin-bottom:12px">' +
+        '<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-green)"></div>' +
+        '<span style="font-size:12px;font-weight:600;color:var(--accent-green)">Breakeven : ' + fc.breakeven + '</span>' +
+      '</div>';
+
+      /* Scenarios */
+      html += '<div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Scenarios MRR a M12</div>';
+      fc.scenarios.forEach(function(s) {
+        var color = s.mrr >= 50000 ? 'var(--accent-green)' : s.mrr >= 5000 ? 'var(--accent-blue)' : 'var(--accent-amber)';
+        var barW = Math.min(s.mrr / fc.scenarios[fc.scenarios.length - 1].mrr * 100, 100);
+        html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">' +
+          '<div style="width:80px;font-size:11px;color:var(--text-muted)">' + s.label + '</div>' +
+          '<div style="flex:1;height:6px;background:var(--bg-secondary);border-radius:3px;overflow:hidden"><div style="width:' + barW + '%;height:100%;background:' + color + ';border-radius:3px"></div></div>' +
+          '<div style="font-family:JetBrains Mono;font-size:12px;font-weight:700;color:' + color + ';min-width:90px;text-align:right">' + s.mrr.toLocaleString('fr-FR') + ' E/m</div>' +
+        '</div>';
+      });
+
+      /* Verdict */
+      var verdictColor = fc.verdict.includes('EXCELLENT') ? 'var(--accent-green)' : fc.verdict.includes('SOLIDE') ? 'var(--accent-blue)' : 'var(--accent-amber)';
+      html += '<div style="margin-top:12px;padding:10px 14px;background:var(--bg-card);border-radius:6px;border-left:3px solid ' + verdictColor + '">' +
+        '<span style="font-size:12px;font-weight:700;color:' + verdictColor + '">' + fc.verdict + '</span>' +
+      '</div>';
+
+      html += '</div>';
+    }
 
     /* Risk */
     html += '<div class="bs-card">' +
