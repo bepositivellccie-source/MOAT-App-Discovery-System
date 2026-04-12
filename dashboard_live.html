@@ -275,6 +275,45 @@
   .compare-bar-wrap { width:100%;height:6px;background:var(--bg-elevated);border-radius:3px;margin-top:4px;overflow:hidden; }
   .compare-bar-fill { height:100%;border-radius:3px; }
 
+  /* ==================== QUICK ACTIONS ==================== */
+  .quick-actions { display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px; }
+  .qa-btn { background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px 16px;cursor:pointer;transition:all 0.2s;text-align:left;display:flex;flex-direction:column;gap:8px;width:100%; }
+  .qa-btn:hover { border-color:var(--border);background:var(--bg-card-hover);transform:translateY(-1px); }
+  .qa-btn-icon { font-size:18px;font-weight:700;color:var(--accent-blue);font-family:'JetBrains Mono'; }
+  .qa-btn-label { font-size:13px;font-weight:600;color:var(--text-primary); }
+  .qa-btn-sub { font-size:11px;color:var(--text-muted); }
+
+  /* Inline forms */
+  .inline-form { background:var(--bg-card);border:1px solid var(--accent-blue);border-radius:var(--radius);padding:24px;margin-bottom:28px;display:none; }
+  .inline-form.open { display:block; }
+  .inline-form h4 { font-size:14px;font-weight:700;margin-bottom:16px;color:var(--accent-blue); }
+  .reviews-form { background:var(--bg-card);border:1px solid var(--accent-purple);border-radius:var(--radius);padding:24px;margin-bottom:28px;display:none; }
+  .reviews-form.open { display:block; }
+  .reviews-form h4 { font-size:14px;font-weight:700;margin-bottom:8px;color:var(--accent-purple); }
+  .reviews-form > p { font-size:12px;color:var(--text-muted);margin-bottom:16px; }
+  .form-row { margin-bottom:14px; }
+  .form-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px;display:block; }
+  .form-input { width:100%;padding:10px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'Inter';font-size:13px;outline:none;transition:border-color 0.15s; }
+  .form-input:focus { border-color:var(--accent-blue); }
+  .form-textarea { width:100%;padding:10px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'Inter';font-size:13px;outline:none;resize:vertical;min-height:80px;transition:border-color 0.15s; }
+  .form-textarea:focus { border-color:var(--accent-blue); }
+  .form-actions { display:flex;gap:10px;margin-top:16px; }
+  .form-submit { padding:10px 24px;background:var(--accent-blue);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Inter';font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s; }
+  .form-submit:hover { opacity:0.85; }
+  .form-cancel { padding:10px 16px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'Inter';font-size:13px;cursor:pointer;transition:all 0.15s; }
+  .form-cancel:hover { color:var(--text-primary); }
+
+  /* Workflow hebdomadaire */
+  .workflow-days { display:grid;grid-template-columns:repeat(5,1fr);gap:10px; }
+  .workflow-day { background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:14px; }
+  .workflow-day-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px; }
+  .workflow-task { font-size:11px;color:var(--text-secondary);display:flex;gap:6px;align-items:flex-start;margin-bottom:7px;line-height:1.4; }
+  .workflow-task::before { content:'→';color:var(--accent-blue);flex-shrink:0;font-weight:700; }
+
+  /* Scoring row highlight */
+  .scoring-highlight td { background:rgba(167,139,250,0.10) !important; }
+  .scoring-highlight td:first-child { border-left:2px solid var(--accent-purple); }
+
   /* Responsive */
   @media(max-width:1100px){
     .kpi-row{grid-template-columns:repeat(3,1fr)}
@@ -313,6 +352,7 @@
     <p>Entre ton Personal Access Token Airtable pour activer le dashboard live.<br>
     Va sur <a href="https://airtable.com/create/tokens" target="_blank" style="color:var(--accent-blue)">airtable.com/create/tokens</a>, cree un token avec le scope <code style="color:var(--accent-purple)">data.records:read</code> sur ta base MOAT.</p>
     <input type="password" id="tokenInput" class="setup-input" placeholder="pat_xxxxxxxxxxxx">
+    <div id="connectError" style="display:none;margin-top:12px;padding:10px 16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12px;color:var(--accent-red);text-align:left"></div>
     <br>
     <button class="setup-btn" onclick="connect()">Connecter</button>
   </div>
@@ -382,6 +422,97 @@
         <tbody id="tableBody"></tbody>
       </table>
     </div>
+    <!-- Workflow Hebdomadaire -->
+    <div id="workflowSection" style="margin-bottom:28px">
+      <div class="section-title">Workflow Hebdomadaire</div>
+      <div class="workflow-days">
+        <div class="workflow-day">
+          <div class="workflow-day-label">Lundi</div>
+          <div class="workflow-task">Scorer 2 nouvelles idées (pain, fréquence, willPay)</div>
+          <div class="workflow-task">Mettre à jour Airtable</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Mardi</div>
+          <div class="workflow-task">Analyser 50+ avis sur les concurrents du top 1</div>
+          <div class="workflow-task">Identifier les pain points non résolus</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Mercredi</div>
+          <div class="workflow-task">Valider hypothèses terrain (forums, Reddit, groupes)</div>
+          <div class="workflow-task">Lancer le MOAT Engine sur l'idée en Scoring</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Jeudi</div>
+          <div class="workflow-task">Créer la landing page de l'idée A</div>
+          <div class="workflow-task">Préparer la fiche Build si score 75+</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Vendredi</div>
+          <div class="workflow-task">Bilan : décisions A/B/C/D à jour</div>
+          <div class="workflow-task">Définir priorité semaine suivante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Rapides -->
+    <div class="section-title">Actions Rapides</div>
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="toggleNewIdea()">
+        <div class="qa-btn-icon">+ New</div>
+        <div class="qa-btn-label">Nouvelle idée</div>
+        <div class="qa-btn-sub">Saisir Idea + Segment + Problem</div>
+      </button>
+      <button class="qa-btn" onclick="scorerIdee()">
+        <div class="qa-btn-icon">◎ Score</div>
+        <div class="qa-btn-label">Scorer une idée</div>
+        <div class="qa-btn-sub">Voir les idées en Scoring</div>
+      </button>
+      <button class="qa-btn" onclick="checklistSemaine()">
+        <div class="qa-btn-icon">≡ Week</div>
+        <div class="qa-btn-label">Checklist semaine</div>
+        <div class="qa-btn-sub">Voir le workflow hebdomadaire</div>
+      </button>
+      <button class="qa-btn" onclick="toggleAnalyseAvis()">
+        <div class="qa-btn-icon">⌁ Avis</div>
+        <div class="qa-btn-label">Analyser des avis</div>
+        <div class="qa-btn-sub">Coller des reviews → Claude Code</div>
+      </button>
+    </div>
+
+    <!-- Inline form: Nouvelle idée -->
+    <div class="inline-form" id="newIdeaForm">
+      <h4>+ Nouvelle idée</h4>
+      <div class="form-row">
+        <label class="form-label">Idea *</label>
+        <input type="text" class="form-input" id="fi_idea" placeholder="ex: SleepCoach FR">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Segment cible *</label>
+        <input type="text" class="form-input" id="fi_segment" placeholder="ex: 20M insomniacs FR">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Problème *</label>
+        <textarea class="form-textarea" id="fi_problem" placeholder="Décris le problème réel que cette app résout..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="form-submit" onclick="submitNewIdea()">Copier pour Airtable</button>
+        <button class="form-cancel" onclick="toggleNewIdea()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Reviews analyzer -->
+    <div class="reviews-form" id="reviewsForm">
+      <h4>Analyser des avis</h4>
+      <p>Colle des avis Google Play ci-dessous. Le bouton copie un prompt prêt pour Claude Code.</p>
+      <div class="form-row">
+        <textarea class="form-textarea" id="reviewsTextarea" placeholder="Colle ici les avis Google Play à analyser..." style="min-height:160px"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="form-submit" style="background:var(--accent-purple)" onclick="envoyerAvis()">Envoyer à Claude Code</button>
+        <button class="form-cancel" onclick="toggleAnalyseAvis()">Fermer</button>
+      </div>
+    </div>
+
   </div>
 
   <div class="footer"><span>MOAT</span> Live Dashboard &mdash; Auto-refresh 30s &mdash; Airtable-connected</div>
@@ -1738,6 +1869,98 @@ const BUILD_SHEETS = {
     },
     risk: 'Couts IA (tokens LLM) a maitriser. Cannibalisation potentielle avec TimeToInvoice.',
     goNoGo: { met: 5, total: 5 },
+  },
+  'DecidR': {
+    score: 95, verified: true, engineScore: 95,
+    bri: 88,
+    pitch: [
+      'Un solopreneur prend en moyenne 100 micro-decisions par jour. Quel outil utiliser. Quel format choisir. Quelle tache prioriser. A qui repondre d\'abord. Chaque decision consomme de la glucose cerebrale. Le soir, il ne reste plus rien pour les decisions strategiques.',
+      'Ce n\'est pas un probleme de temps. C\'est un probleme de capacite cognitive. La science appelle ca la fatigue decisionnelle. Et aucune app ne l\'adresse. Todoist gere les taches. Notion organise les notes. Aucun outil ne reduit le NOMBRE de decisions que tu prends.',
+      'DecidR pre-mache les micro-decisions : templates par contexte (marketing, dev, admin, communication), regles automatiques ("si ca prend moins de 2 minutes, fais-le maintenant"), et un journal cognitif qui track combien de decisions tu as prises aujourd\'hui.',
+      'Quand le compteur atteint ta limite, l\'app te dit : "Stop. Delegue le reste a demain. Fais une pause respiratoire." Synergie directe avec Respir. C\'est le chainon manquant entre productivite et sante mentale.',
+      'ZERO app dediee a la fatigue decisionnelle dans AUCUNE langue. Premiere app hors-sante dans le top 3 du pipeline MOAT.',
+    ],
+    mvp: { weeks: 7, totalHours: 42, hoursPerWeek: 6 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model', phase: 'setup' },
+      { week: 'S2', label: 'Templates de decision', phase: 'core' },
+      { week: 'S3', label: 'Regles automatiques', phase: 'core' },
+      { week: 'S4', label: 'Journal cognitif + compteur', phase: 'core' },
+      { week: 'S5', label: 'Alertes + pause respiratoire', phase: 'core' },
+      { week: 'S6', label: 'RevenueCat + paywall', phase: 'core' },
+      { week: 'S7', label: 'Polish + Play Store', phase: 'launch' },
+    ],
+    market: { target: '4M solopreneurs/freelances FR', tam: '192M EUR', som: '48K/mois' },
+    competitors: [],
+    competitorNote: 'ZERO app dediee a la fatigue decisionnelle. Ni en FR ni en EN. Territoire mondial vierge.',
+    gap: 'Aucune app ne reduit le nombre de decisions -- toutes gerent les taches APRES la decision',
+    monetization: '5.99 EUR/mois ou 44.99 EUR/an',
+    forecast: {
+      price: '5.99/mois -- 44.99/an',
+      conversion: '3.0%',
+      churn: '5%/mois',
+      months: [
+        { m: 1, subs: 350, mrr: 2100, profit: 2060 },
+        { m: 3, subs: 1000, mrr: 6000, profit: 11640 },
+        { m: 6, subs: 2400, mrr: 14400, profit: 45600 },
+        { m: 9, subs: 4000, mrr: 24000, profit: 100800 },
+        { m: 12, subs: 6000, mrr: 36000, profit: 180000 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 18000, arr: 216000 },
+        { label: 'Base', mrr: 36000, arr: 432000 },
+        { label: 'Optimiste', mrr: 72000, arr: 864000 },
+      ],
+      verdict: 'EXCELLENT -- Business auto-suffisant',
+    },
+    risk: 'Concept nouveau -- les gens ne savent pas qu\'ils ont ce probleme. Education marche necessaire.',
+    goNoGo: { met: 5, total: 5 },
+  },
+  'MemoContext': {
+    score: 78, verified: true, engineScore: 78,
+    bri: 85,
+    pitch: [
+      'Tu travailles sur 3 projets. Tu quittes le projet A pendant 10 jours. Quand tu y reviens, tu passes 2 heures a retrouver ou tu en etais. Derniere decision, prochaine etape, fichiers importants, blocages. Cette information est dans ta tete -- et ta tete a oublie.',
+      'Notion ne fait pas ca. Git log ne fait pas ca. Aucun outil ne capture le CONTEXTE de ou tu etais quand tu as quitte un projet. Tout le monde gere les TACHES, personne ne gere le CONTEXTE.',
+      'MemoContext te pose 3 questions en 30 secondes quand tu quittes un projet : "Ou j\'en suis", "Prochaine etape", "Ce qui me bloque". Quand tu reviens, il te restitue tout. Comme un post-it intelligent qui se souvient pour toi.',
+      'Le MVP est le plus rapide du pipeline : 4 semaines, 24 heures de dev. C\'est un test a risque zero.',
+    ],
+    mvp: { weeks: 4, totalHours: 24, hoursPerWeek: 6 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model projets', phase: 'setup' },
+      { week: 'S2', label: 'Capture contexte (3 questions)', phase: 'core' },
+      { week: 'S3', label: 'Restitution + historique', phase: 'core' },
+      { week: 'S4', label: 'Polish + Play Store', phase: 'launch' },
+    ],
+    market: { target: '5M devs/freelances multi-projets', tam: '240M EUR', som: '60K/mois' },
+    competitors: [],
+    competitorNote: 'Notion et Obsidian gerent les NOTES, pas le CONTEXTE de projet. Territoire vierge.',
+    gap: 'Zero outil de capture/restitution de contexte projet',
+    monetization: '3.99 EUR/mois ou 29.99 EUR/an',
+    forecast: {
+      price: '3.99/mois -- 29.99/an',
+      conversion: '2.5%',
+      churn: '6%/mois',
+      months: [
+        { m: 1, subs: 250, mrr: 1000, profit: 960 },
+        { m: 3, subs: 650, mrr: 2600, profit: 4920 },
+        { m: 6, subs: 1400, mrr: 5600, profit: 17400 },
+        { m: 9, subs: 2200, mrr: 8800, profit: 36000 },
+        { m: 12, subs: 3200, mrr: 12800, profit: 63600 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 6400, arr: 76800 },
+        { label: 'Base', mrr: 12800, arr: 153600 },
+        { label: 'Optimiste', mrr: 25600, arr: 307200 },
+      ],
+      verdict: 'SOLIDE -- Revenu viable solo dev',
+    },
+    risk: 'Marche niche -- devs et freelances multi-projets seulement. Mais MVP 4 semaines = test quasi-gratuit.',
+    goNoGo: { met: 5, total: 5 },
   }
 };
 
@@ -1758,7 +1981,7 @@ function connect() {
 }
 
 async function fetchRecords() {
-  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?sort%5B0%5D%5Bfield%5D=Score+V3&sort%5B0%5D%5Bdirection%5D=desc`;
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
   const resp = await fetch(url, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
   if (!resp.ok) throw new Error(`Airtable ${resp.status}`);
   const data = await resp.json();
@@ -1792,6 +2015,7 @@ async function fetchRecords() {
 async function loadData() {
   try {
     records = await fetchRecords();
+    records.sort((a, b) => (b.scoreV3 || b.score) - (a.scoreV3 || a.score));
     document.getElementById('setup').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('liveIndicator').style.display = 'flex';
@@ -1801,13 +2025,25 @@ async function loadData() {
       refreshInterval = setInterval(async () => {
         try {
           records = await fetchRecords();
+          records.sort((a, b) => (b.scoreV3 || b.score) - (a.scoreV3 || a.score));
           render();
           document.getElementById('refreshInfo').textContent = new Date().toLocaleTimeString('fr-FR');
         } catch(e) { console.error(e); }
       }, 30000);
     }
   } catch(e) {
-    alert('Erreur: ' + e.message + '\nVerifie ton token Airtable.');
+    const errDiv = document.getElementById('connectError');
+    const msg = e.message.includes('401') ? 'Token invalide ou expiré — génère un nouveau token sur airtable.com/create/tokens.'
+              : e.message.includes('403') ? 'Accès refusé (403) — vérifie que le token a le scope data.records:read sur la base MOAT.'
+              : 'Erreur : ' + e.message;
+    errDiv.textContent = msg;
+    errDiv.style.display = 'block';
+    localStorage.removeItem('moat_airtable_token');
+    TOKEN = '';
+    document.getElementById('setup').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('liveIndicator').style.display = 'none';
+    if (refreshInterval) { clearInterval(refreshInterval); refreshInterval = null; }
   }
 }
 
@@ -1937,7 +2173,7 @@ function renderPipeline() {
 }
 
 function renderTop3() {
-  const top = records.filter(r=>!r.decision.includes('Kill')).slice(0, 3);
+  const top = records.filter(r=>!r.decision.includes('Kill')).sort((a,b)=>(b.scoreV3||b.score)-(a.scoreV3||a.score)).slice(0, 3);
   const rankClasses = ['r1','r2','r3'];
   const scoreClasses = ['c-green','c-blue','c-amber'];
 
@@ -2029,7 +2265,7 @@ function renderTable() {
 /* ==================== COMPARISON VIEW ==================== */
 function renderComparison() {
   /* Dynamic podium — top 3 from Airtable data, live */
-  var top3 = records.filter(function(r) { return !r.decision.includes('Kill'); }).slice(0, 3);
+  var top3 = records.filter(function(r) { return !r.decision.includes('Kill'); }).sort(function(a,b){ return (b.scoreV3||b.score)-(a.scoreV3||a.score); }).slice(0, 3);
   var podiumColors = ['var(--accent-green)', 'var(--accent-blue)', 'var(--accent-amber)'];
   var medals = ['1er', '2e', '3e'];
 
@@ -2427,7 +2663,8 @@ function exportFiche() {
   var md = '';
   md += '# ' + rec.idea + '\n\n';
   md += '## Identite\n';
-  md += '- **Score MOAT** : ' + rec.score + '/100\n';
+  md += '- **Score V3** : ' + (rec.scoreV3 || rec.score) + '/100\n';
+  md += '- **Score base (9 criteres)** : ' + rec.score + '/100\n';
   md += '- **Decision** : ' + rec.decision + '\n';
   md += '- **Statut** : ' + rec.status + '\n';
   md += '- **Categorie** : ' + rec.category + '\n';
@@ -2448,7 +2685,8 @@ function exportFiche() {
   md += '| Fit personnel (x2) | ' + (rec.personalFit || '?') + '/5 |\n';
   md += '| Vitesse MVP (x1) | ' + (rec.mvpSpeed || '?') + '/5 |\n';
   md += '| Retention (x1) | ' + (rec.retention || '?') + '/5 |\n';
-  md += '| **TOTAL** | **' + rec.score + '/100** |\n\n';
+  md += '| **TOTAL base** | **' + rec.score + '/100** |\n';
+  md += '| **Score V3 (Engine)** | **' + (rec.scoreV3 || rec.score) + '/100** |\n\n';
 
   if (bs) {
     if (bs.pitch) {
@@ -2554,6 +2792,95 @@ function exportFiche() {
       btn.style.color = 'var(--accent-cyan)';
       btn.style.background = 'var(--accent-cyan-dim)';
     }, 2000);
+  });
+}
+
+/* ==================== QUICK ACTIONS ==================== */
+
+function toggleNewIdea() {
+  var form = document.getElementById('newIdeaForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    document.getElementById('reviewsForm').classList.remove('open');
+    setTimeout(function() { document.getElementById('fi_idea').focus(); }, 50);
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function submitNewIdea() {
+  var idea = document.getElementById('fi_idea').value.trim();
+  var segment = document.getElementById('fi_segment').value.trim();
+  var problem = document.getElementById('fi_problem').value.trim();
+  if (!idea) { document.getElementById('fi_idea').focus(); return; }
+
+  var text = 'NOUVELLE IDÉE MOAT\n\nIdea: ' + idea + '\nSegment: ' + segment + '\nProblem: ' + problem;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector('#newIdeaForm .form-submit');
+    btn.textContent = 'Copié !';
+    btn.style.background = 'var(--accent-green)';
+    setTimeout(function() {
+      btn.textContent = 'Copier pour Airtable';
+      btn.style.background = '';
+      document.getElementById('newIdeaForm').classList.remove('open');
+      document.getElementById('fi_idea').value = '';
+      document.getElementById('fi_segment').value = '';
+      document.getElementById('fi_problem').value = '';
+    }, 1800);
+  });
+}
+
+function scorerIdee() {
+  var tableWrap = document.querySelector('.table-wrap');
+  if (!tableWrap) return;
+  tableWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(function() {
+    document.querySelectorAll('#tableBody tr').forEach(function(row) {
+      row.classList.remove('scoring-highlight');
+      var found = Array.from(row.querySelectorAll('td')).some(function(td) {
+        return td.textContent.trim() === 'Scoring';
+      });
+      if (found) row.classList.add('scoring-highlight');
+    });
+    setTimeout(function() {
+      document.querySelectorAll('.scoring-highlight').forEach(function(r) {
+        r.classList.remove('scoring-highlight');
+      });
+    }, 4000);
+  }, 600);
+}
+
+function checklistSemaine() {
+  var section = document.getElementById('workflowSection');
+  if (!section) return;
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  section.style.outline = '2px solid var(--accent-blue)';
+  section.style.borderRadius = '12px';
+  setTimeout(function() { section.style.outline = ''; section.style.borderRadius = ''; }, 2000);
+}
+
+function toggleAnalyseAvis() {
+  var form = document.getElementById('reviewsForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    document.getElementById('newIdeaForm').classList.remove('open');
+    setTimeout(function() { document.getElementById('reviewsTextarea').focus(); }, 50);
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function envoyerAvis() {
+  var avis = document.getElementById('reviewsTextarea').value.trim();
+  if (!avis) { document.getElementById('reviewsTextarea').focus(); return; }
+
+  var prompt = 'Analyse ces avis Google Play et identifie :\n1. Les frustrations principales (classées par fréquence)\n2. Les pain points non résolus par l\'app\n3. Les gaps de marché exploitables\n4. Les mots-clés récurrents négatifs\n5. Verdict : ce marché a-t-il un gap exploitable ?\n\nAvis :\n\n' + avis;
+  navigator.clipboard.writeText(prompt).then(function() {
+    var btn = document.querySelector('#reviewsForm .form-submit');
+    btn.textContent = 'Prompt copié — colle dans Claude Code !';
+    btn.style.background = 'var(--accent-green)';
+    setTimeout(function() {
+      btn.textContent = 'Envoyer à Claude Code';
+      btn.style.background = 'var(--accent-purple)';
+    }, 3000);
   });
 }
 
