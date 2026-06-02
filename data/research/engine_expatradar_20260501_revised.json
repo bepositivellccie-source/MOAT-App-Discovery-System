@@ -1,0 +1,315 @@
+{
+  "idea": "ExpatRadar",
+  "date": "2026-05-01T09:30:00.000000",
+  "scoring_mode": "manual_revised_post_sonnet_cross_review",
+  "previous_report_invalidated": "engine_expatradar_20260501_0856_invalidated.json",
+  "invalidation_reason": "Auto-engine bodyguard ABORT (score 24/100) due to Play Store scraping failure on FR store for English-named international apps (InterNations, GeoSure not indexed in fr-FR locale). Manual scoring backed by web research conducted on 2026-05-01.",
+  "modules_available": {
+    "niche_hunter": "manual",
+    "market_sizer": "manual",
+    "cross_validator": "sonnet_v3.1_rule8",
+    "playstore": "manual_web_research",
+    "community_signal": "documented_facebook_groups_lepetitjournal"
+  },
+  "phases": {
+    "market_scan": {
+      "method": "manual_web_research",
+      "competitors_identified": [
+        {
+          "name": "InterNations",
+          "score_play_store": 4.4,
+          "reviews_count": 9700,
+          "verdict": "Generaliste mondial 420 villes, anglophone, pas safety/alertes"
+        },
+        {
+          "name": "Expat.com app",
+          "score_play_store": 4.0,
+          "reviews_count": null,
+          "verdict": "Forum + classifieds, web dominant, pas geoloc"
+        },
+        {
+          "name": "GeoSure",
+          "score_play_store": null,
+          "reviews_count": null,
+          "verdict": "Safety scoring 400k POI, anglophone, B2B/voyageur, pas communautaire"
+        },
+        {
+          "name": "Citizen",
+          "users": 5000000,
+          "verdict": "US-only, absent LATAM"
+        },
+        {
+          "name": "Nextdoor",
+          "verdict": "US/UK/AU/EU partiel, absent LATAM"
+        },
+        {
+          "name": "lepetitjournal.com",
+          "audience_pv_month": 250000,
+          "verdict": "Media FR 77 villes, 2.5M lecteurs, PAS d'app mobile = trou structurel"
+        }
+      ],
+      "opportunity_signal": "FORT",
+      "gap_summary": "0 app FR LATAM combinant 3 couches (alertes scams + terrain + bons plans verifies). Espace structurellement delaisse en mobile."
+    },
+    "review_analysis": {
+      "method": "manual_documented",
+      "documented_pain_sources": [
+        "Washington Post 05/2025 - fake notario / immigration scams",
+        "AARP - immigration scams surge 2025",
+        "Iberian America 2022 - scamming gringo of Latin America",
+        "Expat.com forum Panama - common scams targeting expats",
+        "Expat.com forum Colombia - common scams",
+        "World Nomads 9 scams Colombia",
+        "Olivier (founder) - 2x trop cher residence Panama 2006-2026"
+      ],
+      "documented_pain_categories": [
+        "Faux avocats notarios (surfacturation 1500-4000$)",
+        "Scams immobiliers Panama (titres propriete)",
+        "Burundanga Colombie (drogue dans verres)",
+        "Medecins francophones difficiles a trouver",
+        "Expat rates gonfles (immobilier)",
+        "Conflits interet avocats vendant assurance sante"
+      ]
+    },
+    "market_sizing": {
+      "segment_size_initial": 220000,
+      "segment_size_revised_post_sonnet": 440000,
+      "segment_definition": "Voyageurs francophones longue duree (FR+BE+CH+QC) + expats LATAM + nomades digitaux + backpackers - hubs Mexico (~15k), Sao Paulo (~10k), Buenos Aires (~8k), Medellin+Bogota (~5k), Panama (~2k)",
+      "arpu_b2c": 30.0,
+      "tam_b2c": 13200000.0,
+      "sam_b2c": 1980000.0,
+      "som_b2c": 39600.0,
+      "monthly_revenue_b2c_y1_realistic": 230,
+      "som_solo_dev_y1": 2772,
+      "som_solo_dev_y1_monthly": 231,
+      "b2b_revenue_streams_y2": [
+        "Data licensing Chapka/AXA Travel: 5-10k EUR/an",
+        "Agences aventure (Tirawa, 66 Nord, Allibert): 3-7k EUR/an",
+        "API safety data: post critical mass"
+      ],
+      "som_y2_hybrid_b2c_b2b_monthly": 750,
+      "som_y3_hybrid_monthly": 2000,
+      "verdict": "VIABLE en hybride B2C+B2B Y2+. V1 Panama mono-pays, extension multi-pays Y2."
+    },
+    "scoring": {
+      "method": "manual_revised_post_sonnet_cross_review",
+      "version": "V3.1",
+      "total": 77,
+      "max": 100,
+      "decision": "A -- Build now",
+      "rang": "Prometteuse",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 4,
+          "weight": 4,
+          "weighted": 16,
+          "max": 20,
+          "justification": "Arnaques avocats/notarios documentees (WashPost 05/2025), burundanga Colombie, scams immo Panama. Pain reel chiffre (1500-4000$ surfacture/residence). Olivier preuve vecue."
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 3,
+          "weight": 3,
+          "weighted": 9,
+          "max": 15,
+          "justification": "Alertes safety = quotidien-hebdo. Bons plans = mensuel-ponctuel. Phase intensive arrivee (3-12 mois) puis ponctuel. Hebdo moyenne."
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15,
+          "justification": "B2C: Chapka 60-250 EUR/mois, GeoSure 40$/an, InterNations 144-240$/an, concierge 500-2000 EUR/an. B2B integre post-Sonnet: Chapka/AXA Travel data licensing, agences aventure. Multi-source revenue streams.",
+          "revised_post_sonnet": "+1 (B2B integration)"
+        },
+        {
+          "criterion": "market_access",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10,
+          "justification": "Hubs identifiables Mexico (~15k), Sao Paulo (~10k), Buenos Aires (~8k), Medellin+Bogota (~5k). Communautes FB 40-60k cumules. Lepetitjournal canal. Reseau Olivier 20 ans Panama. Segment elargi voyageurs francophones longue duree (~440k).",
+          "revised_post_sonnet": "+1 (TAM elargi voyageurs francophones)"
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10,
+          "justification": "0 app FR LATAM 3-couches. InterNations + GeoSure couvrent partiellement, anglo. Lepetitjournal sans app. Citizen/Nextdoor US-only. Trou clair."
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10,
+          "justification": "Multi-couches (alertes + terrain + bons plans) = unique. Focus francophone = unique. Reseau founder 20 ans = defendable. Couche bons plans verifies FR difficile a copier."
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 5,
+          "weight": 2,
+          "weighted": 10,
+          "max": 10,
+          "justification": "Olivier 20 ans Panama, expat FR, douleur vecue (residence 2x trop cher), reseau terrain existant, solo dev Flutter. Founder = utilisateur cible avec expertise terrain + skills tech."
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 2,
+          "weight": 1,
+          "weighted": 2,
+          "max": 5,
+          "justification": "App sociale UGC complexe : moderation, geoloc, profils, signalements multi-couches. 3 couches contenu ambitieux. Solo dev Flutter = 3-4 mois minimum V1. Founder seed n'accelere pas le code."
+        },
+        {
+          "criterion": "retention",
+          "raw": 4,
+          "weight": 1,
+          "weighted": 4,
+          "max": 5,
+          "justification": "Alertes safety sticky si masse critique. Bons plans = retention forte si seed founder. Founder seed (200 fiches Olivier Panama) donne valeur Day 1 sans masse critique sur 2 couches/3. Pattern Reddit/Product Hunt valide.",
+          "revised_post_sonnet": "+1 (founder-seeded content Day 1 value)"
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 4,
+        "usage_frequency": 3,
+        "willingness_to_pay": 4,
+        "market_access": 4,
+        "competition_gap": 4,
+        "differentiation": 4,
+        "personal_fit": 5,
+        "mvp_speed": 2,
+        "retention": 4,
+        "_v3": {
+          "trend_direction": "STABLE",
+          "trend_direction_original": "STABLE",
+          "trend_multiplier": 1.0,
+          "trend_delta": 0,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 77,
+          "som_theoretical": 39600.0,
+          "som_solo_dev_y1": 2772
+        },
+        "_v31": {
+          "geo_target": "GLOBAL",
+          "trend_index_avg_12m": 35.0,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": 3,
+          "timing_type_label": "Trend culturel",
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-05-01",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [
+            {
+              "rule": "A2",
+              "flag": "MICRO_VOLUME_GUARD",
+              "detail": "Trend forced STABLE: index_avg_12m=35.0 < 50 on geo=GLOBAL francophone. Macro signal positif (Panama #1 Expat Insider 2026, Colombie #2, Mexique #3) mais volume Trends FR insuffisant pour multiplier."
+            },
+            {
+              "rule": "MANUAL_REVISION",
+              "flag": "MARKET_EDUCATION_REMOVED_POST_SONNET",
+              "detail": "Flag market_education retire post-Sonnet cross-review: comportement de partage bons plans/alertes existe deja sur FB groups (40-60k cumules) + lepetitjournal + WhatsApp. C'est une substitution d'outil (FB->app), pas une creation de comportement. Definition stricte du flag dans CONDITIONAL_PENALTIES non remplie."
+            }
+          ],
+          "score_justification": "base: 77\n+ trend_multiplier: x1.00 (+0 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 77"
+        }
+      },
+      "sonnet_cross_review_diff": {
+        "score_initial": 61,
+        "score_revised": 77,
+        "delta": 16,
+        "changes": [
+          {
+            "criterion": "willingness_to_pay",
+            "from": 3,
+            "to": 4,
+            "delta_weighted": 3,
+            "reason": "B2B revenue streams integres (Chapka/AXA data licensing, agences aventure)"
+          },
+          {
+            "criterion": "market_access",
+            "from": 3,
+            "to": 4,
+            "delta_weighted": 2,
+            "reason": "Segment elargi voyageurs francophones longue duree (~440k au lieu de 220k) sans diluer founder fit"
+          },
+          {
+            "criterion": "retention",
+            "from": 3,
+            "to": 4,
+            "delta_weighted": 1,
+            "reason": "Founder-seeded content (200 fiches Olivier) = Day 1 value sur 2 couches/3, mitige cold start"
+          },
+          {
+            "flag": "market_education",
+            "from": -10,
+            "to": 0,
+            "delta_weighted": 10,
+            "reason": "Substitution d'outil (FB groups actifs 40-60k membres), pas creation de comportement. Flag non applicable selon definition stricte."
+          }
+        ]
+      },
+      "score_justification": "base: 77\n+ trend_multiplier: x1.00 (+0 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 77"
+    }
+  },
+  "verdict": {
+    "score": 77,
+    "decision": "A -- Build now",
+    "rang": "Prometteuse",
+    "confidence": 70,
+    "bodyguard_killed": false,
+    "signals": [
+      "[+] Gap concurrentiel structurel (0 app FR LATAM 3-couches)",
+      "[+] Pain documente WashPost 05/2025 + AARP + cas Olivier vecu",
+      "[+] Founder fit 5/5 unique (20 ans Panama + reseau terrain + solo dev Flutter)",
+      "[+] Will Pay 4/5 multi-source (B2C Chapka/InterNations + B2B data licensing)",
+      "[+] Retention 4/5 founder seed Day 1 value sur 2 couches/3",
+      "[+] Top 3 destinations mondiales 2026 (Panama #1, Colombie #2, Mexique #3 Expat Insider)",
+      "[+] Score V3 77/100 = Zone A formelle"
+    ],
+    "risks": [
+      "[-] Fragmentation 22k/pays moyenne (mitige par V1 mono-pays Panama)",
+      "[-] Couche alertes UGC dependante de masse critique (acceptable car bons plans+terrain donnent valeur)",
+      "[-] Moderation diffamation requise (CGU + workflow signalements)",
+      "[-] Cycle B2B 6-12 mois (pas Y1 realiste, Y2+)"
+    ],
+    "next_action": {
+      "type": "test_pre_build_obligatoire",
+      "method": "WhatsApp groupe 'Expats Panama - Bons plans & Alertes'",
+      "size": 30,
+      "duration_weeks": 3,
+      "cost_eur": 0,
+      "kpi_go": "<80% messages d'Olivier = UGC valide -> build V1 Panama mono-pays",
+      "kpi_kill": ">80% messages d'Olivier = pivot ou C-Watchlist",
+      "rationale": "Test comportemental reel (vs intention declaree landing page). Cout 0 EUR vs 200 EUR. Aligne playbook MOAT validation terrain avant code."
+    },
+    "build_v1_conditions_post_test_positive": [
+      "V1 Panama uniquement avec 200 fiches founder-seedees",
+      "Extension Mexico City / Medellin Y2",
+      "Moderation UGC + CGU + workflow signalements",
+      "Monetisation hybride B2C freemium + B2B data licensing Y2"
+    ]
+  },
+  "pipeline_position": {
+    "before_revision": "28-30/41 (B-Validate)",
+    "after_revision": "6-8/41 (top 20% A-Build)",
+    "score_v3_initial": 61,
+    "score_v3_revised": 77
+  },
+  "airtable_record": {
+    "base_id": "appupXnLCe8ZIpKdV",
+    "table_id": "tblKhcP3GsGMmhzb1",
+    "record_id": "recCEQqdupjNbaQKp",
+    "synced": true,
+    "sync_date": "2026-05-01"
+  }
+}

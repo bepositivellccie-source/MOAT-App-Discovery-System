@@ -349,3 +349,91 @@ Avant de coder, tu dois confirmer au moins 3/5 hypotheses :
 
 Le systeme fonctionne si tu tues plus d'idees que tu n'en lances.
 C'est normal et sain.
+
+---
+
+## 12. Regle #8 — Cross-review Opus↔Sonnet (V3.1, 2026-04-19)
+
+**Toute fiche scoree 75+ passe une cross-review entre Opus et Sonnet avant d'etre committee en `A — Build now`.**
+
+### Declencheurs obligatoires
+
+La cross-review s'applique si **au moins une** des conditions suivantes :
+1. Score V3 >= 75
+2. Driver structurel +8 applique (verifier obligation legale vs tailwind)
+3. Flag retire (market_education, partner_medical, rgpd_sante, regulatory_risk) — leviers d'inflation haute
+4. Trend multiplier > 1.00 (verifier geographique cible)
+
+**Exclusion** : re-scoring automatique post-patch V3.1+ si le moteur enforce deja les garde-fous.
+
+### Cout et benefice
+
+- **Cout** : ~30 minutes d'echange cross-review
+- **Benefice demontre (2026-04-19)** :
+  - ShadowWork FR 89 → 70 (8-10 semaines economisees sur mauvaise app)
+  - SleepCoach FR 100 → 70 (risque legal partner_medical evite)
+  - DecidR 85 → 78 (Faille #1 V3.1 detectee en live)
+  - NutriZen 80 → 73 (Bodyguard zone grise)
+  - SocialEase 82 → 63 (2 flags oublies)
+  - 3 patterns V3.2 structurels revelles (B9, B10, B11)
+
+### Pattern observe
+
+Un scoreur seul est biaise par son propre narratif. Deux cerveaux qui se challengent sur donnees convergent vers la verite la plus honnete disponible, pas la plus flatteuse. Le cout cross-review (30 min) est derisoire compared au cout de builder la mauvaise app pendant 8-10 semaines.
+
+---
+
+## 13. Protocole validation systematique pre-A-Build (V3.1, 2026-04-19)
+
+**Decouverte structurelle Phase 2** : aucune app post-TimeToInvoice n'est reellement "CLEAR immediat". Toutes necessitent une phase de validation prealable.
+
+### Principe
+
+Avant tout commit en `A — Build now`, **chaque flag actif doit avoir une condition de levee documentee, chiffree, et verifiable**.
+
+### Flag → Condition de levee
+
+| Flag | Condition de levee | Delai typique |
+|------|-------------------|---------------|
+| `partner_medical` | Contrat signe avec clinicien QUALIFIE (specialiste du domaine, pas generaliste) + protocole escalade suicidaire + Art.28 RGPD | 1-2 mois, 5-8K€ |
+| `rgpd_sante` | DPIA realisee par juriste RGPD + consentement renforce Art.9 | 3-6 semaines, 2-5K€ |
+| `rgpd_sante_b2b` | HDS certification (15-30K€/an) + DPIA + clauses Art.28 avec chaque utilisateur | 3-6 mois, 25K€+ |
+| `market_education` | Landing page test + LinkedIn post symptome : seuil GO >3% conversion, KILL <1% | 2-4 semaines, 200-500€ |
+| `regulatory_risk` | Legal clearance documente (avis juriste + veille reglementaire) | 2-4 semaines, 1-3K€ |
+| `POSITIONING_DECISION_REQUIRED` | Positionnement produit tranche + (si verticale) 10 interviews terrain valides | 3-8 semaines, 500-1500€ |
+| `STALE_DATA` (>90j) | Re-audit subscores V3 + V3.1 complet | 2-5 jours |
+
+### Regle stricte
+
+**Aucune app ne passe en `A — Build now` tant que :**
+1. Le score V3.1 est >= 75
+2. **ET** le Readiness Status est `CLEAR`
+3. **ET** les conditions de levee de tous les flags sont remplies (blockers_resolved = True)
+4. **ET** data_freshness_date < 90 jours
+
+Si **l'un** des criteres n'est pas rempli : decision forcee a `B — Validate`. Pas de dispense, pas d'exception.
+
+### Pourquoi cette regle existe
+
+L'audit V3.1 de 16 apps du pipeline a revele que **sans cette discipline, le scoreur est systematiquement tente d'appliquer le driver sans verifier les subscores**, ou **de retirer un flag partner_medical sans avoir le partenaire signe**. Ces derives produisent des "PEPITES fantomes" qui mobilisent 8-10 semaines de dev sur mauvaise app.
+
+**Cout validation prealable systematique** : 2-8 semaines + 500-25K€ selon flags.
+**Cout build mauvaise app** : 8-12 semaines + 0€ mais opportunite perdue.
+
+Le ROI du protocole de validation est systematiquement positif. Pas d'exception.
+
+### Cas d'usage strategique
+
+Quand plusieurs apps sont candidates post-livraison de l'app courante :
+
+1. **Lister les candidates >= 75** post-unlock potentiel
+2. **Calculer le time-to-unlock** de chaque (cumul delais de validation)
+3. **Prioriser par ratio score/time-to-unlock** (score eleve + unlock rapide = win)
+4. **Ne lancer code que quand readiness CLEAR effectif**
+
+Exemple concret (pipeline 2026-04-19 post-TTI) :
+- DecidR : 78 post LinkedIn (2-4 sem) = ratio ~20 pts/sem
+- SoulageR : 85 post partenariat (1-2 mois) = ratio ~10 pts/sem
+- BookMe vertical : 75 post interviews (3-4 sem) = ratio ~19 pts/sem
+
+Priorite : DecidR > BookMe > SoulageR sur critere time-to-unlock. Mais si partenaire SoulageR deja en vue = priorite 85 > 78.

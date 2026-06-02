@@ -1,0 +1,204 @@
+{
+  "idea": "Humeur Cycle Femmes",
+  "date": "2026-04-26T21:18:21.285501",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true,
+    "community_signal": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 11,
+      "avg_score": 4.63,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "FAIBLE"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 41.8,
+      "pricing_complaint_ratio": 52.1,
+      "total_reviews_analyzed": 306,
+      "top_frustrations": [
+        [
+          "gratuit",
+          26
+        ],
+        [
+          "payant",
+          24
+        ],
+        [
+          "pub",
+          17
+        ],
+        [
+          "abonnement",
+          15
+        ],
+        [
+          "payante",
+          15
+        ],
+        [
+          "impossible",
+          14
+        ],
+        [
+          "premium",
+          8
+        ],
+        [
+          "ne fonctionne",
+          5
+        ],
+        [
+          "inutile",
+          4
+        ],
+        [
+          "erreur",
+          3
+        ],
+        [
+          "fonctionne pas",
+          3
+        ],
+        [
+          "cher",
+          3
+        ],
+        [
+          "perdu",
+          2
+        ],
+        [
+          "bug",
+          2
+        ],
+        [
+          "nul",
+          2
+        ]
+      ]
+    },
+    "scoring": {
+      "total": 76,
+      "max": 100,
+      "decision": "A -- Build now",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 4,
+          "weight": 4,
+          "weighted": 16,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 4,
+          "weight": 2,
+          "weighted": 8,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 5,
+          "weight": 1,
+          "weighted": 5,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 4,
+        "usage_frequency": 4,
+        "willingness_to_pay": 4,
+        "market_access": 1,
+        "competition_gap": 4,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 5,
+        "_v3": {
+          "trend_direction": "UP",
+          "trend_direction_original": "UP",
+          "trend_multiplier": 1.08,
+          "trend_delta": 6,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 70,
+          "som_theoretical": 0,
+          "som_solo_dev_y1": 0
+        },
+        "_v31": {
+          "geo_target": null,
+          "trend_index_avg_12m": null,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": null,
+          "timing_type_label": null,
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-04-26",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [],
+          "score_justification": "base: 70\n+ trend_multiplier: x1.08 (+6 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 76"
+        }
+      },
+      "score_justification": "base: 70\n+ trend_multiplier: x1.08 (+6 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 76",
+      "v31_flags": []
+    }
+  },
+  "verdict": {
+    "score": 76,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Marche domine et satisfait"
+    ]
+  }
+}

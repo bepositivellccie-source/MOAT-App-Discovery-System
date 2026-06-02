@@ -100,6 +100,59 @@ SOURCING → QUALIFICATION → SCORING → VALIDATION → DECISION
 
 Seuils : A (75+) Build | B (60-74) Validate | C (45-59) Watch | D (<45) Kill
 
+## MOAT Engine V3.1 — Regles d'enforcement (2026-04-19)
+
+7 regles bloquantes ajoutees post-audit ShadowWork FR + 3 patterns V3.2 identifies. Voir `scripts/MOAT_ENGINE_V3.1_POSTMORTEM.md`.
+
+### A — Corrections moteur (failles V3)
+
+| Regle | Nom | Enforcement |
+|-------|-----|-------------|
+| A1 | Coherence TAM-Trend-SOM geographique | Valide TAM vs PIB national cible |
+| A2 | Trend STABLE force si volume <50 OU variation <10% sur volume >50 | Override automatique |
+| A3 | Ratio Forecast M12 / SOM Solo Y1 | <=3x OK / 3-5x FLAG / >5x KILL |
+| A4 | Traçabilite deltas base → V3 | **BLOQUANT a l'ecriture** (regex + arithmetique) |
+
+### B — Ajouts scoring V3.1
+
+| Regle | Nom | Usage |
+|-------|-----|-------|
+| B5 | Timing type (1 reglementaire / 2 permanent / 3 culturel) | Priorite 1>2>3 a score equivalent |
+| B6.1 | Readiness gating binaire (SINGLE/MULTIPLE/SEVERE) | Force B-Validate si blocker actif |
+| B7 | Data freshness (>90j force re-audit) | Trigger re-scoring |
+
+### CLI V3.1 exhaustif
+
+```bash
+python scripts/moat_engine.py "AppName" \
+  --segment-size 1000000 --arpu 60 \
+  --trend STABLE --geo-target FR --trend-index-avg 77 \
+  --trend-variation-pct 3.4 \
+  --flags "partner_medical,rgpd_sante" \
+  --blockers-resolved "" \
+  --timing-type 2 \
+  --forecast-m12-mrr 5000 \
+  --data-freshness-date 2026-04-19
+```
+
+### Regle #8 projet — Cross-review Opus↔Sonnet
+
+**Declencheurs** (cross-review obligatoire AVANT commit A — Build) :
+1. Score V3 >= 75
+2. Driver structurel +8 applique
+3. Flag retire (market_education, partner_medical, rgpd_sante)
+4. Trend multiplier > 1.00
+
+Cout : ~30 min. Benefice demontre : ShadowWork 89→70, SleepCoach 100→70, DecidR 85→78, 3 patterns V3.2 revelles.
+
+## Airtable schema V3.1 (5 champs ajoutes)
+
+- `Score Justification V3.1` (multilineText, BLOQUANT A4)
+- `Timing Type V3.1` (singleSelect 1/2/3)
+- `Data Freshness Date` (date ISO, trigger re-audit >90j)
+- `Readiness Status V3.1` (singleSelect CLEAR/BLOCKED_SINGLE/BLOCKED_MULTIPLE/BLOCKED_SEVERE/STALE_DATA/LEGACY_V3_PENDING/AUDITED_V3_1_CROSS_REVIEW/POSITIONING_DECISION_REQUIRED)
+- `Legacy V3` (checkbox, tag migration)
+
 ## Dependances
 
 ```bash

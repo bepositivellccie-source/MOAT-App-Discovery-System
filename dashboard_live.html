@@ -120,10 +120,22 @@
   .fbtn.on { background:var(--accent-blue-dim);border-color:var(--accent-blue);color:var(--accent-blue); }
   table { width:100%;border-collapse:collapse; }
   th { text-align:left;padding:10px 20px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle); }
-  td { padding:14px 20px;font-size:13px;color:var(--text-secondary);border-bottom:1px solid var(--border-subtle); }
+  td { padding:14px 20px;font-size:13px;color:var(--text-secondary);border-bottom:1px solid var(--border-subtle);vertical-align:middle; }
   tr:last-child td { border-bottom:none; }
   tr.clickable-row { cursor:pointer;transition:background 0.15s; }
   tr.clickable-row:hover td { background:var(--bg-card-hover); }
+  /* Note cell — dépliable */
+  .note-details { max-width:280px; }
+  .note-summary { list-style:none;font-size:11px;color:var(--text-muted);cursor:pointer;line-height:1.4;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;display:block;
+    padding:2px 0; }
+  .note-summary::-webkit-details-marker { display:none; }
+  .note-summary::before { content:'▶ ';font-size:8px;color:var(--text-muted);margin-right:3px; }
+  details[open] .note-summary::before { content:'▼ '; }
+  .note-full { margin-top:6px;font-size:11px;color:var(--text-secondary);line-height:1.5;
+    white-space:pre-wrap;word-break:break-word;max-width:280px;
+    background:var(--bg-elevated);border:1px solid var(--border-subtle);
+    border-radius:6px;padding:8px 10px; }
   .name { font-weight:600;color:var(--text-primary); }
   .score { font-family:'JetBrains Mono';font-weight:700; }
   .tag { display:inline-block;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:3px 8px;border-radius:4px; }
@@ -255,6 +267,177 @@
   .gng-dot.empty { background:transparent;border-color:var(--border); }
   .gng-label { font-size:11px;color:var(--text-secondary);margin-left:6px; }
 
+  /* ==================== ROADMAP MODAL ==================== */
+  .roadmap-overlay {
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,0.55);z-index:199;
+    opacity:0;pointer-events:none;transition:opacity 0.25s ease;
+  }
+  .roadmap-overlay.open { opacity:1;pointer-events:auto; }
+
+  .roadmap-modal {
+    position:fixed;top:50%;left:50%;
+    transform:translate(-50%, -48%) scale(0.97);
+    width:min(760px, 92vw);max-height:88vh;
+    background:var(--bg-primary);border:1px solid var(--border);
+    border-radius:14px;z-index:200;
+    opacity:0;pointer-events:none;
+    transition:opacity 0.22s ease, transform 0.22s cubic-bezier(0.4,0,0.2,1),
+               width 0.25s ease, max-width 0.25s ease,
+               max-height 0.25s ease, border-radius 0.25s ease;
+    display:flex;flex-direction:column;overflow:hidden;
+    box-shadow:0 24px 80px rgba(0,0,0,0.5);
+  }
+  .roadmap-modal.open {
+    opacity:1;pointer-events:auto;
+    transform:translate(-50%, -50%) scale(1);
+  }
+  .roadmap-modal.fullscreen {
+    width:100vw;max-width:100vw;max-height:100vh;border-radius:0;
+  }
+  .roadmap-modal.fullscreen .roadmap-body { padding:32px 48px;max-width:1100px;margin:0 auto;width:100%; }
+  .roadmap-header {
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;background:var(--bg-secondary);
+    border-bottom:1px solid var(--border);flex-shrink:0;
+  }
+  .roadmap-header-title { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent-purple); }
+  .roadmap-header-app { font-size:15px;font-weight:700;letter-spacing:-0.3px;margin-top:2px; }
+  .roadmap-close, .roadmap-fs-btn {
+    width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+    background:var(--bg-card);color:var(--text-secondary);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+    font-family:'JetBrains Mono';transition:all 0.15s;flex-shrink:0;
+    line-height:1;
+  }
+  .roadmap-close { font-size:18px; }
+  .roadmap-close:hover, .roadmap-fs-btn:hover { background:var(--bg-elevated);color:var(--text-primary); }
+  .roadmap-header-actions { display:flex;gap:6px;align-items:center; }
+  .roadmap-body { padding:22px 24px;overflow-y:auto;overflow-x:hidden;flex:1; }
+  .roadmap-footer {
+    display:flex;justify-content:flex-end;gap:10px;
+    padding:14px 24px;background:var(--bg-secondary);
+    border-top:1px solid var(--border);flex-shrink:0;
+  }
+  .roadmap-back-btn {
+    padding:9px 20px;background:transparent;color:var(--text-secondary);
+    border:1px solid var(--border);border-radius:8px;
+    font-family:'Inter';font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;
+  }
+  .roadmap-back-btn:hover { background:var(--bg-card);color:var(--text-primary);border-color:var(--text-muted); }
+
+  .rm-section { margin-bottom:22px; }
+  .rm-section:last-child { margin-bottom:0; }
+  .rm-section-title {
+    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+    color:var(--text-muted);margin-bottom:10px;padding-bottom:8px;
+    border-bottom:1px solid var(--border-subtle);
+    display:flex;align-items:center;gap:8px;
+  }
+  .rm-section-title .num {
+    width:20px;height:20px;border-radius:6px;background:var(--accent-purple-dim);
+    color:var(--accent-purple);display:inline-flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono';font-size:10px;font-weight:800;
+  }
+  .rm-empty {
+    background:var(--bg-card);border:1px dashed var(--border);border-radius:8px;
+    padding:14px 16px;font-size:12px;color:var(--text-muted);line-height:1.6;
+  }
+  .rm-empty .rm-empty-icon { font-size:14px;margin-right:6px; }
+  .rm-empty code {
+    font-family:'JetBrains Mono';font-size:11px;background:var(--bg-secondary);
+    padding:2px 6px;border-radius:4px;color:var(--accent-cyan);
+    border:1px solid var(--border-subtle);
+  }
+  .rm-build-btn {
+    margin-top:10px;display:inline-flex;align-items:center;gap:8px;
+    padding:9px 16px;background:var(--accent-purple-dim);
+    border:1px solid var(--accent-purple);border-radius:8px;
+    color:var(--accent-purple);font-family:'Inter';font-size:12px;font-weight:700;
+    cursor:pointer;transition:all 0.15s;letter-spacing:0.3px;
+  }
+  .rm-build-btn:hover:not(:disabled) { background:var(--accent-purple);color:#fff;transform:translateY(-1px); }
+  .rm-build-btn:disabled { opacity:0.6;cursor:wait; }
+  .rm-build-btn .rm-spin {
+    width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;
+    border-radius:50%;animation:spin 0.7s linear infinite;display:none;
+  }
+  .rm-build-btn.loading .rm-spin { display:inline-block; }
+  .rm-build-btn.loading .rm-build-btn-label::before { content:''; }
+  .rm-build-error {
+    margin-top:10px;padding:8px 12px;background:var(--accent-red-dim);
+    border:1px solid var(--accent-red);border-radius:6px;
+    font-size:11px;color:var(--accent-red);font-family:'JetBrains Mono';line-height:1.5;
+    white-space:pre-wrap;word-break:break-word;
+  }
+  .rm-build-fallback {
+    margin-top:10px;padding:8px 12px;background:var(--bg-secondary);
+    border:1px solid var(--border-subtle);border-radius:6px;
+    font-size:11px;color:var(--text-muted);font-family:'Inter';
+  }
+  .rm-build-fallback code { font-family:'JetBrains Mono';font-size:10.5px;color:var(--accent-cyan); }
+  .rm-content { font-size:12.5px;color:var(--text-secondary);line-height:1.65; }
+  .rm-content h1, .rm-content h2, .rm-content h3, .rm-content h4 {
+    color:var(--text-primary);margin:14px 0 8px;font-weight:700;letter-spacing:-0.2px;
+  }
+  .rm-content h1 { font-size:15px; }
+  .rm-content h2 { font-size:14px; }
+  .rm-content h3 { font-size:13px; }
+  .rm-content h4 { font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.8px; }
+  .rm-content p { margin:6px 0; }
+  .rm-content ul, .rm-content ol { margin:6px 0 6px 20px; }
+  .rm-content li { margin:3px 0; }
+  .rm-content strong { color:var(--text-primary);font-weight:600; }
+  .rm-content code {
+    font-family:'JetBrains Mono';font-size:11.5px;
+    background:var(--bg-secondary);padding:1px 5px;border-radius:3px;color:var(--accent-cyan);
+  }
+  .rm-content pre {
+    background:var(--bg-secondary);border:1px solid var(--border-subtle);
+    border-radius:6px;padding:10px 12px;margin:8px 0;overflow-x:auto;
+    font-family:'JetBrains Mono';font-size:11px;line-height:1.5;
+  }
+  .rm-content table { width:100%;border-collapse:collapse;margin:8px 0;font-size:11.5px; }
+  .rm-content th, .rm-content td {
+    text-align:left;padding:6px 10px;border-bottom:1px solid var(--border-subtle);
+  }
+  .rm-content th { color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:0.6px;font-weight:700; }
+  .rm-content blockquote {
+    border-left:3px solid var(--accent-purple);padding:4px 12px;margin:8px 0;
+    color:var(--text-muted);font-style:italic;
+  }
+
+  .rm-strategy-list { display:flex;flex-direction:column;gap:8px; }
+  .rm-strategy-row {
+    display:flex;gap:10px;padding:8px 12px;
+    background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:8px;
+    font-size:12px;line-height:1.5;
+  }
+  .rm-strategy-row .lbl { font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);width:90px;flex-shrink:0; }
+  .rm-strategy-row .val { color:var(--text-secondary);flex:1; }
+  .rm-strategy-row.signal .lbl { color:var(--accent-green); }
+  .rm-strategy-row.risk .lbl { color:var(--accent-red); }
+  .rm-strategy-row.flag .lbl { color:var(--accent-amber); }
+
+  .rm-frust-list { display:flex;flex-direction:column;gap:6px; }
+  .rm-frust-row {
+    display:flex;align-items:center;gap:10px;padding:6px 12px;
+    background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:6px;
+  }
+  .rm-frust-rank { font-family:'JetBrains Mono';font-size:11px;font-weight:800;color:var(--accent-purple);width:20px; }
+  .rm-frust-word { flex:1;font-size:13px;font-weight:600;color:var(--text-primary); }
+  .rm-frust-count { font-family:'JetBrains Mono';font-size:11px;color:var(--text-muted); }
+
+  .rm-cta-notion {
+    display:block;width:100%;padding:14px 18px;text-align:center;
+    background:var(--accent-purple-dim);border:1px solid var(--accent-purple);
+    border-radius:10px;color:var(--accent-purple);
+    font-family:'Inter';font-size:13px;font-weight:700;letter-spacing:0.3px;
+    text-decoration:none;transition:all 0.15s;cursor:pointer;
+  }
+  .rm-cta-notion:hover { background:var(--accent-purple);color:#fff;transform:translateY(-1px); }
+  .rm-cta-sub { font-size:11px;color:var(--text-muted);text-align:center;margin-top:10px;line-height:1.5; }
+
   /* ==================== COMPARISON VIEW ==================== */
   .comparison-section { margin-bottom:28px; }
   .compare-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px; }
@@ -274,6 +457,45 @@
   .compare-row-val { color:var(--text-primary);font-weight:600;text-align:right; }
   .compare-bar-wrap { width:100%;height:6px;background:var(--bg-elevated);border-radius:3px;margin-top:4px;overflow:hidden; }
   .compare-bar-fill { height:100%;border-radius:3px; }
+
+  /* ==================== QUICK ACTIONS ==================== */
+  .quick-actions { display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px; }
+  .qa-btn { background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:18px 16px;cursor:pointer;transition:all 0.2s;text-align:left;display:flex;flex-direction:column;gap:8px;width:100%; }
+  .qa-btn:hover { border-color:var(--border);background:var(--bg-card-hover);transform:translateY(-1px); }
+  .qa-btn-icon { font-size:18px;font-weight:700;color:var(--accent-blue);font-family:'JetBrains Mono'; }
+  .qa-btn-label { font-size:13px;font-weight:600;color:var(--text-primary); }
+  .qa-btn-sub { font-size:11px;color:var(--text-muted); }
+
+  /* Inline forms */
+  .inline-form { background:var(--bg-card);border:1px solid var(--accent-blue);border-radius:var(--radius);padding:24px;margin-bottom:28px;display:none; }
+  .inline-form.open { display:block; }
+  .inline-form h4 { font-size:14px;font-weight:700;margin-bottom:16px;color:var(--accent-blue); }
+  .reviews-form { background:var(--bg-card);border:1px solid var(--accent-purple);border-radius:var(--radius);padding:24px;margin-bottom:28px;display:none; }
+  .reviews-form.open { display:block; }
+  .reviews-form h4 { font-size:14px;font-weight:700;margin-bottom:8px;color:var(--accent-purple); }
+  .reviews-form > p { font-size:12px;color:var(--text-muted);margin-bottom:16px; }
+  .form-row { margin-bottom:14px; }
+  .form-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:6px;display:block; }
+  .form-input { width:100%;padding:10px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'Inter';font-size:13px;outline:none;transition:border-color 0.15s; }
+  .form-input:focus { border-color:var(--accent-blue); }
+  .form-textarea { width:100%;padding:10px 14px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'Inter';font-size:13px;outline:none;resize:vertical;min-height:80px;transition:border-color 0.15s; }
+  .form-textarea:focus { border-color:var(--accent-blue); }
+  .form-actions { display:flex;gap:10px;margin-top:16px; }
+  .form-submit { padding:10px 24px;background:var(--accent-blue);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Inter';font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s; }
+  .form-submit:hover { opacity:0.85; }
+  .form-cancel { padding:10px 16px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'Inter';font-size:13px;cursor:pointer;transition:all 0.15s; }
+  .form-cancel:hover { color:var(--text-primary); }
+
+  /* Workflow hebdomadaire */
+  .workflow-days { display:grid;grid-template-columns:repeat(5,1fr);gap:10px; }
+  .workflow-day { background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:14px; }
+  .workflow-day-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px; }
+  .workflow-task { font-size:11px;color:var(--text-secondary);display:flex;gap:6px;align-items:flex-start;margin-bottom:7px;line-height:1.4; }
+  .workflow-task::before { content:'→';color:var(--accent-blue);flex-shrink:0;font-weight:700; }
+
+  /* Scoring row highlight */
+  .scoring-highlight td { background:rgba(167,139,250,0.10) !important; }
+  .scoring-highlight td:first-child { border-left:2px solid var(--accent-purple); }
 
   /* Responsive */
   @media(max-width:1100px){
@@ -313,6 +535,7 @@
     <p>Entre ton Personal Access Token Airtable pour activer le dashboard live.<br>
     Va sur <a href="https://airtable.com/create/tokens" target="_blank" style="color:var(--accent-blue)">airtable.com/create/tokens</a>, cree un token avec le scope <code style="color:var(--accent-purple)">data.records:read</code> sur ta base MOAT.</p>
     <input type="password" id="tokenInput" class="setup-input" placeholder="pat_xxxxxxxxxxxx">
+    <div id="connectError" style="display:none;margin-top:12px;padding:10px 16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12px;color:var(--accent-red);text-align:left"></div>
     <br>
     <button class="setup-btn" onclick="connect()">Connecter</button>
   </div>
@@ -382,6 +605,97 @@
         <tbody id="tableBody"></tbody>
       </table>
     </div>
+    <!-- Workflow Hebdomadaire -->
+    <div id="workflowSection" style="margin-bottom:28px">
+      <div class="section-title">Workflow Hebdomadaire</div>
+      <div class="workflow-days">
+        <div class="workflow-day">
+          <div class="workflow-day-label">Lundi</div>
+          <div class="workflow-task">Scorer 2 nouvelles idées (pain, fréquence, willPay)</div>
+          <div class="workflow-task">Mettre à jour Airtable</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Mardi</div>
+          <div class="workflow-task">Analyser 50+ avis sur les concurrents du top 1</div>
+          <div class="workflow-task">Identifier les pain points non résolus</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Mercredi</div>
+          <div class="workflow-task">Valider hypothèses terrain (forums, Reddit, groupes)</div>
+          <div class="workflow-task">Lancer le MOAT Engine sur l'idée en Scoring</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Jeudi</div>
+          <div class="workflow-task">Créer la landing page de l'idée A</div>
+          <div class="workflow-task">Préparer la fiche Build si score 75+</div>
+        </div>
+        <div class="workflow-day">
+          <div class="workflow-day-label">Vendredi</div>
+          <div class="workflow-task">Bilan : décisions A/B/C/D à jour</div>
+          <div class="workflow-task">Définir priorité semaine suivante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Rapides -->
+    <div class="section-title">Actions Rapides</div>
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="toggleNewIdea()">
+        <div class="qa-btn-icon">+ New</div>
+        <div class="qa-btn-label">Nouvelle idée</div>
+        <div class="qa-btn-sub">Saisir Idea + Segment + Problem</div>
+      </button>
+      <button class="qa-btn" onclick="scorerIdee()">
+        <div class="qa-btn-icon">◎ Score</div>
+        <div class="qa-btn-label">Scorer une idée</div>
+        <div class="qa-btn-sub">Voir les idées en Scoring</div>
+      </button>
+      <button class="qa-btn" onclick="checklistSemaine()">
+        <div class="qa-btn-icon">≡ Week</div>
+        <div class="qa-btn-label">Checklist semaine</div>
+        <div class="qa-btn-sub">Voir le workflow hebdomadaire</div>
+      </button>
+      <button class="qa-btn" onclick="toggleAnalyseAvis()">
+        <div class="qa-btn-icon">⌁ Avis</div>
+        <div class="qa-btn-label">Analyser des avis</div>
+        <div class="qa-btn-sub">Coller des reviews → Claude Code</div>
+      </button>
+    </div>
+
+    <!-- Inline form: Nouvelle idée -->
+    <div class="inline-form" id="newIdeaForm">
+      <h4>+ Nouvelle idée</h4>
+      <div class="form-row">
+        <label class="form-label">Idea *</label>
+        <input type="text" class="form-input" id="fi_idea" placeholder="ex: SleepCoach FR">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Segment cible *</label>
+        <input type="text" class="form-input" id="fi_segment" placeholder="ex: 20M insomniacs FR">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Problème *</label>
+        <textarea class="form-textarea" id="fi_problem" placeholder="Décris le problème réel que cette app résout..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="form-submit" onclick="submitNewIdea()">Copier pour Airtable</button>
+        <button class="form-cancel" onclick="toggleNewIdea()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Reviews analyzer -->
+    <div class="reviews-form" id="reviewsForm">
+      <h4>Analyser des avis</h4>
+      <p>Colle des avis Google Play ci-dessous. Le bouton copie un prompt prêt pour Claude Code.</p>
+      <div class="form-row">
+        <textarea class="form-textarea" id="reviewsTextarea" placeholder="Colle ici les avis Google Play à analyser..." style="min-height:160px"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="form-submit" style="background:var(--accent-purple)" onclick="envoyerAvis()">Envoyer à Claude Code</button>
+        <button class="form-cancel" onclick="toggleAnalyseAvis()">Fermer</button>
+      </div>
+    </div>
+
   </div>
 
   <div class="footer"><span>MOAT</span> Live Dashboard &mdash; Auto-refresh 30s &mdash; Airtable-connected</div>
@@ -393,11 +707,31 @@
   <div class="panel-header">
     <h2 id="panelTitle">--</h2>
     <div style="display:flex;gap:6px;align-items:center">
+      <button id="roadmapBtn" onclick="openRoadmap()" style="display:none;font-family:Inter;font-size:11px;font-weight:600;padding:6px 14px;border-radius:6px;border:1px solid var(--accent-purple);background:var(--accent-purple-dim);color:var(--accent-purple);cursor:pointer;transition:all 0.15s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Roadmap</button>
       <button id="exportBtn" onclick="exportFiche()" style="display:none;font-family:Inter;font-size:11px;font-weight:600;padding:6px 14px;border-radius:6px;border:1px solid var(--accent-cyan);background:var(--accent-cyan-dim);color:var(--accent-cyan);cursor:pointer;transition:all 0.15s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">Exporter fiche</button>
       <button class="panel-close" onclick="closePanel()">x</button>
     </div>
   </div>
   <div class="panel-body" id="panelBody"></div>
+</div>
+
+<!-- Roadmap Modal -->
+<div class="roadmap-overlay" id="roadmapOverlay" onclick="closeRoadmap()"></div>
+<div class="roadmap-modal" id="roadmapModal" role="dialog" aria-modal="true" aria-labelledby="roadmapHeaderApp">
+  <div class="roadmap-header">
+    <div>
+      <div class="roadmap-header-title">Roadmap</div>
+      <div class="roadmap-header-app" id="roadmapHeaderApp">--</div>
+    </div>
+    <div class="roadmap-header-actions">
+      <button class="roadmap-fs-btn" id="roadmapFsBtn" onclick="toggleRoadmapFullscreen()" aria-label="Plein ecran" title="Plein ecran">&#x2922;</button>
+      <button class="roadmap-close" onclick="closeRoadmap()" aria-label="Fermer">x</button>
+    </div>
+  </div>
+  <div class="roadmap-body" id="roadmapBody"></div>
+  <div class="roadmap-footer">
+    <button class="roadmap-back-btn" onclick="closeRoadmap()">&larr; Retour</button>
+  </div>
 </div>
 
 <script>
@@ -411,7 +745,7 @@ let refreshInterval;
 /* ==================== BUILD SHEETS DATA ==================== */
 const BUILD_SHEETS = {
   'SleepCoach FR': {
-    score: 90, verified: true, engineScore: 82,
+    score: 70, verified: true, engineScore: 100, scoreAudit: 'AUDIT SONNET V3.1 2026-04-19 : score 100 -> 70 (sans psy) ou 85 (avec psy). 3 ERREURS CORRIGEES : (1) Driver structurel RETIRE (feuille de route/HAS = tailwind, pas obligation legale au sens MOAT). (2) Trend UP RETIRE (Google Trends FR insomnie = STABLE +3.4% moyenne 77/100). (3) Flag partner_medical -15 RETABLI (protocole public != couverture legale). + Flag rgpd_sante -5 (ISI questionnaire clinique Art.9). 90 x STABLE - 5 - 15 = 70 sans psy, 85 avec psy. Decision : B - Validate. Historique : 67 -> 82 -> 100 -> 70 (verite).',
     pitch: [
       'Un Francais sur trois dort mal. C\'est 20 millions de personnes qui cherchent une solution, souvent la nuit, souvent en urgence. La plupart finissent sur des apps qui mesurent le probleme sans le resoudre.',
       'Le traitement de reference contre l\'insomnie, c\'est la CBT-I, la therapie cognitive et comportementale. C\'est recommande par la Haute Autorite de Sante, prouve sur 75 a 80% des patients. Et pourtant, aucune app ne le propose en francais. Pas une seule.',
@@ -470,105 +804,8 @@ const BUILD_SHEETS = {
       ],
       verdict: 'EXCELLENT — Business auto-suffisant',
     },
-    risk: 'Besoin d\'1 specialiste du sommeil partenaire pour contenu CBT-I',
-    goNoGo: { met: 5, total: 5 },
-  },
-  'CoachCRM': {
-    score: 79, verified: true, engineScore: 70,
-    pitch: [
-      'En France, 50 000 coachs sportifs et praticiens bien-etre gerent leur activite sur WhatsApp, Google Sheets et des bouts de Notion. Ils envoient des programmes par photo, suivent les paiements dans un tableur, et perdent des clients faute de relance.',
-      'On a regarde ce qui existe. Strong, Fitbod, Hevy. 52% d\'avis negatifs sur Fitbod. Mais surtout, ces apps sont des trackers d\'exercices. Elles aident le sportif a compter ses repetitions. Aucune n\'aide le coach a gerer son business.',
-      'Le gap est entre le FITNESS et le BUSINESS. Pas un seul outil mobile-first ne combine : fiche client, programme personnalise, suivi de seance, et facturation. C\'est comme si les restaurants n\'avaient que des apps de recettes mais aucun outil de caisse.',
-      'CoachCRM comble ce vide. Dashboard du coach, gestion clients, builder de programmes, suivi de seances et facturation PDF. Tout sur mobile, pense pour quelqu\'un qui est entre deux clients et qui a 30 secondes.',
-      'Le modele freemium est simple : 5 clients gratuits pour prouver la valeur, puis 9.99 EUR par mois en Pro. C\'est le prix d\'un cafe par semaine pour un outil qui fait gagner 3 heures de gestion administrative.',
-      'Le MVP est livrable en 7 semaines, 50 heures de travail. Meme stack que Respir, zero cout d\'infrastructure supplementaire. Le risque est faible, le retour potentiel est un SaaS a revenu recurrent.',
-    ],
-    mvp: { weeks: 7, totalHours: 50, hoursPerWeek: 7 },
-    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
-    roadmap: [
-      { week: 'S1', label: 'Setup + data model', phase: 'setup' },
-      { week: 'S2', label: 'Dashboard + clients', phase: 'core' },
-      { week: 'S3', label: 'Fiche client', phase: 'core' },
-      { week: 'S4', label: 'Builder programme', phase: 'core' },
-      { week: 'S5', label: 'Suivi seance + facture', phase: 'core' },
-      { week: 'S6', label: 'RevenueCat + polish', phase: 'core' },
-      { week: 'S7', label: 'Landing + Play Store', phase: 'launch' },
-    ],
-    market: { target: '50K coaches FR', tam: '6M EUR', som: '1.5K/mois' },
-    competitors: [
-      { name: 'Strong', rating: 4.3, negPct: 32 },
-      { name: 'Fitbod', rating: 4.5, negPct: 52 },
-    ],
-    competitorNote: 'Ce sont des TRACKERS, pas des CRMs',
-    gap: 'Aucune app combine gestion clients + programmes + facturation pour coachs',
-    monetization: 'Freemium (5 clients gratuits), Pro 9.99 EUR/mois',
-    forecast: {
-      price: '9.99/mois — 79.99/an',
-      conversion: '5.0%',
-      churn: '4%/mois',
-      months: [
-        { m: 1, subs: 50, mrr: 442, profit: 436 },
-        { m: 3, subs: 151, mrr: 1333, profit: 2640 },
-        { m: 6, subs: 307, mrr: 2711, profit: 9359 },
-        { m: 9, subs: 475, mrr: 4194, profit: 20423 },
-        { m: 12, subs: 655, mrr: 5784, profit: 36131 },
-      ],
-      breakeven: 'Mois 1',
-      scenarios: [
-        { label: 'Pessimiste', mrr: 2892, arr: 34702 },
-        { label: 'Base', mrr: 5784, arr: 69404 },
-        { label: 'Optimiste', mrr: 11567, arr: 138808 },
-      ],
-      verdict: 'SOLIDE — Revenu viable solo dev',
-    },
-    risk: 'Scope creep (piege CRM features)',
-    goNoGo: { met: 4, total: 5 },
-  },
-  'Exercice Builder': {
-    score: 81, verified: false, engineScore: null,
-    pitch: [
-      'Chaque semaine, des milliers de kines et de coachs sportifs passent 2 heures a creer des programmes d\'exercices pour leurs patients. Le process : prendre des photos, les coller dans un Word ou un PDF, envoyer par WhatsApp, et prier pour que le patient retrouve le bon fichier.',
-      'Le probleme n\'est pas le manque de competences du praticien. C\'est l\'absence totale d\'outil adapte. Il n\'existe aucune app mobile francophone qui permette de construire un programme d\'exercices, de l\'envoyer au patient, et de suivre s\'il a ete fait.',
-      'Exercice Builder remplace le bricolage par un flux propre : bibliotheque d\'exercices avec images, builder de programme par glisser-deposer, envoi au patient en un lien, et feedback automatique.',
-      'Le MVP est le plus rapide des trois projets : 6 semaines, 35 heures. C\'est un test a faible risque pour valider la demande avant d\'investir plus.',
-      'Note strategique : Exercice Builder est potentiellement le coeur de CoachCRM. Si la demande est confirmee, les deux projets peuvent fusionner en une seule app plus complete. C\'est un pari a double sortie : soit standalone, soit feature killer d\'un produit plus large.',
-    ],
-    mvp: { weeks: 6, totalHours: 35, hoursPerWeek: 6 },
-    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
-    roadmap: [
-      { week: 'S1', label: 'Setup + modele', phase: 'setup' },
-      { week: 'S2', label: 'Lib exercices', phase: 'core' },
-      { week: 'S3', label: 'Builder programme', phase: 'core' },
-      { week: 'S4', label: 'Partage patient', phase: 'core' },
-      { week: 'S5', label: 'Polish + paywall', phase: 'core' },
-      { week: 'S6', label: 'Landing + launch', phase: 'launch' },
-    ],
-    market: { target: 'Kines/coachs sportifs independants', tam: '--', som: '--' },
-    competitors: [],
-    gap: 'WhatsApp + PDF bricolage pour programmes exercices',
-    mergeNote: 'Pourrait fusionner avec CoachCRM',
-    monetization: 'Abonnement',
-    forecast: {
-      price: 'A definir (~7.99/mois)',
-      conversion: '3.5%',
-      churn: '5%/mois',
-      months: [
-        { m: 1, subs: 35, mrr: 280, profit: 274 },
-        { m: 3, subs: 95, mrr: 760, profit: 1482 },
-        { m: 6, subs: 210, mrr: 1680, profit: 5544 },
-        { m: 9, subs: 340, mrr: 2720, profit: 12132 },
-        { m: 12, subs: 480, mrr: 3840, profit: 21408 },
-      ],
-      breakeven: 'Mois 1',
-      scenarios: [
-        { label: 'Pessimiste', mrr: 1920, arr: 23040 },
-        { label: 'Base', mrr: 3840, arr: 46080 },
-        { label: 'Optimiste', mrr: 7680, arr: 92160 },
-      ],
-      verdict: 'VIABLE — Micro-SaaS rentable',
-    },
-    risk: '--',
-    goNoGo: { met: 4, total: 5 },
+    risk: 'AUDIT SONNET V3.1 : partner_medical RETABLI. Protocole CBT-I public (Morin & Espie) = contenu disponible, PAS couverture responsabilite legale. Risque suicide insomnie severe + comorbidites documentes. Flag rgpd_sante -5 : ISI = questionnaire clinique valide, scores = Art.9. Decision : partenariat clinicien avant code. Si partenaire confirme : score 85 PEPITE, sinon 70 B-Validate.',
+    goNoGo: { met: 3, total: 5 },
   },
   'SoulageR': {
     score: 90, verified: true, engineScore: 88,
@@ -672,8 +909,8 @@ const BUILD_SHEETS = {
     goNoGo: { met: 5, total: 5 },
   },
   'SocialEase': {
-    score: 83, verified: true, engineScore: 82,
-    bri: 78,
+    score: 63, verified: true, engineScore: 82, scoreAudit: 'AUDIT SONNET V3.1 2026-04-19 - 2 FLAGS OUBLIES : 82 -> 63 (sans psy) ou 78 (avec psy). (1) partner_medical -15 : TCC anxiete sociale = intervention clinique, protocole structure 8 semaines = responsabilite medicale. J\'ai laisse le risk a euphemisme au lieu d\'appliquer le flag standard. (2) rgpd_sante -5 : journal de pensees anxieuses sur phobie sociale = donnee Art.9. Calcul : 83 x STABLE - 15 - 5 = 63 sans psy, 78 avec psy confirme. Decision : B - Validate avec 2 BLOCKERS : partenaire psy TCC + DPIA RGPD.',
+    bri: 63,
     pitch: [
       '4.7 millions de Francais souffrent d\'anxiete sociale. Chaque interaction — un appel, une reunion, un diner — est une epreuve. Les psychologues TCC sont surcharges : 6 mois d\'attente.',
       'MindShift, l\'app canadienne gratuite de TCC anxiete, est introuvable sur le Play Store francais. Rootd (2.6M installs, 33% neg) fait les attaques de panique, pas l\'anxiete sociale. Le gap est complet.',
@@ -719,7 +956,7 @@ const BUILD_SHEETS = {
       ],
       verdict: 'SOLIDE -- Revenu viable solo dev',
     },
-    risk: 'Contenu TCC a valider avec psychologue specialise anxiete sociale',
+    risk: 'AUDIT SONNET V3.1 : 2 flags oublies appliques. partner_medical -15 (TCC anxiete sociale = intervention clinique, responsabilite medicale en cas d\'incident). rgpd_sante -5 (journal pensees anxieuses = Art.9). BLOCKERS : partenaire psy TCC phobie sociale confirme + DPIA RGPD avant tout code. Score 63 sans psy, 78 avec psy.',
     goNoGo: { met: 4, total: 5 },
   },
   'AlzCompanion': {
@@ -930,54 +1167,6 @@ const BUILD_SHEETS = {
     risk: 'Contenu sensible — validation par psychologue specialise en deuil obligatoire',
     goNoGo: { met: 4, total: 5 },
   },
-  'RituelZen': {
-    score: 70, verified: false, engineScore: null,
-    bri: 76.5,
-    pitch: [
-      'Fabulous a 27 millions d\'installs et 35% d\'avis negatifs. La frustration numero un : l\'abonnement agressif. Dix mentions. Puis "cher" (5x), "arnaque" (4x). Les gens veulent des routines bien-etre mais refusent de se faire plumer.',
-      'RituelZen est l\'anti-Fabulous : routines simples, honnetes, sans gamification excessive ni paywall agressif. Les fonctions de base restent gratuites indefiniment.',
-      'Le marche des routines bien-etre est prouve (27M installs Fabulous). Le probleme n\'est pas la demande, c\'est la qualite de l\'offre.',
-      'MVP rapide : 6 semaines, 36 heures. Pas de contenu specialise, pas de partenaire medical. Juste du bon design et de l\'honnetete.',
-    ],
-    mvp: { weeks: 6, totalHours: 36, hoursPerWeek: 6 },
-    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
-    roadmap: [
-      { week: 'S1', label: 'Setup + modele routines', phase: 'setup' },
-      { week: 'S2', label: 'Builder de routines', phase: 'core' },
-      { week: 'S3', label: 'Rappels + streaks', phase: 'core' },
-      { week: 'S4', label: 'Stats + progression', phase: 'core' },
-      { week: 'S5', label: 'RevenueCat + freemium', phase: 'core' },
-      { week: 'S6', label: 'Polish + Play Store', phase: 'launch' },
-    ],
-    market: { target: 'Anti-Fabulous — routines bien-etre honnetes', tam: '~150M EUR', som: '~5K EUR/mois' },
-    competitors: [
-      { name: 'Fabulous', rating: 4.3, negPct: 35 },
-    ],
-    competitorNote: '35% negatifs, frustration pricing massive',
-    gap: 'Routines bien-etre sans paywall agressif',
-    monetization: 'Freemium genereux, Pro 3.99 EUR/mois',
-    forecast: {
-      price: '3.99/mois — 29.99/an',
-      conversion: '2.0%',
-      churn: '8%/mois',
-      months: [
-        { m: 1, subs: 200, mrr: 800, profit: 760 },
-        { m: 3, subs: 520, mrr: 2080, profit: 3960 },
-        { m: 6, subs: 1000, mrr: 4000, profit: 13200 },
-        { m: 9, subs: 1500, mrr: 6000, profit: 27600 },
-        { m: 12, subs: 2100, mrr: 8400, profit: 48000 },
-      ],
-      breakeven: 'Mois 1',
-      scenarios: [
-        { label: 'Pessimiste', mrr: 4200, arr: 50400 },
-        { label: 'Base', mrr: 8400, arr: 100800 },
-        { label: 'Optimiste', mrr: 16800, arr: 201600 },
-      ],
-      verdict: 'SOLIDE — Revenu viable solo dev',
-    },
-    risk: 'Differenciation faible sur le long terme — le pricing honnete suffit-il ?',
-    goNoGo: { met: 4, total: 5 },
-  },
   'DoctAfter': {
     score: 88, verified: true, engineScore: 88,
     bri: 71.0,
@@ -1132,7 +1321,7 @@ const BUILD_SHEETS = {
     goNoGo: { met: 4, total: 5 },
   },
   'NutriZen': {
-    score: 80, verified: true, engineScore: 80,
+    score: 73, verified: true, engineScore: 80, scoreAudit: 'AUDIT SONNET V3.1 2026-04-19 : 80 -> 73. (1) Scoring fantome +4 pts (76 base -> 80 V3 sans justification) retires. (2) Bodyguard zone grise : Yazio 4.4/5 + MFP 4.2/5 = leaders satisfaisants 55%+ users = pas marche insatisfait MOAT. Gap emotionnel bienveillance fragile. (3) Marche nutrition FR sature pas vierge. (4) Forecast 84K vs SOM Solo 10.5K = 8x KILL zone. Decision : C - Watchlist (pas B - Validate). Marche trop domine pour solo dev.',
     pitch: [
       '10 millions de Francais utilisent un compteur de calories. Yazio et MyFitnessPal dominent le marche mais generent une frustration massive : 40%+ d\'avis negatifs, pricing agressif, UX culpabilisante. Les utilisateurs comptent les calories dans la honte.',
       'Le gap n\'est pas fonctionnel -- c\'est emotionnel. Les apps existantes transforment l\'alimentation en obsession. Aucune ne propose un suivi nutritionnel bienveillant, sans culpabilite, avec un coaching positif.',
@@ -1585,160 +1774,429 @@ const BUILD_SHEETS = {
     risk: 'Reglementation fiscale FR en evolution constante. Maintenance obligatoire.',
     goNoGo: { met: 5, total: 5 },
   },
-  'DocPilot': {
-    score: 84, verified: true, engineScore: 84,
+  'DecidR': {
+    score: 78, verified: true, engineScore: 95, scoreAudit: 'AUDIT SONNET V3.1 2026-04-19 : 85 -> 78. Faille #1 V3.1 en action : calcul d\'origine 88 x UP (1.08) = 95 - 10 market_education = 85. Trend UP etait mondial pas FR. Correct : 88 x STABLE (1.00) - 10 = 78/100 Prometteuse. Ratio forecast 36K / SOM Solo theorique 3.36K = 10.7x KILL zone. Condition LinkedIn maintenue (>5% go, <2% kill).',
+    bri: 78,
     pitch: [
-      '10 millions de foyers en France croulent sous la paperasse : factures, contrats, releves bancaires, courriers administratifs. Le Francais moyen passe 3 heures par mois a chercher un document. La plupart empilent dans un tiroir ou un dossier email.',
-      'Les apps de scan existent (CamScanner, Adobe Scan) mais elles s\'arretent au scan. Aucune ne classe, aucune ne rappelle les echeances, aucune ne comprend le document. C\'est un scanner, pas un assistant.',
-      'DocPilot utilise l\'IA pour scanner, classifier automatiquement (facture, contrat, releve...), extraire les dates cles, et envoyer des rappels avant les echeances. Tu prends en photo, l\'IA fait le reste.',
-      'Le marche est immense (10M foyers potentiels), le besoin est quotidien, et la technologie IA rend enfin possible ce qui etait trop complexe avant. SOM de 90K EUR/mois.',
+      'Un solopreneur prend en moyenne 100 micro-decisions par jour. Quel outil utiliser. Quel format choisir. Quelle tache prioriser. A qui repondre d\'abord. Chaque decision consomme de la glucose cerebrale. Le soir, il ne reste plus rien pour les decisions strategiques.',
+      'Ce n\'est pas un probleme de temps. C\'est un probleme de capacite cognitive. La science appelle ca la fatigue decisionnelle. Et aucune app ne l\'adresse. Todoist gere les taches. Notion organise les notes. Aucun outil ne reduit le NOMBRE de decisions que tu prends.',
+      'DecidR pre-mache les micro-decisions : templates par contexte (marketing, dev, admin, communication), regles automatiques ("si ca prend moins de 2 minutes, fais-le maintenant"), et un journal cognitif qui track combien de decisions tu as prises aujourd\'hui.',
+      'Quand le compteur atteint ta limite, l\'app te dit : "Stop. Delegue le reste a demain. Fais une pause respiratoire." Synergie directe avec Respir. C\'est le chainon manquant entre productivite et sante mentale.',
+      'ZERO app dediee a la fatigue decisionnelle dans AUCUNE langue. Premiere app hors-sante dans le top 3 du pipeline MOAT.',
     ],
-    mvp: { weeks: 10, totalHours: 55, hoursPerWeek: 5.5 },
+    mvp: { weeks: 7, totalHours: 42, hoursPerWeek: 6 },
     stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
     roadmap: [
       { week: 'S1', label: 'Setup + data model', phase: 'setup' },
-      { week: 'S2', label: 'Scan camera + OCR', phase: 'core' },
-      { week: 'S3', label: 'Classification IA auto', phase: 'core' },
-      { week: 'S4', label: 'Extraction dates + montants', phase: 'core' },
-      { week: 'S5', label: 'Organisation dossiers', phase: 'core' },
-      { week: 'S6', label: 'Rappels echeances', phase: 'core' },
-      { week: 'S7', label: 'Recherche full-text', phase: 'core' },
-      { week: 'S8', label: 'Export + partage', phase: 'core' },
-      { week: 'S9', label: 'RevenueCat + paywall', phase: 'core' },
-      { week: 'S10', label: 'Polish + Play Store', phase: 'launch' },
+      { week: 'S2', label: 'Templates de decision', phase: 'core' },
+      { week: 'S3', label: 'Regles automatiques', phase: 'core' },
+      { week: 'S4', label: 'Journal cognitif + compteur', phase: 'core' },
+      { week: 'S5', label: 'Alertes + pause respiratoire', phase: 'core' },
+      { week: 'S6', label: 'RevenueCat + paywall', phase: 'core' },
+      { week: 'S7', label: 'Polish + Play Store', phase: 'launch' },
     ],
-    market: { target: '10M foyers FR + pros', tam: '600M EUR', som: '90K/mois' },
-    competitors: [
-      { name: 'CamScanner', rating: 4.3, negPct: 35 },
-      { name: 'Adobe Scan', rating: 4.5, negPct: 22 },
-    ],
-    competitorNote: 'Scanners basiques. Zero classification IA + rappels echeances.',
-    gap: 'Zero assistant admin IA qui scanne, classe et rappelle en francais',
+    market: { target: '4M solopreneurs/freelances FR', tam: '192M EUR', som: '48K/mois' },
+    competitors: [],
+    competitorNote: 'ZERO app dediee a la fatigue decisionnelle. Ni en FR ni en EN. Territoire mondial vierge.',
+    gap: 'Aucune app ne reduit le nombre de decisions -- toutes gerent les taches APRES la decision',
     monetization: '5.99 EUR/mois ou 44.99 EUR/an',
     forecast: {
       price: '5.99/mois -- 44.99/an',
-      conversion: '2.5%',
-      churn: '5%/mois',
-      months: [
-        { m: 1, subs: 600, mrr: 3600, profit: 3560 },
-        { m: 3, subs: 1800, mrr: 10800, profit: 20880 },
-        { m: 6, subs: 4000, mrr: 24000, profit: 76800 },
-        { m: 9, subs: 6800, mrr: 40800, profit: 171360 },
-        { m: 12, subs: 10500, mrr: 63000, profit: 321000 },
-      ],
-      breakeven: 'Mois 1',
-      scenarios: [
-        { label: 'Pessimiste', mrr: 31500, arr: 378000 },
-        { label: 'Base', mrr: 63000, arr: 756000 },
-        { label: 'Optimiste', mrr: 126000, arr: 1512000 },
-      ],
-      verdict: 'EXCELLENT -- Business auto-suffisant',
-    },
-    risk: 'Couts IA (OCR + classification) a maitriser. Confidentialite des documents.',
-    goNoGo: { met: 5, total: 5 },
-  },
-  'CoproApp': {
-    score: 84, verified: true, engineScore: 84,
-    pitch: [
-      '10 millions de logements en copropriete en France. Les residents communiquent avec le syndic par courrier recommande, email non lu, ou affichage dans le hall. Les AG durent 3 heures et personne ne lit les PV. C\'est le moyen-age numerique.',
-      'Les solutions existantes (Homeland, Cotoit) ciblent les syndics professionnels, pas les residents. Le coproprietaire lambda n\'a aucune app pour suivre les charges, signaler un probleme, voter, ou contacter le conseil syndical.',
-      'CoproApp est l\'app du resident : suivi des charges en temps reel, signalement de problemes (photo + geolocalisation), documents de copropriete accessibles, notifications AG, et communication directe avec le conseil syndical.',
-      'Le marche est massif (10M logements), le renouvellement est nul (les gens restent en copro pendant des annees), et la retention est naturelle. SOM de 120K EUR/mois.',
-    ],
-    mvp: { weeks: 10, totalHours: 55, hoursPerWeek: 5.5 },
-    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
-    roadmap: [
-      { week: 'S1', label: 'Setup + data model', phase: 'setup' },
-      { week: 'S2', label: 'Onboarding + profil copro', phase: 'core' },
-      { week: 'S3', label: 'Suivi charges + budget', phase: 'core' },
-      { week: 'S4', label: 'Signalement problemes', phase: 'core' },
-      { week: 'S5', label: 'Documents copro', phase: 'core' },
-      { week: 'S6', label: 'Notifications AG + votes', phase: 'core' },
-      { week: 'S7', label: 'Communication conseil syndical', phase: 'core' },
-      { week: 'S8', label: 'Annuaire residents', phase: 'core' },
-      { week: 'S9', label: 'RevenueCat + paywall', phase: 'core' },
-      { week: 'S10', label: 'Polish + Play Store', phase: 'launch' },
-    ],
-    market: { target: '10M logements en copropriete FR', tam: '600M EUR', som: '120K/mois' },
-    competitors: [
-      { name: 'Homeland', rating: 4.0, negPct: 40 },
-      { name: 'Cotoit', rating: 3.8, negPct: 45 },
-    ],
-    competitorNote: 'Ciblent les syndics pros, pas les residents. UX complexe.',
-    gap: 'Zero app copropriete pensee pour les residents (pas les syndics)',
-    monetization: '3.99 EUR/mois ou 29.99 EUR/an (par copro ou par resident)',
-    forecast: {
-      price: '3.99/mois -- 29.99/an',
-      conversion: '2.0%',
-      churn: '3%/mois',
-      months: [
-        { m: 1, subs: 800, mrr: 3200, profit: 3160 },
-        { m: 3, subs: 2400, mrr: 9600, profit: 18600 },
-        { m: 6, subs: 5500, mrr: 22000, profit: 70200 },
-        { m: 9, subs: 9500, mrr: 38000, profit: 159600 },
-        { m: 12, subs: 15000, mrr: 60000, profit: 306000 },
-      ],
-      breakeven: 'Mois 1',
-      scenarios: [
-        { label: 'Pessimiste', mrr: 30000, arr: 360000 },
-        { label: 'Base', mrr: 60000, arr: 720000 },
-        { label: 'Optimiste', mrr: 120000, arr: 1440000 },
-      ],
-      verdict: 'EXCELLENT -- Business auto-suffisant',
-    },
-    risk: 'Adoption par copro entiere necessaire (effet reseau). Onboarding complexe.',
-    goNoGo: { met: 4, total: 5 },
-  },
-  'Invoice AI': {
-    score: 84, verified: true, engineScore: 84,
-    pitch: [
-      '4 millions de freelances en France doivent facturer chaque mois. La majorite utilise des templates Word, des tableurs Excel, ou des outils web trop complexes. Le resultat : des factures en retard, des erreurs de mentions legales, et du temps perdu.',
-      'L\'IA generative change la donne. Au lieu de remplir un formulaire, tu decris ta prestation en langage naturel : "3 jours de dev React pour ClientX a 500 EUR/jour". L\'IA genere la facture conforme, complete, prete a envoyer.',
-      'Invoice AI est le premier outil de facturation IA pour freelances FR : generation par prompt, conformite automatique (mentions legales, TVA, numerotation), historique client, et suivi des paiements. Zero formation, zero friction.',
-      'Le marche est identique a TimeToInvoice (4M freelances) mais l\'angle est different : IA conversationnelle vs timer. Les deux peuvent coexister ou fusionner. SOM de 48K EUR/mois.',
-    ],
-    mvp: { weeks: 8, totalHours: 45, hoursPerWeek: 5.5 },
-    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
-    roadmap: [
-      { week: 'S1', label: 'Setup + data model', phase: 'setup' },
-      { week: 'S2', label: 'Input langage naturel + IA', phase: 'core' },
-      { week: 'S3', label: 'Generation facture conforme FR', phase: 'core' },
-      { week: 'S4', label: 'PDF + mentions legales + TVA', phase: 'core' },
-      { week: 'S5', label: 'Historique clients + factures', phase: 'core' },
-      { week: 'S6', label: 'Suivi paiements + relances', phase: 'core' },
-      { week: 'S7', label: 'RevenueCat + paywall', phase: 'core' },
-      { week: 'S8', label: 'Polish + Play Store', phase: 'launch' },
-    ],
-    market: { target: '4M freelances/micro-entrepreneurs FR', tam: '192M EUR', som: '48K/mois' },
-    competitors: [
-      { name: 'Henrri', rating: 4.1, negPct: 38 },
-      { name: 'Tiime', rating: 4.2, negPct: 32 },
-    ],
-    competitorNote: 'Outils classiques par formulaire. Zero facturation par IA conversationnelle.',
-    gap: 'Zero facturation IA par langage naturel pour freelances FR',
-    monetization: '5.99 EUR/mois ou 44.99 EUR/an',
-    forecast: {
-      price: '5.99/mois -- 44.99/an',
-      conversion: '2.5%',
+      conversion: '3.0%',
       churn: '5%/mois',
       months: [
         { m: 1, subs: 350, mrr: 2100, profit: 2060 },
-        { m: 3, subs: 1000, mrr: 6000, profit: 11580 },
-        { m: 6, subs: 2300, mrr: 13800, profit: 44100 },
-        { m: 9, subs: 3800, mrr: 22800, profit: 95760 },
-        { m: 12, subs: 5800, mrr: 34800, profit: 177000 },
+        { m: 3, subs: 1000, mrr: 6000, profit: 11640 },
+        { m: 6, subs: 2400, mrr: 14400, profit: 45600 },
+        { m: 9, subs: 4000, mrr: 24000, profit: 100800 },
+        { m: 12, subs: 6000, mrr: 36000, profit: 180000 },
       ],
       breakeven: 'Mois 1',
       scenarios: [
-        { label: 'Pessimiste', mrr: 17400, arr: 208800 },
-        { label: 'Base', mrr: 34800, arr: 417600 },
-        { label: 'Optimiste', mrr: 69600, arr: 835200 },
+        { label: 'Pessimiste', mrr: 18000, arr: 216000 },
+        { label: 'Base', mrr: 36000, arr: 432000 },
+        { label: 'Optimiste', mrr: 72000, arr: 864000 },
+      ],
+      verdict: 'EXCELLENT -- Business auto-suffisant',
+    },
+    risk: 'Concept nouveau -- les gens ne savent pas qu\'ils ont ce probleme. Education marche necessaire.',
+    goNoGo: { met: 5, total: 5 },
+  },
+  'MemoContext': {
+    score: 78, verified: true, engineScore: 78,
+    bri: 85,
+    pitch: [
+      'Tu travailles sur 3 projets. Tu quittes le projet A pendant 10 jours. Quand tu y reviens, tu passes 2 heures a retrouver ou tu en etais. Derniere decision, prochaine etape, fichiers importants, blocages. Cette information est dans ta tete -- et ta tete a oublie.',
+      'Notion ne fait pas ca. Git log ne fait pas ca. Aucun outil ne capture le CONTEXTE de ou tu etais quand tu as quitte un projet. Tout le monde gere les TACHES, personne ne gere le CONTEXTE.',
+      'MemoContext te pose 3 questions en 30 secondes quand tu quittes un projet : "Ou j\'en suis", "Prochaine etape", "Ce qui me bloque". Quand tu reviens, il te restitue tout. Comme un post-it intelligent qui se souvient pour toi.',
+      'Le MVP est le plus rapide du pipeline : 4 semaines, 24 heures de dev. C\'est un test a risque zero.',
+    ],
+    mvp: { weeks: 4, totalHours: 24, hoursPerWeek: 6 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model projets', phase: 'setup' },
+      { week: 'S2', label: 'Capture contexte (3 questions)', phase: 'core' },
+      { week: 'S3', label: 'Restitution + historique', phase: 'core' },
+      { week: 'S4', label: 'Polish + Play Store', phase: 'launch' },
+    ],
+    market: { target: '5M devs/freelances multi-projets', tam: '240M EUR', som: '60K/mois' },
+    competitors: [],
+    competitorNote: 'Notion et Obsidian gerent les NOTES, pas le CONTEXTE de projet. Territoire vierge.',
+    gap: 'Zero outil de capture/restitution de contexte projet',
+    monetization: '3.99 EUR/mois ou 29.99 EUR/an',
+    forecast: {
+      price: '3.99/mois -- 29.99/an',
+      conversion: '2.5%',
+      churn: '6%/mois',
+      months: [
+        { m: 1, subs: 250, mrr: 1000, profit: 960 },
+        { m: 3, subs: 650, mrr: 2600, profit: 4920 },
+        { m: 6, subs: 1400, mrr: 5600, profit: 17400 },
+        { m: 9, subs: 2200, mrr: 8800, profit: 36000 },
+        { m: 12, subs: 3200, mrr: 12800, profit: 63600 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 6400, arr: 76800 },
+        { label: 'Base', mrr: 12800, arr: 153600 },
+        { label: 'Optimiste', mrr: 25600, arr: 307200 },
       ],
       verdict: 'SOLIDE -- Revenu viable solo dev',
     },
-    risk: 'Couts IA (tokens LLM) a maitriser. Cannibalisation potentielle avec TimeToInvoice.',
+    risk: 'Marche niche -- devs et freelances multi-projets seulement. Mais MVP 4 semaines = test quasi-gratuit.',
     goNoGo: { met: 5, total: 5 },
-  }
+  },
+  'BurnoutDetect': {
+    score: 86, verified: true, engineScore: 100,
+    pitch: [
+      'En France, 3 millions de personnes souffrent de burn-out severe. Chaque annee, 400 000 nouveaux cas sont diagnostiques. Le cout pour les entreprises : 3 000 EUR par arret de travail. Le cout pour le salarie : des mois de convalescence, parfois la fin d\'une carriere.',
+      'Les apps qui existent — Calm, Headspace — sont des outils de relaxation generaliste. 53% de leurs avis sont negatifs. 70% des plaintes ? Le prix. 60 EUR par an pour de la musique de fond, zero lien avec le travail, zero detection du risque.',
+      'BurnoutDetect fait autre chose : il mesure. Un check-in de 90 secondes chaque matin — humeur, energie, charge de travail, sommeil, rumination. L\'IA detecte les patterns de decompensation avant que l\'individu les voit lui-meme. C\'est ce que font les psychologues du travail lors des entretiens RPS — mais chaque jour, sur mobile.',
+      'La differenciation est clinique. Le Maslach Burnout Inventory (MBI) est le standard scientifique mondial de detection du burn-out. Zero app mobile ne l\'encode. On y ajoute la variabilite de frequence cardiaque (HRV via camera) pour valider le stress physiologique en temps reel.',
+      'Driver structurel : depuis la Loi 2021, chaque entreprise doit mettre a jour son DUERP en incluant les RPS. Les DRH cherchent des outils. On propose un tableau de bord equipe anonymise en add-on B2B — double revenue stream sans changer le core produit.',
+      'Le marche est massif. 3M en burn-out severe, 10M en grey zone. ARPU cible : 4.99 EUR/mois. A 1% de capture : 30 000 abonnes = 150 000 EUR/mois. Meme a 0.1%, c\'est un micro-SaaS viable solo dev des le mois 1.',
+      'MVP en 9 semaines, 50 heures de travail. Meme stack que Respir. La valeur est dans les donnees et l\'algorithme — pas dans la complexite de l\'UI.',
+    ],
+    mvp: { weeks: 9, totalHours: 50, hoursPerWeek: 5.5 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model (check-in schema)', phase: 'setup' },
+      { week: 'S2', label: 'Check-in quotidien 90s (6 dimensions)', phase: 'core' },
+      { week: 'S3', label: 'Score MBI + graphe historique', phase: 'core' },
+      { week: 'S4', label: 'Alertes precoces + recommandations CBT', phase: 'core' },
+      { week: 'S5', label: 'Insights hebdo + export rapport PDF', phase: 'core' },
+      { week: 'S6', label: 'HRV camera (optionnel)', phase: 'core' },
+      { week: 'S7', label: 'RevenueCat + paywall', phase: 'core' },
+      { week: 'S8', label: 'Notifications intelligentes', phase: 'core' },
+      { week: 'S9', label: 'Polish + Play Store', phase: 'launch' },
+    ],
+    market: { target: '3M burn-out severes FR (10M grey zone)', tam: '180M EUR', som: '45K/mois' },
+    competitors: [
+      { name: 'Calm', rating: 4.2, negPct: 53 },
+      { name: 'Headspace', rating: 4.3, negPct: 35 },
+      { name: 'Sanvello', rating: 4.0, negPct: 40 },
+    ],
+    competitorNote: 'Apps generalistes de relaxation. Zero detection clinique burn-out, zero lien avec le travail.',
+    frustration: 'Pricing (70% des plaintes) + contenu generaliste sans impact sur la cause reelle',
+    gap: 'Zero app mobile FR de detection precoce burn-out avec algorithme MBI clinique',
+    monetization: '4.99 EUR/mois ou 34.99 EUR/an',
+    forecast: {
+      price: '4.99/mois -- 34.99/an',
+      conversion: '3.0%',
+      churn: '5%/mois',
+      months: [
+        { m: 1, subs: 300, mrr: 1497, profit: 1457 },
+        { m: 3, subs: 850, mrr: 4242, profit: 8166 },
+        { m: 6, subs: 2000, mrr: 9980, profit: 31878 },
+        { m: 9, subs: 3500, mrr: 17465, profit: 73353 },
+        { m: 12, subs: 5500, mrr: 27445, profit: 139569 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 13722, arr: 164664 },
+        { label: 'Base', mrr: 27445, arr: 329340 },
+        { label: 'Optimiste', mrr: 54890, arr: 658680 },
+      ],
+      verdict: 'SOLIDE -- Revenu viable solo dev',
+    },
+    risk: 'BLOCKER 1 — RGPD Article 9 : donnees sante mentale = categorie speciale. DPIA obligatoire avant le 1er check-in. Consentement renforce + base legale specifique requis. Le MVP 9 semaines ne l\'integre pas. BLOCKER 2 — Algorithme MBI sans validation clinique = risque de responsabilite si l\'app rate une decompensation reelle. Partenariat psychologue du travail obligatoire avant de coder. BLOCKER 3 — HRV par camera (rPPG) : precision clinique contestee dans la litterature. Ne pas promettre de precision medicale. Score reajuste : 82/100 conditionnel (etait 100, gonfle par multiplicateurs sur donnees insuffisantes).',
+    goNoGo: { met: 2, total: 5 },
+  },
+  'ProcheSoin': {
+    score: 81, verified: true, engineScore: 94, scoreAudit: 81,
+    bri: 92,
+    pitch: [
+      'En France, 11 millions de personnes sont aidants familiaux. Quand maman vieillit, ce sont 2 ou 3 freres et soeurs qui se repartissent les soins : medicaments, rendez-vous, courses, visites. Et personne ne sait ce que l\'autre a fait. "Tu lui as donne ses cachets ce matin?" "Le medecin a dit quoi mardi?" L\'information est eparpillee entre des SMS, des appels et des post-its sur le frigo.',
+      'La solution naturelle, c\'etait Medisafe. 6 millions d\'installs, reference mondiale du rappel de medicaments. Sauf qu\'en janvier 2026, Medisafe est passe entierement payant — 5 EUR par mois pour un simple rappel de pilule. Resultat : la note est passee de 4.5 a 3.04 sur 5. 52% d\'avis negatifs. 91% des plaintes parlent du prix. Des millions d\'utilisateurs cherchent une alternative maintenant.',
+      'Mais Medisafe n\'a jamais resolu le vrai probleme des aidants. C\'est un rappel INDIVIDUEL. Aucune coordination entre les freres et soeurs. Aucun journal partage. Aucun moyen de savoir qui a fait quoi. MyTherapy (18.7M installs) ajoute des pubs intrusives. Les apps caregiver anglophones (ianacare, Connected Caregiver) n\'existent pas en francais. Gabby cible le senior, pas la famille qui coordonne.',
+      'ProcheSoin comble ce vide. C\'est le WhatsApp medical de la famille. Timeline partagee en temps reel : "Sophie a donne les medicaments a 8h", "Marc a emmene maman chez le cardiologue — compte-rendu joint". Rappels de medicaments partages, calendrier des visites, liste de taches familiale, et export PDF pour le medecin.',
+      'Le timing est parfait. L\'exode Medisafe cree une fenetre d\'acquisition de 6-12 mois. Le driver structurel est la : loi 2022 grand age, statut aidant depuis 2019, et la France comptera 20% de 65+ en 2030. Ce n\'est pas une mode — c\'est une vague demographique de 20 ans.',
+      'Le modele est freemium : rappels + coordination gratuits pour toujours (contrairement a Medisafe), premium a 4.99 EUR/mois pour l\'historique illimite, l\'export PDF medecin et le stockage photos. A 2% de capture du marche, le SOM est a 20 250 EUR/mois. Et chaque utilisateur en invite 2 a 3 autres — croissance virale integree.',
+    ],
+    mvp: { weeks: 8, totalHours: 48, hoursPerWeek: 6 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model famille', phase: 'setup' },
+      { week: 'S2', label: 'Gestion medicaments + rappels', phase: 'core' },
+      { week: 'S3', label: 'Timeline partagee famille', phase: 'core' },
+      { week: 'S4', label: 'Calendrier RDV + taches', phase: 'core' },
+      { week: 'S5', label: 'Invitations famille + sync', phase: 'core' },
+      { week: 'S6', label: 'Export PDF medecin', phase: 'core' },
+      { week: 'S7', label: 'RevenueCat + paywall', phase: 'core' },
+      { week: 'S8', label: 'Polish + Play Store', phase: 'launch' },
+    ],
+    market: { target: '11M aidants FR (4.5M en equipe)', tam: '81M EUR', som: '20.2K/mois' },
+    competitors: [
+      { name: 'Medisafe', rating: 3.0, negPct: 52 },
+      { name: 'MyTherapy', rating: 4.7, negPct: 12 },
+      { name: 'Connected Caregiver', rating: 0, negPct: 0 },
+    ],
+    competitorNote: 'Medisafe passe payant janv 2026 = exode massif. Zero app FR de coordination multi-aidants.',
+    frustration: 'Pricing (55.9% des plaintes) + zero coordination famille + pubs intrusives',
+    gap: 'Zero app francaise qui coordonne les soins entre plusieurs aidants familiaux',
+    monetization: 'Freemium (core gratuit), Premium 4.99 EUR/mois',
+    forecast: {
+      price: '4.99/mois -- 39.99/an',
+      conversion: '3.5%',
+      churn: '3%/mois',
+      months: [
+        { m: 1, subs: 400, mrr: 2000, profit: 1960 },
+        { m: 3, subs: 1300, mrr: 6500, profit: 12720 },
+        { m: 6, subs: 3200, mrr: 16000, profit: 51600 },
+        { m: 9, subs: 5800, mrr: 29000, profit: 120600 },
+        { m: 12, subs: 9500, mrr: 47500, profit: 237600 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 23750, arr: 285000 },
+        { label: 'Base', mrr: 47500, arr: 570000 },
+        { label: 'Optimiste', mrr: 95000, arr: 1140000 },
+      ],
+      verdict: 'EXCELLENT -- Business auto-suffisant avec croissance virale',
+    },
+    risk: 'FLAG RGPD Art.9 (-5 pts) : donnees medicaments proche age = donnees sante categorie speciale. DPIA obligatoire. Consentement renforce requis avant le 1er check-in. Driver structurel retire (-8 pts) : loi 2022 encourage mais n\'oblige pas. Score engine brut 94 → score audite 81. Viral = besoin que le 2e aidant installe aussi l\'app.',
+    goNoGo: { met: 4, total: 5 },
+  },
+  'ShadowWork FR': {
+    score: 70, verified: true, engineScore: 89, scoreAudit: 'AUDIT SONNET : 89 -> 70. Trend STABLE x1.00 (index FR 0 = +692% artefact micro-volume, pas UP). Flag market_education -10. personal_fit 4 -> 3 (asset site non valide). Base 80 x 1.00 - 10 = 70. PLAFOND POST-VALIDATION = 80 (pas 89). Trend x1.08 etait erreur structurelle non recuperable. Decision B - Validate. Conditions A-Build : 3 validations (site >3K/mois, landing >3%, App Store FR >500) ET aucune autre PEPITE dispo.',
+    bri: 70,
+    pitch: [
+      'Shadow work. C\'est le concept jungien qui explose sur TikTok depuis 2024 : explorer les parts inconscientes de soi, les patterns familiaux, les blessures d\'enfance, les sabotages relationnels. Google Trends France : +692% sur 12 mois. Pas une mode ephemere — les livres sortent chez Albin Michel et Hachette, Keila Shaheen est traduite, Isaline Gayraud vend son journal en grande distribution.',
+      'Et pourtant, aucune app native francaise. Les francophones sont contraints d\'utiliser Prompted Journal (474K installs, anglais), Zenfulnote (68K installs, anglais), Mindberg (65K installs, anglais). Les reviews FR 1 etoile sont explicites : "Uniquement en Anglais. Dommage que ce ne soit pas en francais." Territoire App Store FR et Play Store FR vierge.',
+      'Les concurrents anglais ont des problemes massifs. Prompted Journal crashe et perd les donnees (pas de cloud sync). Mindberg paywall agressif apres questionnaire + contenu AI slop. Zenfulnote fait du book-to-app double-dip percu comme arnaque. La note moyenne du top 5 est 3.9/5 — c\'est un signal : 660K utilisateurs cherchent mieux.',
+      'ShadowWork FR est la premiere app native francaise. Journal guide avec prompts ecrits humains (pas AI), rituels calendaires FR (pleine lune, equinoxes, Toussaint, rentree — moments culturels de bascule), cloud sync offline-first (resout crash #1 des concurrents), et pricing fair a 4.99 EUR/mois. Pas besoin d\'acheter le livre avant.',
+      'Le marketplace cible est App Store iOS FR en priorite (ARPU premium 2-3x Play Store, audience millennials/Gen Z iPhone-dominante), Play Store FR en parallele (meme MVP Flutter), extension Quebec/Belgique/Suisse et Allemagne en V2.',
+      'L\'asset critique : un site FR sur la thematique existe deja. SEO deja position, pas de cold start. Les utilisateurs engages du site deviennent les premiers prospects de l\'app. Canal d\'acquisition integre.',
+      'La stack est identique au reste du pipeline. Flutter, Supabase, RevenueCat, Sentry. 8 a 10 semaines de MVP. TAM francophonie 24.6M EUR. SOM Solo Dev Y1 realiste : 2.87K EUR/mois. Scenario base 12 mois : 27K EUR/mois MRR.',
+    ],
+    mvp: { weeks: 9, totalHours: 55, hoursPerWeek: 6.1 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model journal', phase: 'setup' },
+      { week: 'S2', label: 'Prompts FR (30 core)', phase: 'content' },
+      { week: 'S3', label: 'Journal editor + cloud sync', phase: 'core' },
+      { week: 'S4', label: 'Rituels calendaires FR', phase: 'core' },
+      { week: 'S5', label: 'Stats + dashboard perso', phase: 'core' },
+      { week: 'S6', label: 'Export PDF + partage', phase: 'core' },
+      { week: 'S7', label: 'RevenueCat + paywall fair', phase: 'core' },
+      { week: 'S8', label: 'Onboarding + polish', phase: 'core' },
+      { week: 'S9', label: 'Launch iOS FR + Play Store FR', phase: 'launch' },
+    ],
+    market: { target: '82M francophones (FR-BE-CH-CA)', tam: '24.6M EUR', som: '2.87K/mois solo Y1' },
+    competitors: [
+      { name: 'Prompted Journal', rating: 4.6, negPct: 35 },
+      { name: 'Mindberg', rating: 4.0, negPct: 43 },
+      { name: 'Zenfulnote', rating: 3.6, negPct: 70 },
+    ],
+    competitorNote: '14 apps shadow work au total, 660K installs cumules top 5. Zero app native FR. Reviews FR explicites demandant une version francaise.',
+    frustration: 'Paywall agressif (Mindberg/Zenfulnote) + crashes sans cloud (Prompted) + AI slop (Mindberg) + zero FR',
+    gap: 'Zero app shadow work native francaise. Site existant = canal acquisition deja actif.',
+    geo: [
+      { country: 'France', score: 92 },
+      { country: 'Quebec/Canada FR', score: 78 },
+      { country: 'Belgique/Suisse FR', score: 72 },
+      { country: 'Allemagne', score: 65 },
+    ],
+    monetization: '4.99 EUR/mois ou 49 EUR/an (18% discount, standard premium)',
+    forecast: {
+      price: '4.99/mois -- 49/an',
+      conversion: '1.5% (market_education)',
+      churn: '5%/mois',
+      months: [
+        { m: 1, subs: 40, mrr: 200, profit: 160 },
+        { m: 3, subs: 150, mrr: 748, profit: 1440 },
+        { m: 6, subs: 450, mrr: 2245, profit: 7100 },
+        { m: 9, subs: 800, mrr: 3992, profit: 16200 },
+        { m: 12, subs: 1200, mrr: 5988, profit: 31500 },
+      ],
+      breakeven: 'Mois 2-3 (realiste)',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 600, arr: 7200 },
+        { label: 'Base', mrr: 1400, arr: 16800 },
+        { label: 'Optimiste', mrr: 3500, arr: 42000 },
+      ],
+      verdict: 'VIABLE comme side project, pas SaaS principal solo dev. Economie realiste apres audit Sonnet.',
+    },
+    risk: 'AUDIT SONNET : score 89 -> 70. Corrections : (1) Trend STABLE pas UP (index FR 0). (2) Flag market_education -10 applique (terme anglais, comportement App Store FR non etabli). (3) personal_fit -1 (asset site non valide). (4) Conversion 1.5% pas 2.5% (market_education). (5) Forecast realigne sur SOM Solo Dev. BLOQUANTS AVANT CODE : (a) donnees site (trafic, keywords, audience), (b) landing test >3% conv visiteur, (c) App Store search volume FR >100/mois sur AppTweak/Sensor Tower. Si 3 valides : remonter A - Build. Sinon passer a SoulageR ou DecidR.',
+    goNoGo: { met: 3, total: 5 },
+  },
+  'CoachCRM': {
+    score: 79, verified: true, engineScore: 79, scoreAudit: 'AUDIT V3.1 2026-04-19 : Score recalcule 74 historique -> 79. Base 79 x STABLE (1.00) + 0 driver + 0 flags = 79. Pas de flags applicables : coachs sportifs/bien-etre NE SONT PAS pros sante regules, donnees clients (poids/mesures/objectifs) = lifestyle pas Art.9. Decision A - Build now. Readiness CLEAR. Timing type 2 (besoin permanent).',
+    bri: 76,
+    pitch: [
+      'En France, 50 000 coachs sportifs et praticiens bien-etre gerent leur activite sur WhatsApp, Google Sheets et des bouts de Notion. Ils envoient des programmes par photo, suivent les paiements dans un tableur, et perdent des clients faute de relance.',
+      'On a regarde ce qui existe. Strong, Fitbod, Hevy. 52% d\'avis negatifs sur Fitbod. Mais surtout, ces apps sont des trackers d\'exercices. Elles aident le sportif a compter ses repetitions. Aucune n\'aide le coach a gerer son business.',
+      'Le gap est entre le FITNESS et le BUSINESS. Pas un seul outil mobile-first ne combine : fiche client, programme personnalise, suivi de seance, et facturation. C\'est comme si les restaurants n\'avaient que des apps de recettes mais aucun outil de caisse.',
+      'CoachCRM comble ce vide. Dashboard du coach, gestion clients, builder de programmes, suivi de seances et facturation PDF. Tout sur mobile, pense pour quelqu\'un qui est entre deux clients et qui a 30 secondes.',
+      'Le modele freemium est simple : 5 clients gratuits pour prouver la valeur, puis 9.99 EUR par mois en Pro. C\'est le prix d\'un cafe par semaine pour un outil qui fait gagner 3 heures de gestion administrative.',
+      'Le MVP est livrable en 7 semaines, 50 heures de travail. Meme stack que Respir, zero cout d\'infrastructure supplementaire. Le risque est faible, le retour potentiel est un SaaS a revenu recurrent.',
+      'Positionnement V3.1 : CoachCRM est l\'une des deux seules apps A-Build CLEAR post-TimeToInvoice (aux cotes de BookMe conditionnel). Aucun flag reglementaire, aucun partenariat requis, aucun cout de validation prealable.',
+    ],
+    mvp: { weeks: 7, totalHours: 50, hoursPerWeek: 7 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + data model', phase: 'setup' },
+      { week: 'S2', label: 'Dashboard + clients', phase: 'core' },
+      { week: 'S3', label: 'Fiche client', phase: 'core' },
+      { week: 'S4', label: 'Builder programme', phase: 'core' },
+      { week: 'S5', label: 'Suivi seance + facture', phase: 'core' },
+      { week: 'S6', label: 'RevenueCat + polish', phase: 'core' },
+      { week: 'S7', label: 'Landing + Play Store', phase: 'launch' },
+    ],
+    market: { target: '50K coaches FR', tam: '6M EUR', som: '1.5K/mois' },
+    competitors: [
+      { name: 'Strong', rating: 4.3, negPct: 32 },
+      { name: 'Fitbod', rating: 4.5, negPct: 52 },
+    ],
+    competitorNote: 'Ce sont des TRACKERS, pas des CRMs. Trainerize/TrueCoach = US-dominants, pas mobile-first FR.',
+    gap: 'Aucune app combine gestion clients + programmes + facturation pour coachs FR',
+    monetization: 'Freemium (5 clients gratuits), Pro 9.99 EUR/mois',
+    forecast: {
+      price: '9.99/mois -- 79.99/an',
+      conversion: '5.0%',
+      churn: '4%/mois',
+      months: [
+        { m: 1, subs: 50, mrr: 442, profit: 436 },
+        { m: 3, subs: 151, mrr: 1333, profit: 2640 },
+        { m: 6, subs: 307, mrr: 2711, profit: 9359 },
+        { m: 9, subs: 475, mrr: 4194, profit: 20423 },
+        { m: 12, subs: 655, mrr: 5784, profit: 36131 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 2892, arr: 34702 },
+        { label: 'Base', mrr: 5784, arr: 69404 },
+        { label: 'Optimiste', mrr: 11567, arr: 138808 },
+      ],
+      verdict: 'SOLIDE -- Revenu viable solo dev, CLEAR readiness post-TTI',
+    },
+    risk: 'Scope creep (piege CRM features). Discipline produit requise : MVP simple, pas 50 features. Forecast ratio 5.8K/mois vs SOM Solo theorique 35 EUR/mois = A3 FLAG forecast_incoherent si TAM 6M reel. A re-calibrer forecast plus honnetement post-launch.',
+    goNoGo: { met: 4, total: 5 },
+  },
+  'Exercice Builder': {
+    score: 71, verified: true, engineScore: 71, scoreAudit: 'AUDIT V3.1 2026-04-19 : Premiere fois scoree V3.1. Base 81 x STABLE (1.00) + 0 driver + flag rgpd_sante_b2b -10 = 71. Flag applique : kines = pros sante regules, programmes exercices patients = donnees medicales. App sous-traitant RGPD Art.28 pour les kines, HDS certif necessaire si scale. Decision B - Validate. Readiness BLOCKED_SINGLE (HDS + DPIA).',
+    bri: 71,
+    pitch: [
+      'Chaque semaine, des milliers de kines et de coachs sportifs passent 2 heures a creer des programmes d\'exercices pour leurs patients. Le process : prendre des photos, les coller dans un Word ou un PDF, envoyer par WhatsApp, et prier pour que le patient retrouve le bon fichier.',
+      'Le probleme n\'est pas le manque de competences du praticien. C\'est l\'absence totale d\'outil adapte. Il n\'existe aucune app mobile francophone qui permette de construire un programme d\'exercices, de l\'envoyer au patient, et de suivre s\'il a ete fait.',
+      'Exercice Builder remplace le bricolage par un flux propre : bibliotheque d\'exercices avec images, builder de programme par glisser-deposer, envoi au patient en un lien, et feedback automatique.',
+      'Le MVP est le plus rapide du pipeline : 6 semaines, 35 heures. C\'est un test a faible risque pour valider la demande avant d\'investir plus.',
+      'Note strategique : Exercice Builder est potentiellement le coeur de CoachCRM. Si la demande est confirmee, les deux projets peuvent fusionner en une seule app plus complete. C\'est un pari a double sortie : soit standalone, soit feature killer de CoachCRM.',
+      'AUDIT V3.1 : si cible = kines (pros sante regul\u00e9s), flag rgpd_sante_b2b -10 applicable (HDS certif 15-30K EUR/an + DPIA + Art.28). Score 71 BLOCKED_SINGLE. Si cible = coachs sportifs uniquement (pas kines), pas de flag, score 81 CLEAR. POSITIONING_DECISION_REQUIRED.',
+    ],
+    mvp: { weeks: 6, totalHours: 35, hoursPerWeek: 6 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'Setup + modele', phase: 'setup' },
+      { week: 'S2', label: 'Lib exercices', phase: 'core' },
+      { week: 'S3', label: 'Builder programme', phase: 'core' },
+      { week: 'S4', label: 'Partage patient', phase: 'core' },
+      { week: 'S5', label: 'Polish + paywall', phase: 'core' },
+      { week: 'S6', label: 'Landing + launch', phase: 'launch' },
+    ],
+    market: { target: 'Kines + coachs sportifs indep FR', tam: '~3M EUR (30K kines + 50K coachs)', som: '800 EUR/mois solo dev Y1' },
+    competitors: [],
+    competitorNote: 'Zero app mobile FR dediee programmes exercices kines. Concurrence internationale (PhysiApp, Exercise.com) non-FR et desktop-centrees.',
+    gap: 'WhatsApp + PDF bricolage pour programmes exercices kine FR',
+    monetization: 'Abonnement 7.99 EUR/mois',
+    forecast: {
+      price: '7.99/mois -- 59.99/an',
+      conversion: '3.5%',
+      churn: '5%/mois',
+      months: [
+        { m: 1, subs: 35, mrr: 280, profit: 274 },
+        { m: 3, subs: 95, mrr: 760, profit: 1482 },
+        { m: 6, subs: 210, mrr: 1680, profit: 5544 },
+        { m: 9, subs: 340, mrr: 2720, profit: 12132 },
+        { m: 12, subs: 480, mrr: 3840, profit: 21408 },
+      ],
+      breakeven: 'Mois 1',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 1920, arr: 23040 },
+        { label: 'Base', mrr: 3840, arr: 46080 },
+        { label: 'Optimiste', mrr: 7680, arr: 92160 },
+      ],
+      verdict: 'VIABLE -- Micro-SaaS rentable si scenario coachs seul (pas kines)',
+    },
+    risk: 'FLAG rgpd_sante_b2b si cible kines : HDS certif (15-30K EUR/an) + DPIA + Art.28 clauses = budget 25K EUR+ prealable. POSITIONING_DECISION : cible "kines + coachs" = -10 RGPD B2B. Cible "coachs sportifs uniquement" = pas de flag, score 81 CLEAR. Olivier doit trancher. Alternative : pivoter comme feature de CoachCRM (absorption V2).',
+    goNoGo: { met: 3, total: 5 },
+  },
+  'DiabèteCoach FR': {
+    score: 85, verified: true, engineScore: 100, scoreAudit: 'AUDIT POST-RUN 2026-04-24 : Engine brut 100 (base 88 x 1.08 + 8). Score recalibre : 85 conditionnel. BLOCKERS appliques : RGPD Art.9 glycemie = donnees sante speciale (DPIA obligatoire, base legale renforcee). Validation medicale avant deploiement : partenariat endocrinologue ou diabetologue requis. Sans ces deux points, score reajuste a 72. Rang Prometteuse (pas PEPITE). Decision B - Validate. Conditions passage A-Build : DPIA valide + lettre accord referent medical + landing test >2% conv.',
+    bri: 85,
+    pitch: [
+      'En France, 4,5 millions de personnes vivent avec le diabete de type 2, et 3 millions de plus sont en situation de prediabete sans le savoir. Pour ces patients, chaque jour ressemble a la meme equation : equilibrer ce qu\'ils mangent, leur glycemie, leur activite physique et leurs medicaments — sans outil qui comprend leur quotidien en francais.',
+      'Les apps qui existent sont anglaises et generiques. MyFitnessPal : 62% d\'avis negatifs sur le Play Store FR. Principale plainte ? Le prix — 45,9% des reviews mentionnent explicitement "gratuit", "payant", "abonnement" ou "arnaque". 4,99 EUR par mois pour des fonctionnalites de base que l\'app cachait ensuite derriere un paywall. Les utilisateurs FR se sentent trahis.',
+      'MySugr, l\'app diabete de reference, appartient a Roche depuis 2017. Elle est passee payante progressivement et son interface n\'a pas ete refaite depuis 2019. Glucose Buddy, DiabetesM : toutes en anglais, toutes avec des interfaces datees, toutes sans comprendre le systeme de sante francais — pas de carnet de glycemie format Secu, pas d\'integration avec les lecteurs de glycemie courants en France.',
+      'DiabeteCoach FR comble ce vide avec trois piliers : (1) Journal glycemique intelligent — saisie rapide HbA1c, glycemies pré/post repas, tendances visuelles simples ; (2) Nutrition contextuelle FR — base alimentaire francaise, index glycemique, calcul de charge glycemique par repas ; (3) Coaching adaptatif — conseils journaliers bases sur les donnees personnelles, alertes tendances, export PDF carnet Secu-compatible pour le medecin.',
+      'Le driver structurel est reel : le decret 2023 sur l\'Education Therapeutique du Patient (ETP) oblige les structures de soin a proposer des outils d\'autogestion aux patients DT2. Les ALD (Affection Longue Duree) numeriques sont en cours de remboursement. Un partenariat avec un cabinet d\'endocrinologie ou une association de patients (FFD — Federation Francaise des Diabetiques, 80 000 adherents) peut servir de canal d\'acquisition direct et legitimer cliniquement l\'app.',
+      'Le marche est massif et sous-adresse en FR. 4,5M de patients DT2 actifs, 3M de prediabetiques. ARPU cible : 59 EUR/an (4,99 EUR/mois). SOM Solo Dev Y1 : 55 755 EUR/mois selon le moteur. A 0,5% de capture du marche DT2 : 22 500 abonnes = 112 500 EUR/mois. Scenario conservateur (0,1%) : 4 500 abonnes = 22 500 EUR/mois. Viable solo dev des le mois 3.',
+    ],
+    mvp: { weeks: 9, totalHours: 56, hoursPerWeek: 6.2 },
+    stack: 'Flutter + Riverpod + Supabase + RevenueCat + Sentry',
+    roadmap: [
+      { week: 'S1', label: 'DPIA + accord referent medical (BLOQUANT)', phase: 'setup' },
+      { week: 'S2', label: 'Setup projet + data model glycemie', phase: 'setup' },
+      { week: 'S3', label: 'Journal glycemie : saisie + historique + graphes', phase: 'core' },
+      { week: 'S4', label: 'Base alimentaire FR + index glycemique', phase: 'core' },
+      { week: 'S5', label: 'Log repas + calcul charge glycemique', phase: 'core' },
+      { week: 'S6', label: 'Coaching adaptatif + alertes tendances', phase: 'core' },
+      { week: 'S7', label: 'Export PDF carnet Secu-compatible', phase: 'core' },
+      { week: 'S8', label: 'RevenueCat + paywall freemium', phase: 'core' },
+      { week: 'S9', label: 'Polish + Play Store FR + landing', phase: 'launch' },
+    ],
+    market: { target: '4.5M diabetiques DT2 + 3M prediabetiques FR', tam: '265M EUR', som: '55.7K/mois solo Y1' },
+    competitors: [
+      { name: 'MyFitnessPal', rating: 3.9, negPct: 62 },
+      { name: 'MySugr (Roche)', rating: 4.1, negPct: 38 },
+      { name: 'DiabetesM', rating: 4.2, negPct: 29 },
+    ],
+    competitorNote: '62% avis negatifs MyFitnessPal FR. 45.9% plaintes pricing. MySugr passe payant progressivement depuis rachat Roche. Zero app native FR dediee DT2 avec export carnet Secu.',
+    frustration: 'Pricing (45.9% des plaintes) + apps generiques non adaptees DT2 + zero outil FR + interface datee MySugr',
+    gap: 'Zero app native FR dediee gestion quotidienne diabete type 2 avec export carnet Secu-compatible',
+    monetization: 'Freemium (journal 30j gratuit), Premium 4.99 EUR/mois ou 39.99 EUR/an',
+    forecast: {
+      price: '4.99/mois -- 39.99/an',
+      conversion: '2.5%',
+      churn: '4%/mois',
+      months: [
+        { m: 1, subs: 250, mrr: 1248, profit: 1210 },
+        { m: 3, subs: 720, mrr: 3593, profit: 6920 },
+        { m: 6, subs: 1800, mrr: 8982, profit: 29100 },
+        { m: 9, subs: 3200, mrr: 15968, profit: 67500 },
+        { m: 12, subs: 5000, mrr: 24950, profit: 126900 },
+      ],
+      breakeven: 'Mois 1-2',
+      scenarios: [
+        { label: 'Pessimiste', mrr: 12475, arr: 149700 },
+        { label: 'Base', mrr: 24950, arr: 299400 },
+        { label: 'Optimiste', mrr: 49900, arr: 598800 },
+      ],
+      verdict: 'SOLIDE si blockers RGPD resolus — Business viable solo dev avec canal partenariat FFD',
+    },
+    risk: 'BLOCKER 1 — RGPD Article 9 : donnees glycemiques = donnees de sante categorie speciale. DPIA obligatoire avant le premier enregistrement glycemique. Consentement renforce + base legale specifique (Art.9(2)(a) ou (h)). BLOCKER 2 — Validation medicale : sans partenariat endocrinologue ou diabetologue, responsabilite en cas de conseil errone sur glycemie. Accord lettre referent medical avant tout deploiement. Score engine 100 → score audite 85 conditionnel (etait 100, meme inflation que BurnoutDetect sur donnees insuffisantes). CONDITION PASSAGE A-BUILD : DPIA valide + accord referent medical + landing test >2% conversion.',
+    goNoGo: { met: 2, total: 5 },
+  },
 };
 
 /* Phase colors for timeline */
@@ -1758,7 +2216,7 @@ function connect() {
 }
 
 async function fetchRecords() {
-  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?sort%5B0%5D%5Bfield%5D=Score+V3&sort%5B0%5D%5Bdirection%5D=desc`;
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
   const resp = await fetch(url, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
   if (!resp.ok) throw new Error(`Airtable ${resp.status}`);
   const data = await resp.json();
@@ -1786,12 +2244,15 @@ async function fetchRecords() {
     moatId: r.fields['ID'] || '',
     rang: r.fields['Rang']?.name || r.fields['Rang'] || '',
     scoreV3: r.fields['Score V3'] || 0,
+    externalRoadmapUrl: r.fields['External Roadmap URL'] || '',
   }));
 }
 
 async function loadData() {
   try {
     records = await fetchRecords();
+    records.sort((a, b) => (b.scoreV3 || b.score) - (a.scoreV3 || a.score));
+    records.forEach((r, i) => { r._rank = i + 1; });
     document.getElementById('setup').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('liveIndicator').style.display = 'flex';
@@ -1801,13 +2262,26 @@ async function loadData() {
       refreshInterval = setInterval(async () => {
         try {
           records = await fetchRecords();
+          records.sort((a, b) => (b.scoreV3 || b.score) - (a.scoreV3 || a.score));
+          records.forEach((r, i) => { r._rank = i + 1; });
           render();
           document.getElementById('refreshInfo').textContent = new Date().toLocaleTimeString('fr-FR');
         } catch(e) { console.error(e); }
       }, 30000);
     }
   } catch(e) {
-    alert('Erreur: ' + e.message + '\nVerifie ton token Airtable.');
+    const errDiv = document.getElementById('connectError');
+    const msg = e.message.includes('401') ? 'Token invalide ou expiré — génère un nouveau token sur airtable.com/create/tokens.'
+              : e.message.includes('403') ? 'Accès refusé (403) — vérifie que le token a le scope data.records:read sur la base MOAT.'
+              : 'Erreur : ' + e.message;
+    errDiv.textContent = msg;
+    errDiv.style.display = 'block';
+    localStorage.removeItem('moat_airtable_token');
+    TOKEN = '';
+    document.getElementById('setup').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('liveIndicator').style.display = 'none';
+    if (refreshInterval) { clearInterval(refreshInterval); refreshInterval = null; }
   }
 }
 
@@ -1871,6 +2345,18 @@ function verifiedTag(v) {
   if (v === 'Verifie') return '<span class="tag tag-a" title="Score confirme par le MOAT Engine avec donnees reelles Google Play" style="cursor:help">Verifie</span>';
   if (v === 'En cours') return '<span class="tag tag-scoring" title="Verification Engine en cours" style="cursor:help">En cours</span>';
   return '<span class="tag tag-backlog" title="Score manuel uniquement, pas encore passe par le MOAT Engine" style="cursor:help">Non verifie</span>';
+}
+
+function renderNoteCell(text) {
+  if (!text) return '<span style="color:var(--text-muted);font-size:11px">--</span>';
+  if (text.length <= 80) return '<span style="font-size:11px">' + text + '</span>';
+  var preview = text.substring(0, 72) + '…';
+  var safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  var safePreview = preview.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return '<details class="note-details" onclick="event.stopPropagation()">' +
+    '<summary class="note-summary">' + safePreview + '</summary>' +
+    '<div class="note-full">' + safe + '</div>' +
+  '</details>';
 }
 
 function hasBuildSheet(ideaName) {
@@ -1937,7 +2423,7 @@ function renderPipeline() {
 }
 
 function renderTop3() {
-  const top = records.filter(r=>!r.decision.includes('Kill')).slice(0, 3);
+  const top = records.filter(r=>!r.decision.includes('Kill')).sort((a,b)=>(b.scoreV3||b.score)-(a.scoreV3||a.score)).slice(0, 3);
   const rankClasses = ['r1','r2','r3'];
   const scoreClasses = ['c-green','c-blue','c-amber'];
 
@@ -2011,7 +2497,7 @@ function renderTable() {
     const sc = scoreClass(r.score);
     const bs = hasBuildSheet(r.idea);
     html += '<tr class="clickable-row' + (bs ? ' has-build-sheet' : '') + '" onclick="openPanel(\'' + r.idea.replace(/'/g, "\\'") + '\')">' +
-      '<td style="font-family:JetBrains Mono;font-size:12px;color:var(--text-muted);text-align:center">' + (r.moatId || '--') + '</td>' +
+      '<td style="font-family:JetBrains Mono;font-size:12px;color:var(--text-muted);text-align:center">' + r._rank + '</td>' +
       '<td class="name">' + r.idea + '</td>' +
       '<td>' + r.category + '</td>' +
       '<td>' + r.segment.substring(0,40) + '</td>' +
@@ -2020,7 +2506,7 @@ function renderTable() {
       '<td>' + statusTag(r.status) + '</td>' +
       '<td>' + verifiedTag(r.engineVerified) + '</td>' +
       '<td>' + rangTag(r.rang) + '</td>' +
-      '<td>' + r.nextAction + '</td>' +
+      '<td>' + renderNoteCell(r.nextAction) + '</td>' +
     '</tr>';
   });
   document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="8" style="text-align:center;color:var(--text-muted)">Aucune idee dans ce filtre</td></tr>';
@@ -2029,7 +2515,7 @@ function renderTable() {
 /* ==================== COMPARISON VIEW ==================== */
 function renderComparison() {
   /* Dynamic podium — top 3 from Airtable data, live */
-  var top3 = records.filter(function(r) { return !r.decision.includes('Kill'); }).slice(0, 3);
+  var top3 = records.filter(function(r) { return !r.decision.includes('Kill'); }).sort(function(a,b){ return (b.scoreV3||b.score)-(a.scoreV3||a.score); }).slice(0, 3);
   var podiumColors = ['var(--accent-green)', 'var(--accent-blue)', 'var(--accent-amber)'];
   var medals = ['1er', '2e', '3e'];
 
@@ -2080,6 +2566,7 @@ function openPanel(ideaName) {
   document.getElementById('panelTitle').textContent = rec.idea;
   currentPanelIdea = rec.idea;
   document.getElementById('exportBtn').style.display = 'block';
+  document.getElementById('roadmapBtn').style.display = 'block';
   document.getElementById('panelOverlay').classList.add('open');
   document.getElementById('detailPanel').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2427,7 +2914,8 @@ function exportFiche() {
   var md = '';
   md += '# ' + rec.idea + '\n\n';
   md += '## Identite\n';
-  md += '- **Score MOAT** : ' + rec.score + '/100\n';
+  md += '- **Score V3** : ' + (rec.scoreV3 || rec.score) + '/100\n';
+  md += '- **Score base (9 criteres)** : ' + rec.score + '/100\n';
   md += '- **Decision** : ' + rec.decision + '\n';
   md += '- **Statut** : ' + rec.status + '\n';
   md += '- **Categorie** : ' + rec.category + '\n';
@@ -2448,7 +2936,8 @@ function exportFiche() {
   md += '| Fit personnel (x2) | ' + (rec.personalFit || '?') + '/5 |\n';
   md += '| Vitesse MVP (x1) | ' + (rec.mvpSpeed || '?') + '/5 |\n';
   md += '| Retention (x1) | ' + (rec.retention || '?') + '/5 |\n';
-  md += '| **TOTAL** | **' + rec.score + '/100** |\n\n';
+  md += '| **TOTAL base** | **' + rec.score + '/100** |\n';
+  md += '| **Score V3 (Engine)** | **' + (rec.scoreV3 || rec.score) + '/100** |\n\n';
 
   if (bs) {
     if (bs.pitch) {
@@ -2530,32 +3019,713 @@ function exportFiche() {
 
   md += '## Prochaine action\n' + (rec.nextAction || '--') + '\n';
 
-  /* Copy to clipboard + download */
-  navigator.clipboard.writeText(md).then(function() {
-    /* Also trigger download */
+  /* Download d'abord (critique, doit toujours marcher), clipboard ensuite (best-effort) */
+  var btn = document.getElementById('exportBtn');
+  var orig = btn.textContent;
+
+  try {
     var blob = new Blob([md], { type: 'text/markdown' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
     a.download = rec.idea.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_fiche.md';
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
-
-    /* Visual feedback */
-    var btn = document.getElementById('exportBtn');
-    var orig = btn.textContent;
-    btn.textContent = 'Copie + telecharge !';
-    btn.style.borderColor = 'var(--accent-green)';
-    btn.style.color = 'var(--accent-green)';
-    btn.style.background = 'var(--accent-green-dim)';
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  } catch (e) {
+    btn.textContent = 'Erreur download';
+    btn.style.borderColor = 'var(--accent-red)';
+    btn.style.color = 'var(--accent-red)';
+    btn.style.background = 'var(--accent-red-dim)';
+    console.error('exportFiche download failed:', e);
     setTimeout(function() {
       btn.textContent = orig;
       btn.style.borderColor = 'var(--accent-cyan)';
       btn.style.color = 'var(--accent-cyan)';
       btn.style.background = 'var(--accent-cyan-dim)';
-    }, 2000);
+    }, 2500);
+    return;
+  }
+
+  /* Tentative clipboard en best-effort (peut echouer si tab pas focus / permissions) */
+  var clipboardOk = false;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(md).then(function() { clipboardOk = true; }, function() {});
+  }
+
+  /* Visual feedback (immediat, ne depend pas du clipboard) */
+  btn.textContent = 'Telechargee !';
+  btn.style.borderColor = 'var(--accent-green)';
+  btn.style.color = 'var(--accent-green)';
+  btn.style.background = 'var(--accent-green-dim)';
+  setTimeout(function() {
+    if (clipboardOk) btn.textContent = 'Copiee + telechargee !';
+  }, 200);
+  setTimeout(function() {
+    btn.textContent = orig;
+    btn.style.borderColor = 'var(--accent-cyan)';
+    btn.style.color = 'var(--accent-cyan)';
+    btn.style.background = 'var(--accent-cyan-dim)';
+  }, 2500);
+}
+
+/* ==================== QUICK ACTIONS ==================== */
+
+function toggleNewIdea() {
+  var form = document.getElementById('newIdeaForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    document.getElementById('reviewsForm').classList.remove('open');
+    setTimeout(function() { document.getElementById('fi_idea').focus(); }, 50);
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function submitNewIdea() {
+  var idea = document.getElementById('fi_idea').value.trim();
+  var segment = document.getElementById('fi_segment').value.trim();
+  var problem = document.getElementById('fi_problem').value.trim();
+  if (!idea) { document.getElementById('fi_idea').focus(); return; }
+
+  var text = 'NOUVELLE IDÉE MOAT\n\nIdea: ' + idea + '\nSegment: ' + segment + '\nProblem: ' + problem;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector('#newIdeaForm .form-submit');
+    btn.textContent = 'Copié !';
+    btn.style.background = 'var(--accent-green)';
+    setTimeout(function() {
+      btn.textContent = 'Copier pour Airtable';
+      btn.style.background = '';
+      document.getElementById('newIdeaForm').classList.remove('open');
+      document.getElementById('fi_idea').value = '';
+      document.getElementById('fi_segment').value = '';
+      document.getElementById('fi_problem').value = '';
+    }, 1800);
   });
 }
+
+function scorerIdee() {
+  var tableWrap = document.querySelector('.table-wrap');
+  if (!tableWrap) return;
+  tableWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(function() {
+    document.querySelectorAll('#tableBody tr').forEach(function(row) {
+      row.classList.remove('scoring-highlight');
+      var found = Array.from(row.querySelectorAll('td')).some(function(td) {
+        return td.textContent.trim() === 'Scoring';
+      });
+      if (found) row.classList.add('scoring-highlight');
+    });
+    setTimeout(function() {
+      document.querySelectorAll('.scoring-highlight').forEach(function(r) {
+        r.classList.remove('scoring-highlight');
+      });
+    }, 4000);
+  }, 600);
+}
+
+function checklistSemaine() {
+  var section = document.getElementById('workflowSection');
+  if (!section) return;
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  section.style.outline = '2px solid var(--accent-blue)';
+  section.style.borderRadius = '12px';
+  setTimeout(function() { section.style.outline = ''; section.style.borderRadius = ''; }, 2000);
+}
+
+function toggleAnalyseAvis() {
+  var form = document.getElementById('reviewsForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    document.getElementById('newIdeaForm').classList.remove('open');
+    setTimeout(function() { document.getElementById('reviewsTextarea').focus(); }, 50);
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function envoyerAvis() {
+  var avis = document.getElementById('reviewsTextarea').value.trim();
+  if (!avis) { document.getElementById('reviewsTextarea').focus(); return; }
+
+  var prompt = 'Analyse ces avis Google Play et identifie :\n1. Les frustrations principales (classées par fréquence)\n2. Les pain points non résolus par l\'app\n3. Les gaps de marché exploitables\n4. Les mots-clés récurrents négatifs\n5. Verdict : ce marché a-t-il un gap exploitable ?\n\nAvis :\n\n' + avis;
+  navigator.clipboard.writeText(prompt).then(function() {
+    var btn = document.querySelector('#reviewsForm .form-submit');
+    btn.textContent = 'Prompt copié — colle dans Claude Code !';
+    btn.style.background = 'var(--accent-green)';
+    setTimeout(function() {
+      btn.textContent = 'Envoyer à Claude Code';
+      btn.style.background = 'var(--accent-purple)';
+    }, 3000);
+  });
+}
+
+/* ==================== ROADMAP MODAL ==================== */
+
+/* Port JS du _slugify Python (build_blueprint.py) — ASCII-safe */
+function rmSlugify(text) {
+  if (!text) return '';
+  var t = text.toLowerCase();
+  var map = { 'é':'e','è':'e','ê':'e','à':'a','â':'a','ù':'u','û':'u','î':'i','ô':'o',
+              'ç':'c','ë':'e','ï':'i','ü':'u','ý':'y','ñ':'n','œ':'oe','æ':'ae' };
+  Object.keys(map).forEach(function(k) { t = t.split(k).join(map[k]); });
+  return t.replace(/[^\w]/g, '_').replace(/^_+|_+$/g, '');
+}
+
+/* Liste un dossier servi par python -m http.server (parse le HTML directory listing) */
+async function rmListDir(path) {
+  try {
+    var resp = await fetch(path);
+    if (!resp.ok) return [];
+    var html = await resp.text();
+    var matches = [...html.matchAll(/<a href="([^"]+)">/g)];
+    return matches
+      .map(function(m) { try { return decodeURIComponent(m[1]); } catch(e) { return m[1]; } })
+      .filter(function(f) { return f && !f.startsWith('?') && !f.startsWith('/') && !f.endsWith('/') && f !== '..'; });
+  } catch (e) {
+    return [];
+  }
+}
+
+/* Trouve le fichier engine_{slug}_*.json le plus recent (sort desc par filename) */
+async function rmFindLatestEngine(slug) {
+  var files = await rmListDir('data/research/');
+  var prefix = 'engine_' + slug + '_';
+  var matches = files.filter(function(f) {
+    return f.startsWith(prefix) && f.endsWith('.json');
+  });
+  if (!matches.length) return null;
+  matches.sort();
+  return 'data/research/' + matches[matches.length - 1];
+}
+
+/* Trouve le fichier opportunities/*_{slug}.md le plus recent (date prefix YYYY-MM-DD) */
+async function rmFindLatestOpportunity(slug) {
+  var files = await rmListDir('data/opportunities/');
+  var pattern = new RegExp('^\\d{4}-\\d{2}-\\d{2}_' + slug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\.md$');
+  var matches = files.filter(function(f) { return pattern.test(f); });
+  if (!matches.length) return null;
+  matches.sort();
+  return 'data/opportunities/' + matches[matches.length - 1];
+}
+
+/* Trouve le fichier build_fiches/build_{slug}_*.md le plus recent */
+async function rmFindLatestBuildFiche(slug) {
+  var files = await rmListDir('data/build_fiches/');
+  var pattern = new RegExp('^build_' + slug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '_\\d+\\.md$');
+  var matches = files.filter(function(f) { return pattern.test(f); });
+  if (!matches.length) return null;
+  matches.sort();
+  return 'data/build_fiches/' + matches[matches.length - 1];
+}
+
+/* Fetch un fichier texte, retourne null si 404 ou erreur */
+async function rmFetchTextOrNull(path) {
+  try {
+    var resp = await fetch(path);
+    if (!resp.ok) return null;
+    return await resp.text();
+  } catch (e) {
+    return null;
+  }
+}
+
+/* Fetch un JSON, retourne null si 404 ou erreur */
+async function rmFetchJsonOrNull(path) {
+  try {
+    var resp = await fetch(path);
+    if (!resp.ok) return null;
+    return await resp.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+/* Extrait la section "Garde-fous Design" d'un design_prompt.md */
+function rmExtractGuardrails(md) {
+  if (!md) return null;
+  var lines = md.replace(/\r\n?/g, '\n').split('\n');
+  var inSection = false;
+  var collected = [];
+  for (var i = 0; i < lines.length; i++) {
+    var l = lines[i];
+    if (/^##\s+4\.\s+Garde-fous/i.test(l) || /^##\s+Garde-fous/i.test(l)) {
+      inSection = true;
+      continue;
+    }
+    if (inSection && /^##\s+/.test(l)) break;
+    if (inSection) collected.push(l);
+  }
+  var content = collected.join('\n').trim();
+  return content.length ? content : null;
+}
+
+/* Renderer Markdown minimal (h1-h4, listes, gras, italique, code, tables, blockquote) */
+function rmMdToHtml(md) {
+  if (!md) return '';
+  var esc = function(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  };
+  /* Normalise les fins de ligne (CRLF Windows -> LF) */
+  var lines = md.replace(/\r\n?/g, '\n').split('\n');
+  var html = [];
+  var inUl = false, inOl = false, inCode = false, inTable = false, inQuote = false;
+  var tableHeader = false;
+
+  function closeLists() {
+    if (inUl) { html.push('</ul>'); inUl = false; }
+    if (inOl) { html.push('</ol>'); inOl = false; }
+    if (inTable) { html.push('</table>'); inTable = false; tableHeader = false; }
+    if (inQuote) { html.push('</blockquote>'); inQuote = false; }
+  }
+
+  function inline(s) {
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/(?:^|[^*])\*([^*]+)\*(?!\*)/g, function(m, p1, off) {
+      var pre = m.startsWith('*') ? '' : m[0];
+      return pre + '<em>' + p1 + '</em>';
+    });
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+
+    if (/^```/.test(line)) {
+      if (!inCode) { closeLists(); html.push('<pre><code>'); inCode = true; }
+      else { html.push('</code></pre>'); inCode = false; }
+      continue;
+    }
+    if (inCode) { html.push(esc(line)); continue; }
+
+    if (/^\s*$/.test(line)) { closeLists(); continue; }
+
+    var hMatch = line.match(/^(#{1,4})\s+(.+)$/);
+    if (hMatch) {
+      closeLists();
+      var lvl = hMatch[1].length;
+      html.push('<h' + lvl + '>' + inline(hMatch[2]) + '</h' + lvl + '>');
+      continue;
+    }
+
+    if (/^>\s?/.test(line)) {
+      if (!inQuote) { closeLists(); html.push('<blockquote>'); inQuote = true; }
+      html.push(inline(line.replace(/^>\s?/, '')) + '<br>');
+      continue;
+    } else if (inQuote) { html.push('</blockquote>'); inQuote = false; }
+
+    if (/^\s*\|.+\|\s*$/.test(line)) {
+      if (!inTable) { closeLists(); html.push('<table>'); inTable = true; tableHeader = false; }
+      var cells = line.trim().slice(1, -1).split('|').map(function(c) { return c.trim(); });
+      if (/^\s*\|?[\s:|-]+\|?\s*$/.test(line) && /-/.test(line)) { tableHeader = true; continue; }
+      var tag = tableHeader ? 'td' : 'th';
+      html.push('<tr>' + cells.map(function(c) { return '<' + tag + '>' + inline(c) + '</' + tag + '>'; }).join('') + '</tr>');
+      if (!tableHeader) tableHeader = true;
+      continue;
+    } else if (inTable) { html.push('</table>'); inTable = false; tableHeader = false; }
+
+    var ulMatch = line.match(/^(\s*)[-*]\s+(.+)$/);
+    if (ulMatch) {
+      if (inOl) { html.push('</ol>'); inOl = false; }
+      if (!inUl) { html.push('<ul>'); inUl = true; }
+      html.push('<li>' + inline(ulMatch[2]) + '</li>');
+      continue;
+    }
+
+    var olMatch = line.match(/^\s*\d+\.\s+(.+)$/);
+    if (olMatch) {
+      if (inUl) { html.push('</ul>'); inUl = false; }
+      if (!inOl) { html.push('<ol>'); inOl = true; }
+      html.push('<li>' + inline(olMatch[1]) + '</li>');
+      continue;
+    }
+
+    closeLists();
+    html.push('<p>' + inline(line) + '</p>');
+  }
+  closeLists();
+  if (inCode) html.push('</code></pre>');
+  return html.join('\n');
+}
+
+/* Renderer d'une section vide avec bouton "Construire" cliquable
+   action : 'build_blueprint' | 'build_index' | 'scaffold_opportunity' | null (= read-only command)
+   idea   : nom complet de l'app (passe au backend en JSON)
+   label  : texte du bouton ("Construire la fiche", "Construire le design prompt", ...)
+   command: commande affichee en fallback si action absent ou backend KO
+   sectionId: id unique pour pouvoir re-render apres generation */
+function rmEmptySection(opts) {
+  var reason     = opts.reason;
+  var action     = opts.action || null;
+  var idea       = opts.idea || '';
+  var label      = opts.label || 'Construire';
+  var command    = opts.command || null;
+  var sectionId  = opts.sectionId || ('rmsec_' + Math.random().toString(36).slice(2, 8));
+
+  var cmdHtml = command
+    ? '<div class="rm-build-fallback">Commande equivalente : <code>' + escapeHtml(command) + '</code></div>'
+    : '';
+
+  var btnHtml = '';
+  if (action) {
+    var safeIdea = escapeHtml(idea);
+    btnHtml = '<button class="rm-build-btn" onclick="rmGenerate(this, \'' + action + '\', ' +
+      JSON.stringify(idea).replace(/"/g, '&quot;') + ', \'' + sectionId + '\')">' +
+      '<span class="rm-spin"></span><span class="rm-build-btn-label">' + escapeHtml(label) + '</span>' +
+    '</button>';
+  }
+
+  return '<div class="rm-empty" id="' + sectionId + '">' +
+    '<span class="rm-empty-icon">&#9888;</span>' + reason +
+    btnHtml +
+    cmdHtml +
+  '</div>';
+}
+
+/* Click sur "Construire" : POST /api/{action} -> re-render la section avec le contenu genere */
+async function rmGenerate(btn, action, idea, sectionId) {
+  btn.disabled = true;
+  btn.classList.add('loading');
+  var lbl = btn.querySelector('.rm-build-btn-label');
+  var origLabel = lbl ? lbl.textContent : '';
+  if (lbl) lbl.textContent = 'Generation en cours...';
+
+  var clearError = function() {
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    var prevErr = section.querySelector('.rm-build-error');
+    if (prevErr) prevErr.remove();
+  };
+  clearError();
+
+  try {
+    var resp = await fetch('/api/' + action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idea: idea }),
+    });
+    /* Si le serveur ne supporte pas /api/ (ex: python -m http.server vanilla),
+       il retourne du HTML 404 - JSON.parse plante. On detecte ca via content-type. */
+    var ct = resp.headers.get('content-type') || '';
+    if (!ct.toLowerCase().includes('application/json')) {
+      throw new Error('BACKEND_OFFLINE');
+    }
+    var data = await resp.json();
+    if (!resp.ok || !data.ok) {
+      throw new Error(data.error || data.stderr || ('HTTP ' + resp.status));
+    }
+
+    /* Cas particulier build_index : script OK mais BRI < 75 -> pas de fiche generee
+       (comportement normal du script, pas une erreur) */
+    if (action === 'build_index' && data.fiche_generated === false) {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      if (lbl) lbl.textContent = origLabel;
+      var section = document.getElementById(sectionId);
+      if (section) {
+        var briTxt = data.bri != null ? data.bri + '/100' : 'inconnu';
+        var dec = data.decision ? ' (' + data.decision + ')' : '';
+        var existing = section.querySelector('.rm-build-error');
+        if (existing) existing.remove();
+        var info = document.createElement('div');
+        info.className = 'rm-build-error';
+        info.style.background = 'var(--accent-amber-dim)';
+        info.style.borderColor = 'var(--accent-amber)';
+        info.style.color = 'var(--accent-amber)';
+        info.textContent = 'BRI calcule : ' + briTxt + dec + '\n\n'
+                         + 'Le script ne genere automatiquement la fiche que si BRI >= 75.\n'
+                         + 'Pour cette idee, les parametres par defaut donnent un score insuffisant.\n'
+                         + 'Tu peux la rediger a la main : `cp data/build_fiches/build_sleepcoach_fr_20260410.md data/build_fiches/build_'
+                         + rmSlugify(idea) + '_' + (new Date().toISOString().slice(0,10).replace(/-/g,'')) + '.md`';
+        section.appendChild(info);
+      }
+      return;
+    }
+
+    /* Refresh la section sans rouvrir tout le modal */
+    await rmReloadSection(action, idea, sectionId);
+
+  } catch (e) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    if (lbl) lbl.textContent = origLabel;
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    var errMsg = (e && e.message) || String(e);
+
+    var msg;
+    if (errMsg === 'BACKEND_OFFLINE'
+        || errMsg.indexOf('Failed to fetch') !== -1
+        || errMsg.indexOf('NetworkError') !== -1
+        || errMsg.indexOf('Unexpected token') !== -1
+        || errMsg.indexOf('is not valid JSON') !== -1) {
+      msg = 'Backend API offline.\n\n'
+          + 'Tu utilises probablement `python -m http.server` (ancien serveur sans API).\n'
+          + 'Pour activer les boutons "Construire" :\n'
+          + '  1. Arrete le serveur en cours (Ctrl+C dans le terminal)\n'
+          + '  2. Relance via `open_dashboard.bat` OU `python scripts/serve.py 8080`\n'
+          + '  3. Recharge cette page (F5)';
+    } else {
+      msg = 'Erreur : ' + errMsg;
+    }
+    var div = document.createElement('div');
+    div.className = 'rm-build-error';
+    div.textContent = msg;
+    section.appendChild(div);
+  }
+}
+
+/* Re-render uniquement la section concernee apres une generation reussie */
+async function rmReloadSection(action, idea, sectionId) {
+  var slug = rmSlugify(idea);
+  var newHtml = '';
+
+  if (action === 'build_blueprint') {
+    var md = await rmFetchTextOrNull('data/blueprints/' + slug + '/design_prompt.md');
+    var guardrails = md ? rmExtractGuardrails(md) : null;
+    newHtml = guardrails ? '<div class="rm-content">' + rmMdToHtml(guardrails) + '</div>'
+                         : rmEmptySection({
+                             reason: 'Design prompt genere mais section "Garde-fous" introuvable.',
+                             idea: idea,
+                           });
+  } else if (action === 'build_index') {
+    var path = await rmFindLatestBuildFiche(slug);
+    var ficheMd = path ? await rmFetchTextOrNull(path) : null;
+    newHtml = ficheMd ? '<div class="rm-content">' + rmMdToHtml(ficheMd) + '</div>'
+                      : rmEmptySection({
+                          reason: 'Fiche build calculee mais BRI insuffisant (<75) - aucun .md genere. Tweak les flags pour forcer.',
+                          idea: idea,
+                        });
+  } else if (action === 'scaffold_opportunity') {
+    var oppPath = await rmFindLatestOpportunity(slug);
+    var oppMd = oppPath ? await rmFetchTextOrNull(oppPath) : null;
+    newHtml = oppMd ? '<div class="rm-content">' + rmMdToHtml(oppMd) + '</div>'
+                    : rmEmptySection({
+                        reason: 'Scaffold cree mais fichier introuvable.',
+                        idea: idea,
+                      });
+  }
+
+  var section = document.getElementById(sectionId);
+  if (!section) return;
+  /* Remplace la rm-empty entiere par le nouveau contenu */
+  var wrapper = document.createElement('div');
+  wrapper.innerHTML = newHtml;
+  while (wrapper.firstChild) section.parentNode.insertBefore(wrapper.firstChild, section);
+  section.remove();
+}
+
+/* Cas externe (ex: Respir → Notion) : affichage minimal */
+function rmRenderExternal(rec) {
+  return '<div class="rm-section">' +
+    '<a href="' + rec.externalRoadmapUrl + '" target="_blank" rel="noopener" class="rm-cta-notion">' +
+      'Voir la roadmap complete &uarr;' +
+    '</a>' +
+    '<div class="rm-cta-sub">Cette app a une roadmap externe maintenue manuellement.<br>' +
+    '<span style="color:var(--text-muted);font-family:JetBrains Mono;font-size:10px;word-break:break-all">' + rec.externalRoadmapUrl + '</span></div>' +
+  '</div>';
+}
+
+/* Section 1 — Strategie depuis engine_*.json + champs Airtable */
+function rmRenderStrategy(rec, engineData) {
+  var rows = [];
+  var scoring = engineData && engineData.phases && engineData.phases.scoring;
+  var verdict = engineData && engineData.verdict;
+  var v31 = scoring && scoring.raw_scores && scoring.raw_scores._v31;
+  var v3 = scoring && scoring.raw_scores && scoring.raw_scores._v3;
+
+  if (verdict && verdict.signals && verdict.signals.length) {
+    verdict.signals.forEach(function(s) {
+      rows.push('<div class="rm-strategy-row signal"><div class="lbl">Signal</div><div class="val">' + escapeHtml(s) + '</div></div>');
+    });
+  }
+  if (verdict && verdict.risks && verdict.risks.length) {
+    verdict.risks.forEach(function(r) {
+      rows.push('<div class="rm-strategy-row risk"><div class="lbl">Risque</div><div class="val">' + escapeHtml(r) + '</div></div>');
+    });
+  }
+  if (v31 && v31.flags_applied && v31.flags_applied.length) {
+    var flagLabels = v31.flags_applied.map(function(f) { return Array.isArray(f) ? f[0] : f; }).join(', ');
+    rows.push('<div class="rm-strategy-row flag"><div class="lbl">Flags V3.1</div><div class="val">' + escapeHtml(flagLabels) + '</div></div>');
+  }
+  var timing = (v31 && v31.timing_type_label) || '';
+  if (!timing && v3 && v3.structural_driver) timing = 'Driver structurel';
+  if (timing) {
+    rows.push('<div class="rm-strategy-row"><div class="lbl">Timing</div><div class="val">' + escapeHtml(timing) + '</div></div>');
+  }
+  var justif = (v31 && v31.score_justification) || (scoring && scoring.score_justification);
+  if (justif) {
+    rows.push('<div class="rm-strategy-row"><div class="lbl">Score</div><div class="val" style="white-space:pre-line;font-family:JetBrains Mono;font-size:11px">' + escapeHtml(justif) + '</div></div>');
+  }
+
+  if (!rows.length) {
+    return rmEmptySection({
+      reason: 'Pas encore d\'analyse Engine pour cette idee. Le MOAT Engine demande des parametres marche (segment-size, ARPU, query, competitors) qu\'il faut definir au cas par cas.',
+      command: 'python scripts/moat_engine.py "' + rec.idea + '" --segment-size N --arpu N --query "..." --competitors "..."',
+      idea: rec.idea,
+    });
+  }
+  return '<div class="rm-strategy-list">' + rows.join('') + '</div>';
+}
+
+/* Section 5 — Top frustrations marche */
+function rmRenderFrustrations(rec, engineData) {
+  var frust = engineData && engineData.phases && engineData.phases.review_analysis &&
+              engineData.phases.review_analysis.top_frustrations;
+  if (!frust || !frust.length) {
+    return rmEmptySection({
+      reason: 'Pas d\'analyse d\'avis disponible. Necessite le MOAT Engine avec une liste de competitors Play Store.',
+      command: 'python scripts/moat_engine.py "' + rec.idea + '" --competitors "com.x,com.y" ...',
+      idea: rec.idea,
+    });
+  }
+  var top = frust.slice(0, 5);
+  var rows = top.map(function(f, i) {
+    var word = Array.isArray(f) ? f[0] : (f.word || '');
+    var count = Array.isArray(f) ? f[1] : (f.count || 0);
+    return '<div class="rm-frust-row">' +
+      '<div class="rm-frust-rank">' + (i + 1) + '</div>' +
+      '<div class="rm-frust-word">' + escapeHtml(word) + '</div>' +
+      '<div class="rm-frust-count">' + count + ' mentions</div>' +
+    '</div>';
+  });
+  return '<div class="rm-frust-list">' + rows.join('') + '</div>';
+}
+
+/* Echappement HTML simple pour les valeurs texte */
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* Orchestrateur du modal Roadmap */
+async function openRoadmap() {
+  var rec = records.find(function(r) { return r.idea === currentPanelIdea; });
+  if (!rec) return;
+
+  document.getElementById('roadmapHeaderApp').textContent = rec.idea;
+  document.getElementById('roadmapBody').innerHTML =
+    '<div class="rm-empty" style="text-align:center"><div class="spinner" style="display:inline-block;vertical-align:middle;margin-right:10px"></div>Chargement des sources...</div>';
+  document.getElementById('roadmapOverlay').classList.add('open');
+  document.getElementById('roadmapModal').classList.add('open');
+
+  /* Cas 1 — URL externe (Respir / Notion) */
+  if (rec.externalRoadmapUrl && rec.externalRoadmapUrl.trim()) {
+    document.getElementById('roadmapBody').innerHTML = rmRenderExternal(rec);
+    return;
+  }
+
+  /* Cas 2 — Agregat 5 sections */
+  var slug = rmSlugify(rec.idea);
+
+  var enginePath = await rmFindLatestEngine(slug);
+  var engineData = enginePath ? await rmFetchJsonOrNull(enginePath) : null;
+
+  var designMd = await rmFetchTextOrNull('data/blueprints/' + slug + '/design_prompt.md');
+  var guardrails = designMd ? rmExtractGuardrails(designMd) : null;
+
+  var buildFichePath = await rmFindLatestBuildFiche(slug);
+  var buildFicheMd = buildFichePath ? await rmFetchTextOrNull(buildFichePath) : null;
+
+  var oppPath = await rmFindLatestOpportunity(slug);
+  var oppMd = oppPath ? await rmFetchTextOrNull(oppPath) : null;
+
+  var sections = [
+    {
+      num: 1,
+      title: 'Strategie',
+      content: rmRenderStrategy(rec, engineData),
+    },
+    {
+      num: 2,
+      title: 'Garde-fous design',
+      content: guardrails
+        ? '<div class="rm-content">' + rmMdToHtml(guardrails) + '</div>'
+        : rmEmptySection({
+            reason: 'Pas de design prompt genere pour cette idee.',
+            action: 'build_blueprint',
+            idea: rec.idea,
+            label: 'Construire le design prompt',
+            command: 'python scripts/build_blueprint.py "' + rec.idea + '"',
+          }),
+    },
+    {
+      num: 3,
+      title: 'Stack & MVP',
+      content: buildFicheMd
+        ? '<div class="rm-content">' + rmMdToHtml(buildFicheMd) + '</div>'
+        : rmEmptySection({
+            reason: 'Pas de fiche build generee pour cette idee.',
+            action: 'build_index',
+            idea: rec.idea,
+            label: 'Construire la fiche build',
+            command: 'python scripts/build_index.py --idea "' + rec.idea + '" --moat-score 75 ...',
+          }),
+    },
+    {
+      num: 4,
+      title: 'Validation & conditions',
+      content: oppMd
+        ? '<div class="rm-content">' + rmMdToHtml(oppMd) + '</div>'
+        : rmEmptySection({
+            reason: 'Pas de fiche opportunite redigee pour cette idee.',
+            action: 'scaffold_opportunity',
+            idea: rec.idea,
+            label: 'Initialiser la fiche opportunite',
+            command: 'cp templates/opportunity_card.md data/opportunities/' + new Date().toISOString().slice(0,10) + '_' + slug + '.md',
+          }),
+    },
+    {
+      num: 5,
+      title: 'Top frustrations marche',
+      content: rmRenderFrustrations(rec, engineData),
+    },
+  ];
+
+  var html = sections.map(function(s) {
+    return '<div class="rm-section">' +
+      '<div class="rm-section-title"><span class="num">' + s.num + '</span> ' + s.title + '</div>' +
+      s.content +
+    '</div>';
+  }).join('');
+
+  document.getElementById('roadmapBody').innerHTML = html;
+}
+
+function closeRoadmap() {
+  document.getElementById('roadmapOverlay').classList.remove('open');
+  document.getElementById('roadmapModal').classList.remove('open');
+  document.getElementById('roadmapModal').classList.remove('fullscreen');
+  var btn = document.getElementById('roadmapFsBtn');
+  if (btn) { btn.innerHTML = '&#x2922;'; btn.title = 'Plein ecran'; btn.setAttribute('aria-label', 'Plein ecran'); }
+}
+
+function toggleRoadmapFullscreen() {
+  var modal = document.getElementById('roadmapModal');
+  var btn = document.getElementById('roadmapFsBtn');
+  var isFs = modal.classList.toggle('fullscreen');
+  if (isFs) {
+    btn.innerHTML = '&#x2921;';
+    btn.title = 'Reduire';
+    btn.setAttribute('aria-label', 'Reduire');
+  } else {
+    btn.innerHTML = '&#x2922;';
+    btn.title = 'Plein ecran';
+    btn.setAttribute('aria-label', 'Plein ecran');
+  }
+}
+
+/* Escape ferme prioritairement le modal Roadmap, sinon le panneau detail */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('roadmapModal').classList.contains('open')) {
+    closeRoadmap();
+    e.stopPropagation();
+  }
+}, true);
 
 // Auto-connect if token saved
 if (TOKEN) loadData();

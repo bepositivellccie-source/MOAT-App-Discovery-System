@@ -1,0 +1,227 @@
+{
+  "idea": "Coherence Cardiaque FR",
+  "date": "2026-05-31T10:59:35.381713",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true,
+    "community_signal": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 14,
+      "avg_score": 4.54,
+      "total_installs": 0,
+      "pct_below_4": 14,
+      "opportunity_signal": "FAIBLE"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 26.6,
+      "pricing_complaint_ratio": 21.4,
+      "total_reviews_analyzed": 316,
+      "top_frustrations": [
+        [
+          "ne fonctionne",
+          11
+        ],
+        [
+          "bug",
+          11
+        ],
+        [
+          "pub",
+          8
+        ],
+        [
+          "gratuit",
+          8
+        ],
+        [
+          "impossible",
+          7
+        ],
+        [
+          "cher",
+          3
+        ],
+        [
+          "manque",
+          3
+        ],
+        [
+          "inutile",
+          2
+        ],
+        [
+          "horrible",
+          2
+        ],
+        [
+          "oblige",
+          2
+        ],
+        [
+          "ne marche",
+          2
+        ],
+        [
+          "disparu",
+          2
+        ],
+        [
+          "fonctionne pas",
+          2
+        ],
+        [
+          "payant",
+          2
+        ],
+        [
+          "premium",
+          2
+        ]
+      ]
+    },
+    "market_sizing": {
+      "segment_size": 1500000,
+      "arpu": 12.0,
+      "tam": 18000000.0,
+      "sam": 2700000.0,
+      "som": 54000.0,
+      "monthly_revenue_est": 4500,
+      "capture_rate": 0.02,
+      "verdict": "VIABLE — micro-SaaS viable"
+    },
+    "scoring": {
+      "total": 61,
+      "max": 100,
+      "decision": "B -- Validate",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 3,
+          "weight": 4,
+          "weighted": 12,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 2,
+          "weight": 3,
+          "weighted": 6,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 4,
+          "weight": 1,
+          "weighted": 4,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 3,
+        "usage_frequency": 4,
+        "willingness_to_pay": 2,
+        "market_access": 3,
+        "competition_gap": 3,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 4,
+        "_v3": {
+          "trend_direction": "STABLE",
+          "trend_direction_original": "DOWN",
+          "trend_multiplier": 1.0,
+          "trend_delta": 0,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 61,
+          "som_theoretical": 54000.0,
+          "som_solo_dev_y1": 3780
+        },
+        "_v31": {
+          "geo_target": "FR",
+          "trend_index_avg_12m": 38.0,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": 3,
+          "timing_type_label": "Trend culturel",
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-05-31",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [
+            {
+              "rule": "A2",
+              "flag": "MICRO_VOLUME_GUARD",
+              "detail": "Trend forced STABLE: index_avg_12m=38.0 < 50 on geo=FR. Original trend \"DOWN\" overridden."
+            }
+          ],
+          "score_justification": "base: 61\n+ trend_multiplier: x1.00 (+0 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 61"
+        }
+      },
+      "score_justification": "base: 61\n+ trend_multiplier: x1.00 (+0 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 61",
+      "v31_flags": [
+        {
+          "rule": "A2",
+          "flag": "MICRO_VOLUME_GUARD",
+          "detail": "Trend forced STABLE: index_avg_12m=38.0 < 50 on geo=FR. Original trend \"DOWN\" overridden."
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "score": 61,
+    "decision": "B -- Validate",
+    "confidence": 0,
+    "signals": [],
+    "risks": [
+      "[-] Marche petit ou naissant (peu d'installs)"
+    ]
+  }
+}

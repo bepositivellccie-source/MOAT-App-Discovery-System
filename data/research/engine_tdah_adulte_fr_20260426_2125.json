@@ -1,0 +1,204 @@
+{
+  "idea": "TDAH Adulte FR",
+  "date": "2026-04-26T21:25:29.440006",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true,
+    "community_signal": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 15,
+      "avg_score": 4.29,
+      "total_installs": 0,
+      "pct_below_4": 11,
+      "opportunity_signal": "FAIBLE"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 19.6,
+      "pricing_complaint_ratio": 24.0,
+      "total_reviews_analyzed": 312,
+      "top_frustrations": [
+        [
+          "pub",
+          10
+        ],
+        [
+          "bug",
+          5
+        ],
+        [
+          "payant",
+          5
+        ],
+        [
+          "payante",
+          4
+        ],
+        [
+          "fonctionne pas",
+          3
+        ],
+        [
+          "ne fonctionne",
+          3
+        ],
+        [
+          "impossible",
+          3
+        ],
+        [
+          "abonnement",
+          3
+        ],
+        [
+          "cher",
+          2
+        ],
+        [
+          "bloque",
+          2
+        ],
+        [
+          "gratuit",
+          2
+        ],
+        [
+          "perdu",
+          1
+        ],
+        [
+          "desinstalle",
+          1
+        ],
+        [
+          "manque",
+          1
+        ],
+        [
+          "lent",
+          1
+        ]
+      ]
+    },
+    "scoring": {
+      "total": 55,
+      "max": 100,
+      "decision": "C -- Watchlist",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 2,
+          "weight": 4,
+          "weighted": 8,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 2,
+          "weight": 3,
+          "weighted": 6,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 2,
+          "weight": 2,
+          "weighted": 4,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 4,
+          "weight": 1,
+          "weighted": 4,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 2,
+        "usage_frequency": 4,
+        "willingness_to_pay": 2,
+        "market_access": 1,
+        "competition_gap": 2,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 4,
+        "_v3": {
+          "trend_direction": "UP",
+          "trend_direction_original": "UP",
+          "trend_multiplier": 1.08,
+          "trend_delta": 4,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 51,
+          "som_theoretical": 0,
+          "som_solo_dev_y1": 0
+        },
+        "_v31": {
+          "geo_target": null,
+          "trend_index_avg_12m": null,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": null,
+          "timing_type_label": null,
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-04-26",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [],
+          "score_justification": "base: 51\n+ trend_multiplier: x1.08 (+4 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 55"
+        }
+      },
+      "score_justification": "base: 51\n+ trend_multiplier: x1.08 (+4 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 55",
+      "v31_flags": []
+    }
+  },
+  "verdict": {
+    "score": 55,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Pas de douleur reelle"
+    ]
+  }
+}
