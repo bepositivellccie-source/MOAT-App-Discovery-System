@@ -1,0 +1,139 @@
+{
+  "idea": "Capa Hebdo Freelance",
+  "date": "2026-04-25T12:01:19.143653",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true,
+    "community_signal": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 0,
+      "avg_score": 0,
+      "total_installs": 0,
+      "pct_below_4": 0,
+      "opportunity_signal": "UNKNOWN"
+    },
+    "scoring": {
+      "total": 30,
+      "max": 100,
+      "decision": "D -- Kill",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 1,
+          "weight": 4,
+          "weighted": 4,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 1,
+          "weight": 3,
+          "weighted": 3,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 1,
+          "weight": 3,
+          "weighted": 3,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 1,
+          "weight": 1,
+          "weighted": 1,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 1,
+        "usage_frequency": 1,
+        "willingness_to_pay": 1,
+        "market_access": 1,
+        "competition_gap": 1,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 1,
+        "_v3": {
+          "trend_direction": "STABLE",
+          "trend_direction_original": "STABLE",
+          "trend_multiplier": 1.0,
+          "trend_delta": 0,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 30,
+          "som_theoretical": 0,
+          "som_solo_dev_y1": 0
+        },
+        "_v31": {
+          "geo_target": null,
+          "trend_index_avg_12m": null,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": null,
+          "timing_type_label": null,
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-04-25",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [],
+          "score_justification": "base: 30\n+ trend_multiplier: x1.00 (+0 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 30"
+        }
+      },
+      "score_justification": "base: 30\n+ trend_multiplier: x1.00 (+0 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 30",
+      "v31_flags": []
+    }
+  },
+  "verdict": {
+    "score": 30,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Pas de douleur reelle",
+      "Usage trop rare",
+      "Aucun signal de paiement"
+    ]
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "idea": "Messagerie Famille Privee",
+  "date": "2026-04-26T21:04:27.545914",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true,
+    "community_signal": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 8,
+      "avg_score": 4.22,
+      "total_installs": 0,
+      "pct_below_4": 29,
+      "opportunity_signal": "FAIBLE"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 24.2,
+      "pricing_complaint_ratio": 25.6,
+      "total_reviews_analyzed": 450,
+      "top_frustrations": [
+        [
+          "impossible",
+          13
+        ],
+        [
+          "nul",
+          11
+        ],
+        [
+          "bug",
+          8
+        ],
+        [
+          "payant",
+          7
+        ],
+        [
+          "gratuit",
+          5
+        ],
+        [
+          "bloque",
+          5
+        ],
+        [
+          "abonnement",
+          4
+        ],
+        [
+          "cher",
+          4
+        ],
+        [
+          "ne marche",
+          3
+        ],
+        [
+          "payante",
+          3
+        ],
+        [
+          "inutile",
+          3
+        ],
+        [
+          "pub",
+          3
+        ],
+        [
+          "ne fonctionne",
+          3
+        ],
+        [
+          "fonctionne pas",
+          3
+        ],
+        [
+          "supprime",
+          2
+        ]
+      ]
+    },
+    "scoring": {
+      "total": 60,
+      "max": 100,
+      "decision": "B -- Validate",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 2,
+          "weight": 4,
+          "weighted": 8,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 3,
+          "weight": 3,
+          "weighted": 9,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 4,
+          "weight": 1,
+          "weighted": 4,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 2,
+        "usage_frequency": 4,
+        "willingness_to_pay": 3,
+        "market_access": 1,
+        "competition_gap": 3,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 4,
+        "_v3": {
+          "trend_direction": "UP",
+          "trend_direction_original": "UP",
+          "trend_multiplier": 1.08,
+          "trend_delta": 4,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 56,
+          "som_theoretical": 0,
+          "som_solo_dev_y1": 0
+        },
+        "_v31": {
+          "geo_target": null,
+          "trend_index_avg_12m": null,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": null,
+          "timing_type_label": null,
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-04-26",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [],
+          "score_justification": "base: 56\n+ trend_multiplier: x1.08 (+4 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 60"
+        }
+      },
+      "score_justification": "base: 56\n+ trend_multiplier: x1.08 (+4 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 60",
+      "v31_flags": []
+    }
+  },
+  "verdict": {
+    "score": 60,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Pas de douleur reelle"
+    ]
+  }
+}

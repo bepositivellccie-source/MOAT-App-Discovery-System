@@ -1,0 +1,204 @@
+{
+  "idea": "Humeur Depression Suivi",
+  "date": "2026-04-26T21:18:22.843122",
+  "modules_available": {
+    "niche_hunter": true,
+    "market_sizer": false,
+    "cross_validator": false,
+    "playstore": true,
+    "community_signal": true
+  },
+  "phases": {
+    "market_scan": {
+      "total_apps": 15,
+      "avg_score": 4.28,
+      "total_installs": 0,
+      "pct_below_4": 14,
+      "opportunity_signal": "FAIBLE"
+    },
+    "review_analysis": {
+      "avg_negative_ratio": 14.3,
+      "pricing_complaint_ratio": 56.8,
+      "total_reviews_analyzed": 230,
+      "top_frustrations": [
+        [
+          "abonnement",
+          7
+        ],
+        [
+          "payant",
+          7
+        ],
+        [
+          "gratuit",
+          4
+        ],
+        [
+          "payante",
+          4
+        ],
+        [
+          "arnaque",
+          2
+        ],
+        [
+          "impossible",
+          2
+        ],
+        [
+          "pub",
+          2
+        ],
+        [
+          "probleme",
+          1
+        ],
+        [
+          "lent",
+          1
+        ],
+        [
+          "ne fonctionne",
+          1
+        ],
+        [
+          "cher",
+          1
+        ],
+        [
+          "bloque",
+          1
+        ],
+        [
+          "manque",
+          1
+        ],
+        [
+          "perdu",
+          1
+        ],
+        [
+          "desinstalle",
+          1
+        ]
+      ]
+    },
+    "scoring": {
+      "total": 56,
+      "max": 100,
+      "decision": "C -- Watchlist",
+      "details": [
+        {
+          "criterion": "pain_intensity",
+          "raw": 1,
+          "weight": 4,
+          "weighted": 4,
+          "max": 20
+        },
+        {
+          "criterion": "usage_frequency",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "willingness_to_pay",
+          "raw": 4,
+          "weight": 3,
+          "weighted": 12,
+          "max": 15
+        },
+        {
+          "criterion": "market_access",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "competition_gap",
+          "raw": 1,
+          "weight": 2,
+          "weighted": 2,
+          "max": 10
+        },
+        {
+          "criterion": "differentiation",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "personal_fit",
+          "raw": 3,
+          "weight": 2,
+          "weighted": 6,
+          "max": 10
+        },
+        {
+          "criterion": "mvp_speed",
+          "raw": 3,
+          "weight": 1,
+          "weighted": 3,
+          "max": 5
+        },
+        {
+          "criterion": "retention",
+          "raw": 5,
+          "weight": 1,
+          "weighted": 5,
+          "max": 5
+        }
+      ],
+      "raw_scores": {
+        "pain_intensity": 1,
+        "usage_frequency": 4,
+        "willingness_to_pay": 4,
+        "market_access": 1,
+        "competition_gap": 1,
+        "differentiation": 3,
+        "personal_fit": 3,
+        "mvp_speed": 3,
+        "retention": 5,
+        "_v3": {
+          "trend_direction": "UP",
+          "trend_direction_original": "UP",
+          "trend_multiplier": 1.08,
+          "trend_delta": 4,
+          "structural_driver": false,
+          "structural_bonus": 0,
+          "total_before_adjustments": 52,
+          "som_theoretical": 0,
+          "som_solo_dev_y1": 0
+        },
+        "_v31": {
+          "geo_target": null,
+          "trend_index_avg_12m": null,
+          "flags_applied": [],
+          "flags_total_penalty": 0,
+          "timing_type": null,
+          "timing_type_label": null,
+          "readiness_status": "CLEAR",
+          "forecast_coherence_status": "UNKNOWN",
+          "forecast_coherence_ratio": null,
+          "data_freshness_date": "2026-04-26",
+          "data_freshness_status": "fresh_0d",
+          "v31_flags": [],
+          "score_justification": "base: 52\n+ trend_multiplier: x1.08 (+4 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 56"
+        }
+      },
+      "score_justification": "base: 52\n+ trend_multiplier: x1.08 (+4 pts)\n+ driver_structurel: +0\n+ flags: [aucun]\n= score_v3: 56",
+      "v31_flags": []
+    }
+  },
+  "verdict": {
+    "score": 56,
+    "decision": "ABORT",
+    "bodyguard_killed": true,
+    "kill_reasons": [
+      "Pas de douleur reelle"
+    ]
+  }
+}

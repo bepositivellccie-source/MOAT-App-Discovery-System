@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "query": "sleep insomnia",
+    "keywords": [],
+    "timestamp": "2026-04-10 11:23",
+    "lang": "fr",
+    "country": "fr"
+  },
+  "market": {
+    "query": "sleep insomnia",
+    "timestamp": "2026-04-10 11:23",
+    "lang": "fr",
+    "country": "fr",
+    "apps": [],
+    "stats": {
+      "count": 0,
+      "avg_score": 0,
+      "median_score": 0,
+      "pct_below_4": 0,
+      "total_installs": 0,
+      "avg_installs": 0,
+      "max_installs": 0,
+      "free_pct": 0,
+      "saturation": "unknown"
+    },
+    "weakest_competitors": []
+  },
+  "reviews": {
+    "total_reviews": 0,
+    "apps_analyzed": 0,
+    "frustrations": {
+      "by_category": {},
+      "top_keywords": {},
+      "total_frustration_mentions": 0
+    },
+    "sentiment": {
+      "positive": 0,
+      "neutral": 0,
+      "negative": 0,
+      "ratio": 0,
+      "total": 0
+    },
+    "pain_points": [],
+    "gaps": [],
+    "per_app": {}
+  },
+  "concentration": {
+    "hhi": 0,
+    "interpretation": "No data",
+    "shares": []
+  },
+  "opportunity": {
+    "total_score": 45,
+    "verdict": "MODERATE - Opportunity exists but needs differentiation",
+    "breakdown": {
+      "market_gap": 30,
+      "frustration_level": 5.0,
+      "market_size": 5,
+      "trend_signal": 5
+    },
+    "max_scores": {
+      "market_gap": 30,
+      "frustration_level": 25,
+      "market_size": 25,
+      "trend_signal": 20
+    }
+  }
+}
